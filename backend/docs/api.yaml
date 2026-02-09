@@ -1,0 +1,3559 @@
+openapi: 3.0.3
+
+# ===========================================================================
+# Info
+# ===========================================================================
+info:
+  title: 30 Sec Challenge API
+  version: 1.0.0
+  description: |
+    Backend API for the 30-second video challenge social app. Users record
+    30-second videos for daily challenges, vote on submissions, climb
+    leaderboards, earn coins, send gifts, and more.
+
+    All responses follow a standard envelope:
+    ```json
+    {
+      "success": true,
+      "data": { ... },
+      "message": "optional human-readable message",
+      "meta": { "total": 100, "page": 1, "limit": 20, "total_pages": 5 }
+    }
+    ```
+  contact:
+    name: API Support
+  license:
+    name: UNLICENSED
+
+# ===========================================================================
+# Servers
+# ===========================================================================
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+# ===========================================================================
+# Security
+# ===========================================================================
+security:
+  - bearerAuth: []
+
+# ===========================================================================
+# Tags
+# ===========================================================================
+tags:
+  - name: Health
+    description: Service health check
+  - name: Auth
+    description: Registration, login, social auth, token refresh, password reset
+  - name: Users
+    description: User profiles, search, and account management
+  - name: Social
+    description: Follow, block, and report functionality
+  - name: Challenges
+    description: Daily video challenges
+  - name: Submissions
+    description: Video submission upload and retrieval
+  - name: Voting
+    description: Vote queue and casting votes
+  - name: Leaderboards
+    description: Rankings and leaderboards
+  - name: Notifications
+    description: In-app notifications, preferences, and device registration
+  - name: Subscriptions
+    description: IAP subscription verification, status, and webhooks
+  - name: Coins
+    description: In-app coin balance, packages, and transactions
+  - name: Gifts
+    description: Virtual gift catalog, sending, and history
+  - name: Ads
+    description: Rewarded ad callbacks and reward claims
+  - name: Admin
+    description: Admin dashboard, moderation, reports, analytics, user and challenge management
+  - name: Share
+    description: Deep-link sharing
+
+# ===========================================================================
+# Paths
+# ===========================================================================
+paths:
+  # -------------------------------------------------------------------------
+  # Health
+  # -------------------------------------------------------------------------
+  /api/health:
+    get:
+      operationId: healthCheck
+      tags: [Health]
+      summary: Service health check
+      security: []
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: ok
+                          timestamp:
+                            type: string
+                            format: date-time
+
+  # -------------------------------------------------------------------------
+  # Auth
+  # -------------------------------------------------------------------------
+  /api/v1/auth/register:
+    post:
+      operationId: register
+      tags: [Auth]
+      summary: Register a new user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AuthTokens'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Email or username already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/auth/login:
+    post:
+      operationId: login
+      tags: [Auth]
+      summary: Log in with email and password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AuthTokens'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/auth/social:
+    post:
+      operationId: socialLogin
+      tags: [Auth]
+      summary: Log in or register with a social provider (Google or Apple)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialLoginRequest'
+      responses:
+        '200':
+          description: Social login successful
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AuthTokens'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/auth/refresh:
+    post:
+      operationId: refreshToken
+      tags: [Auth]
+      summary: Refresh an expired access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token:
+                  type: string
+                  description: The refresh token issued during login
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AuthTokens'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/auth/me:
+    get:
+      operationId: getMe
+      tags: [Auth]
+      summary: Get the currently authenticated user
+      responses:
+        '200':
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/auth/logout:
+    post:
+      operationId: logout
+      tags: [Auth]
+      summary: Log out (invalidate refresh token)
+      responses:
+        '200':
+          description: Logged out successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/auth/forgot-password:
+    post:
+      operationId: forgotPassword
+      tags: [Auth]
+      summary: Request a password reset email
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Reset email sent (always returns 200 to prevent email enumeration)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/v1/auth/reset-password:
+    post:
+      operationId: resetPassword
+      tags: [Auth]
+      summary: Reset password with a valid reset token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, password]
+              properties:
+                token:
+                  type: string
+                  description: The reset token from the email link
+                password:
+                  type: string
+                  minLength: 8
+                  description: New password (min 8 chars, 1 upper, 1 lower, 1 digit)
+      responses:
+        '200':
+          description: Password reset successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  # -------------------------------------------------------------------------
+  # Users
+  # -------------------------------------------------------------------------
+  /api/v1/users/search:
+    get:
+      operationId: searchUsers
+      tags: [Users]
+      summary: Search users by username or display name
+      security: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search query string
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated search results
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/UserSummary'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+
+  /api/v1/users/{id}:
+    get:
+      operationId: getUserProfile
+      tags: [Users]
+      summary: Get a user profile by ID
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/users/profile:
+    put:
+      operationId: updateProfile
+      tags: [Users]
+      summary: Update the authenticated user's profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/users/account:
+    delete:
+      operationId: deleteAccount
+      tags: [Users]
+      summary: Soft-delete the authenticated user's account
+      responses:
+        '200':
+          description: Account deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/users/{id}/submissions:
+    get:
+      operationId: getUserSubmissions
+      tags: [Users]
+      summary: Get submissions by a specific user
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated list of user submissions
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Submission'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # -------------------------------------------------------------------------
+  # Social
+  # -------------------------------------------------------------------------
+  /api/v1/social/follow/{userId}:
+    post:
+      operationId: followUser
+      tags: [Social]
+      summary: Follow a user
+      parameters:
+        - $ref: '#/components/parameters/TargetUserId'
+      responses:
+        '200':
+          description: Followed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: unfollowUser
+      tags: [Social]
+      summary: Unfollow a user
+      parameters:
+        - $ref: '#/components/parameters/TargetUserId'
+      responses:
+        '200':
+          description: Unfollowed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/social/followers/{userId}:
+    get:
+      operationId: getFollowers
+      tags: [Social]
+      summary: Get a user's followers
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/TargetUserId'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated list of followers
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/UserSummary'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+
+  /api/v1/social/following/{userId}:
+    get:
+      operationId: getFollowing
+      tags: [Social]
+      summary: Get users that a user is following
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/TargetUserId'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated list of following
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/UserSummary'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+
+  /api/v1/social/block/{userId}:
+    post:
+      operationId: blockUser
+      tags: [Social]
+      summary: Block a user
+      parameters:
+        - $ref: '#/components/parameters/TargetUserId'
+      responses:
+        '200':
+          description: Blocked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      operationId: unblockUser
+      tags: [Social]
+      summary: Unblock a user
+      parameters:
+        - $ref: '#/components/parameters/TargetUserId'
+      responses:
+        '200':
+          description: Unblocked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/social/blocked:
+    get:
+      operationId: getBlockedUsers
+      tags: [Social]
+      summary: Get list of users blocked by the authenticated user
+      responses:
+        '200':
+          description: List of blocked users
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/UserSummary'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/social/report/user/{userId}:
+    post:
+      operationId: reportUser
+      tags: [Social]
+      summary: Report a user
+      parameters:
+        - $ref: '#/components/parameters/TargetUserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason:
+                  type: string
+                  description: Reason for the report
+                details:
+                  type: string
+                  description: Additional details
+      responses:
+        '201':
+          description: Report submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/social/report/submission/{submissionId}:
+    post:
+      operationId: reportSubmission
+      tags: [Social]
+      summary: Report a submission
+      parameters:
+        - name: submissionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason:
+                  type: string
+                  description: Reason for the report
+                details:
+                  type: string
+                  description: Additional details
+      responses:
+        '201':
+          description: Report submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # -------------------------------------------------------------------------
+  # Challenges
+  # -------------------------------------------------------------------------
+  /api/v1/challenges:
+    get:
+      operationId: getCurrentChallenge
+      tags: [Challenges]
+      summary: Get the currently active challenge
+      security: []
+      responses:
+        '200':
+          description: Current active challenge
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Challenge'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      operationId: createChallenge
+      tags: [Challenges]
+      summary: Create a new challenge (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChallengeRequest'
+      responses:
+        '201':
+          description: Challenge created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Challenge'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/challenges/upcoming:
+    get:
+      operationId: getUpcomingChallenges
+      tags: [Challenges]
+      summary: Get upcoming scheduled challenges
+      security:
+        - {}
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of upcoming challenges
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Challenge'
+
+  /api/v1/challenges/history:
+    get:
+      operationId: getChallengeHistory
+      tags: [Challenges]
+      summary: Get paginated list of completed challenges
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum: [created_at, starts_at, ends_at, title]
+            default: ends_at
+        - name: sort_order
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: Filter by category
+      responses:
+        '200':
+          description: Paginated challenge history
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Challenge'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+
+  /api/v1/challenges/{id}:
+    get:
+      operationId: getChallengeById
+      tags: [Challenges]
+      summary: Get a challenge by ID
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/ChallengeId'
+      responses:
+        '200':
+          description: Challenge details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Challenge'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateChallenge
+      tags: [Challenges]
+      summary: Update an existing challenge (admin only)
+      parameters:
+        - $ref: '#/components/parameters/ChallengeId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateChallengeRequest'
+      responses:
+        '200':
+          description: Challenge updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Challenge'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/challenges/{id}/results:
+    get:
+      operationId: getChallengeResults
+      tags: [Challenges]
+      summary: Get ranked submissions for a completed challenge
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/ChallengeId'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated ranked submissions
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Submission'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # -------------------------------------------------------------------------
+  # Submissions
+  # -------------------------------------------------------------------------
+  /api/v1/submissions/initiate:
+    post:
+      operationId: initiateUpload
+      tags: [Submissions]
+      summary: Initiate a video submission upload (returns presigned S3 URL)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitiateUploadRequest'
+      responses:
+        '201':
+          description: Upload initiated with presigned URL
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          submission_id:
+                            type: string
+                            format: uuid
+                          upload_url:
+                            type: string
+                            format: uri
+                            description: Presigned S3 URL for uploading the video
+                          video_key:
+                            type: string
+                            description: The S3 object key
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/submissions/{id}/complete:
+    post:
+      operationId: completeUpload
+      tags: [Submissions]
+      summary: Mark a submission upload as complete and trigger transcoding
+      parameters:
+        - $ref: '#/components/parameters/SubmissionId'
+      responses:
+        '200':
+          description: Upload marked complete, transcoding started
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Submission'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/submissions/{id}:
+    get:
+      operationId: getSubmissionById
+      tags: [Submissions]
+      summary: Get a single submission by ID
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/SubmissionId'
+      responses:
+        '200':
+          description: Submission details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Submission'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteSubmission
+      tags: [Submissions]
+      summary: Soft-delete a submission (owner only)
+      parameters:
+        - $ref: '#/components/parameters/SubmissionId'
+      responses:
+        '200':
+          description: Submission deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/submissions/challenge/{challengeId}:
+    get:
+      operationId: getSubmissionsByChallenge
+      tags: [Submissions]
+      summary: Get paginated submissions for a challenge
+      security: []
+      parameters:
+        - name: challengeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated submissions
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Submission'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+
+  /api/v1/submissions/user/{userId}:
+    get:
+      operationId: getSubmissionsByUser
+      tags: [Submissions]
+      summary: Get paginated submissions by a specific user
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/TargetUserId'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated user submissions
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Submission'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+
+  # -------------------------------------------------------------------------
+  # Voting
+  # -------------------------------------------------------------------------
+  /api/v1/voting/queue:
+    get:
+      operationId: getVoteQueue
+      tags: [Voting]
+      summary: Get a queue of submissions to vote on
+      parameters:
+        - name: challenge_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Challenge ID to get vote queue for
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+          description: Number of submissions to return
+      responses:
+        '200':
+          description: Vote queue
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Submission'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/voting:
+    post:
+      operationId: castVote
+      tags: [Voting]
+      summary: Cast a vote on a submission
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CastVoteRequest'
+      responses:
+        '201':
+          description: Vote recorded
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          vote_id:
+                            type: string
+                            format: uuid
+                          submission_id:
+                            type: string
+                            format: uuid
+                          value:
+                            type: integer
+                            enum: [1, -1]
+                          is_super_vote:
+                            type: boolean
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/voting/stats/{submissionId}:
+    get:
+      operationId: getVoteStats
+      tags: [Voting]
+      summary: Get vote statistics for a submission
+      security: []
+      parameters:
+        - name: submissionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Vote statistics
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          submission_id:
+                            type: string
+                            format: uuid
+                          total_votes:
+                            type: integer
+                          upvotes:
+                            type: integer
+                          downvotes:
+                            type: integer
+                          super_votes:
+                            type: integer
+                          wilson_score:
+                            type: number
+
+  /api/v1/voting/super-votes/balance:
+    get:
+      operationId: getSuperVoteBalance
+      tags: [Voting]
+      summary: Get the authenticated user's remaining super votes
+      responses:
+        '200':
+          description: Super vote balance
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          balance:
+                            type: integer
+                          daily_limit:
+                            type: integer
+                          resets_at:
+                            type: string
+                            format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # -------------------------------------------------------------------------
+  # Leaderboards
+  # -------------------------------------------------------------------------
+  /api/v1/leaderboards/top-creators:
+    get:
+      operationId: getTopCreators
+      tags: [Leaderboards]
+      summary: Get the all-time top creators leaderboard
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Top creators leaderboard
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/LeaderboardEntry'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+
+  /api/v1/leaderboards/challenge/{challengeId}:
+    get:
+      operationId: getChallengeLeaderboard
+      tags: [Leaderboards]
+      summary: Get the leaderboard for a specific challenge
+      security: []
+      parameters:
+        - name: challengeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Challenge leaderboard
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/LeaderboardEntry'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+
+  /api/v1/leaderboards/challenge/{challengeId}/me:
+    get:
+      operationId: getUserRank
+      tags: [Leaderboards]
+      summary: Get the authenticated user's rank in a challenge
+      parameters:
+        - name: challengeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: User rank details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          rank:
+                            type: integer
+                            nullable: true
+                          total_participants:
+                            type: integer
+                          submission:
+                            $ref: '#/components/schemas/Submission'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/leaderboards/challenge/{challengeId}/friends:
+    get:
+      operationId: getFriendsLeaderboard
+      tags: [Leaderboards]
+      summary: Get the friends-only leaderboard for a challenge
+      parameters:
+        - name: challengeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Friends leaderboard
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/LeaderboardEntry'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # -------------------------------------------------------------------------
+  # Notifications
+  # -------------------------------------------------------------------------
+  /api/v1/notifications:
+    get:
+      operationId: getNotifications
+      tags: [Notifications]
+      summary: Get the authenticated user's notifications
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated notifications
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Notification'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/notifications/unread-count:
+    get:
+      operationId: getUnreadCount
+      tags: [Notifications]
+      summary: Get the count of unread notifications
+      responses:
+        '200':
+          description: Unread notification count
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          count:
+                            type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/notifications/{id}/read:
+    put:
+      operationId: markNotificationAsRead
+      tags: [Notifications]
+      summary: Mark a single notification as read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Notification marked as read
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/notifications/read-all:
+    put:
+      operationId: markAllNotificationsAsRead
+      tags: [Notifications]
+      summary: Mark all notifications as read
+      responses:
+        '200':
+          description: All notifications marked as read
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/notifications/{id}:
+    delete:
+      operationId: deleteNotification
+      tags: [Notifications]
+      summary: Delete a notification
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Notification deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/notifications/preferences:
+    get:
+      operationId: getNotificationPreferences
+      tags: [Notifications]
+      summary: Get notification preferences
+      responses:
+        '200':
+          description: Notification preferences
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/NotificationPreferences'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    put:
+      operationId: updateNotificationPreferences
+      tags: [Notifications]
+      summary: Update notification preferences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPreferences'
+      responses:
+        '200':
+          description: Preferences updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/NotificationPreferences'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/notifications/device:
+    post:
+      operationId: registerDevice
+      tags: [Notifications]
+      summary: Register a device for push notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, platform]
+              properties:
+                token:
+                  type: string
+                  description: FCM or APNs device token
+                platform:
+                  type: string
+                  enum: [ios, android]
+      responses:
+        '201':
+          description: Device registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      operationId: unregisterDevice
+      tags: [Notifications]
+      summary: Unregister a device from push notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token:
+                  type: string
+                  description: The device token to unregister
+      responses:
+        '200':
+          description: Device unregistered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # -------------------------------------------------------------------------
+  # Subscriptions
+  # -------------------------------------------------------------------------
+  /api/v1/subscriptions/plans:
+    get:
+      operationId: getSubscriptionPlans
+      tags: [Subscriptions]
+      summary: Get available subscription plans
+      security: []
+      responses:
+        '200':
+          description: List of subscription plans
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SubscriptionPlan'
+
+  /api/v1/subscriptions/verify:
+    post:
+      operationId: verifySubscriptionReceipt
+      tags: [Subscriptions]
+      summary: Verify an IAP receipt and activate the subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [receipt, platform]
+              properties:
+                receipt:
+                  type: string
+                  description: Base64-encoded receipt data
+                platform:
+                  type: string
+                  enum: [ios, android]
+                product_id:
+                  type: string
+                  description: Store product identifier
+      responses:
+        '200':
+          description: Receipt verified, subscription activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SubscriptionStatus'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/subscriptions/status:
+    get:
+      operationId: getSubscriptionStatus
+      tags: [Subscriptions]
+      summary: Get the current subscription status
+      responses:
+        '200':
+          description: Subscription status
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SubscriptionStatus'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/subscriptions/restore:
+    post:
+      operationId: restorePurchases
+      tags: [Subscriptions]
+      summary: Restore previously purchased subscriptions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [receipt, platform]
+              properties:
+                receipt:
+                  type: string
+                platform:
+                  type: string
+                  enum: [ios, android]
+      responses:
+        '200':
+          description: Purchases restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SubscriptionStatus'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/subscriptions/cancel/{id}:
+    post:
+      operationId: cancelSubscription
+      tags: [Subscriptions]
+      summary: Cancel a subscription
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Subscription cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/subscriptions/webhook/apple:
+    post:
+      operationId: handleAppleWebhook
+      tags: [Subscriptions]
+      summary: Apple App Store server-to-server webhook
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Apple server notification payload
+      responses:
+        '200':
+          description: Webhook processed
+
+  /api/v1/subscriptions/webhook/google:
+    post:
+      operationId: handleGoogleWebhook
+      tags: [Subscriptions]
+      summary: Google Play server-to-server webhook
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Google Play RTDN payload
+      responses:
+        '200':
+          description: Webhook processed
+
+  # -------------------------------------------------------------------------
+  # Coins
+  # -------------------------------------------------------------------------
+  /api/v1/coins/packages:
+    get:
+      operationId: getCoinPackages
+      tags: [Coins]
+      summary: Get available coin packages for purchase
+      security: []
+      responses:
+        '200':
+          description: List of coin packages
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CoinPackage'
+
+  /api/v1/coins/balance:
+    get:
+      operationId: getCoinBalance
+      tags: [Coins]
+      summary: Get the authenticated user's coin balance
+      responses:
+        '200':
+          description: Coin balance
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          balance:
+                            type: integer
+                          total_earned:
+                            type: integer
+                          total_spent:
+                            type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/coins/purchase:
+    post:
+      operationId: purchaseCoins
+      tags: [Coins]
+      summary: Purchase a coin package via IAP receipt verification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [package_id, receipt, platform]
+              properties:
+                package_id:
+                  type: string
+                  format: uuid
+                receipt:
+                  type: string
+                  description: Base64-encoded IAP receipt
+                platform:
+                  type: string
+                  enum: [ios, android]
+      responses:
+        '200':
+          description: Coins purchased and credited
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          new_balance:
+                            type: integer
+                          coins_added:
+                            type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/coins/history:
+    get:
+      operationId: getCoinHistory
+      tags: [Coins]
+      summary: Get coin transaction history
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [earned, spent, purchased, gifted]
+          description: Filter by transaction type
+      responses:
+        '200':
+          description: Paginated coin transaction history
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CoinTransaction'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # -------------------------------------------------------------------------
+  # Gifts
+  # -------------------------------------------------------------------------
+  /api/v1/gifts/catalog:
+    get:
+      operationId: getGiftCatalog
+      tags: [Gifts]
+      summary: Get the gift catalog
+      security: []
+      responses:
+        '200':
+          description: List of available gifts
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/GiftItem'
+
+  /api/v1/gifts/send:
+    post:
+      operationId: sendGift
+      tags: [Gifts]
+      summary: Send a gift to a submission
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [gift_id, submission_id]
+              properties:
+                gift_id:
+                  type: string
+                  format: uuid
+                submission_id:
+                  type: string
+                  format: uuid
+                message:
+                  type: string
+                  maxLength: 200
+      responses:
+        '201':
+          description: Gift sent
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          gift_transaction_id:
+                            type: string
+                            format: uuid
+                          new_balance:
+                            type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/gifts/submission/{submissionId}:
+    get:
+      operationId: getSubmissionGifts
+      tags: [Gifts]
+      summary: Get gifts received on a specific submission
+      security: []
+      parameters:
+        - name: submissionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated list of gifts
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/GiftTransaction'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+
+  /api/v1/gifts/received:
+    get:
+      operationId: getReceivedGifts
+      tags: [Gifts]
+      summary: Get gifts received by the authenticated user
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated received gifts
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/GiftTransaction'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/gifts/sent:
+    get:
+      operationId: getSentGifts
+      tags: [Gifts]
+      summary: Get gifts sent by the authenticated user
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated sent gifts
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/GiftTransaction'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # -------------------------------------------------------------------------
+  # Ads
+  # -------------------------------------------------------------------------
+  /api/v1/ads/reward-callback:
+    get:
+      operationId: verifyRewardCallback
+      tags: [Ads]
+      summary: Server-to-server rewarded ad callback (verified via signature)
+      security: []
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: reward_type
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: reward_amount
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: signature
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: timestamp
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Callback verified and reward credited
+
+  /api/v1/ads/event:
+    post:
+      operationId: logAdEvent
+      tags: [Ads]
+      summary: Log an ad event (impression, click, completion)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [event_type, ad_unit_id]
+              properties:
+                event_type:
+                  type: string
+                  enum: [impression, click, complete, error]
+                ad_unit_id:
+                  type: string
+                placement:
+                  type: string
+      responses:
+        '201':
+          description: Event logged
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/ads/claim-reward:
+    post:
+      operationId: claimAdReward
+      tags: [Ads]
+      summary: Claim a reward after watching a rewarded ad
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ad_unit_id, reward_type]
+              properties:
+                ad_unit_id:
+                  type: string
+                reward_type:
+                  type: string
+                  enum: [coins, super_vote, extra_submission]
+      responses:
+        '200':
+          description: Reward claimed
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          reward_type:
+                            type: string
+                          reward_amount:
+                            type: integer
+                          new_balance:
+                            type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/ads/config:
+    get:
+      operationId: getAdConfig
+      tags: [Ads]
+      summary: Get ad configuration for the client
+      responses:
+        '200':
+          description: Ad config
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          show_ads:
+                            type: boolean
+                            description: Whether the user should see ads (false for pro subscribers)
+                          rewarded_ad_unit_id:
+                            type: string
+                          interstitial_ad_unit_id:
+                            type: string
+                          daily_reward_limit:
+                            type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/ads/stats:
+    get:
+      operationId: getDailyAdStats
+      tags: [Ads]
+      summary: Get daily ad stats for the authenticated user
+      responses:
+        '200':
+          description: Ad stats
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          ads_watched_today:
+                            type: integer
+                          rewards_claimed_today:
+                            type: integer
+                          daily_limit:
+                            type: integer
+                          can_watch_more:
+                            type: boolean
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # -------------------------------------------------------------------------
+  # Admin
+  # -------------------------------------------------------------------------
+  /api/v1/admin/dashboard:
+    get:
+      operationId: getDashboardStats
+      tags: [Admin]
+      summary: Get admin dashboard statistics
+      responses:
+        '200':
+          description: Dashboard stats
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          total_users:
+                            type: integer
+                          active_users_today:
+                            type: integer
+                          total_submissions:
+                            type: integer
+                          pending_moderation:
+                            type: integer
+                          active_challenges:
+                            type: integer
+                          total_revenue:
+                            type: number
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/admin/users:
+    get:
+      operationId: adminGetUsers
+      tags: [Admin]
+      summary: Get paginated list of users (admin)
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: q
+          in: query
+          schema:
+            type: string
+          description: Search by email or username
+        - name: role
+          in: query
+          schema:
+            type: string
+            enum: [user, moderator, admin]
+        - name: is_banned
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Paginated user list
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/admin/users/{id}/ban:
+    post:
+      operationId: banUser
+      tags: [Admin]
+      summary: Ban a user
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: Reason for the ban
+      responses:
+        '200':
+          description: User banned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/admin/users/{id}/unban:
+    post:
+      operationId: unbanUser
+      tags: [Admin]
+      summary: Unban a user
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: User unbanned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/admin/moderation:
+    get:
+      operationId: getModerationQueue
+      tags: [Admin]
+      summary: Get the moderation queue (submissions pending review)
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, manual_review]
+            default: pending
+      responses:
+        '200':
+          description: Moderation queue
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Submission'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/admin/moderation/{submissionId}:
+    post:
+      operationId: moderateSubmission
+      tags: [Admin]
+      summary: Approve or reject a submission
+      parameters:
+        - name: submissionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: [approve, reject]
+                reason:
+                  type: string
+                  description: Required when rejecting
+      responses:
+        '200':
+          description: Submission moderated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Submission'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/admin/reports:
+    get:
+      operationId: getReports
+      tags: [Admin]
+      summary: Get user and submission reports
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, resolved, dismissed]
+            default: pending
+      responses:
+        '200':
+          description: Paginated reports
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Report'
+                      meta:
+                        $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/admin/reports/{id}/resolve:
+    post:
+      operationId: resolveReport
+      tags: [Admin]
+      summary: Resolve a report
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [resolution]
+              properties:
+                resolution:
+                  type: string
+                  enum: [resolved, dismissed]
+                action_taken:
+                  type: string
+                  description: Description of action taken
+      responses:
+        '200':
+          description: Report resolved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/admin/analytics:
+    get:
+      operationId: getAnalytics
+      tags: [Admin]
+      summary: Get analytics data
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [day, week, month]
+            default: week
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Analytics data
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          signups:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AnalyticsDataPoint'
+                          submissions:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AnalyticsDataPoint'
+                          votes:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AnalyticsDataPoint'
+                          revenue:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AnalyticsDataPoint'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/admin/challenges:
+    post:
+      operationId: adminCreateChallenge
+      tags: [Admin]
+      summary: Create a challenge via the admin panel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChallengeRequest'
+      responses:
+        '201':
+          description: Challenge created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Challenge'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/v1/admin/challenges/{id}:
+    put:
+      operationId: adminUpdateChallenge
+      tags: [Admin]
+      summary: Update a challenge via the admin panel
+      parameters:
+        - $ref: '#/components/parameters/ChallengeId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateChallengeRequest'
+      responses:
+        '200':
+          description: Challenge updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Challenge'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # -------------------------------------------------------------------------
+  # Share
+  # -------------------------------------------------------------------------
+  /api/v1/share/generate:
+    post:
+      operationId: generateShareUrl
+      tags: [Share]
+      summary: Generate a shareable deep-link URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [type, id]
+              properties:
+                type:
+                  type: string
+                  enum: [submission, challenge, profile]
+                  description: The type of content to share
+                id:
+                  type: string
+                  format: uuid
+                  description: The ID of the content being shared
+      responses:
+        '200':
+          description: Share URL generated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          url:
+                            type: string
+                            format: uri
+                          code:
+                            type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/share/resolve/{code}:
+    get:
+      operationId: resolveShareUrl
+      tags: [Share]
+      summary: Resolve a share code to the original content
+      security: []
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Share code resolved
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum: [submission, challenge, profile]
+                          id:
+                            type: string
+                            format: uuid
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/share/metadata/{submissionId}:
+    get:
+      operationId: getShareMetadata
+      tags: [Share]
+      summary: Get Open Graph metadata for a shared submission
+      security: []
+      parameters:
+        - name: submissionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Share metadata for social previews
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          title:
+                            type: string
+                          description:
+                            type: string
+                          image_url:
+                            type: string
+                            format: uri
+                          video_url:
+                            type: string
+                            format: uri
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+# ===========================================================================
+# Components
+# ===========================================================================
+components:
+
+  # -------------------------------------------------------------------------
+  # Security Schemes
+  # -------------------------------------------------------------------------
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token obtained from /auth/login or /auth/register
+
+  # -------------------------------------------------------------------------
+  # Parameters
+  # -------------------------------------------------------------------------
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: Page number for pagination
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+      description: Number of items per page
+    UserId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: User ID
+    TargetUserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Target user ID
+    ChallengeId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Challenge ID
+    SubmissionId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Submission ID
+
+  # -------------------------------------------------------------------------
+  # Common Responses
+  # -------------------------------------------------------------------------
+  responses:
+    BadRequest:
+      description: Validation error or bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            data: null
+            message: Validation failed
+            error:
+              code: VALIDATION_ERROR
+              details:
+                - field: email
+                  message: Invalid email address
+    Unauthorized:
+      description: Missing or invalid authentication token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            data: null
+            message: Authentication required
+            error:
+              code: AUTHENTICATION_ERROR
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            data: null
+            message: You do not have permission to perform this action
+            error:
+              code: FORBIDDEN
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            data: null
+            message: Resource not found
+            error:
+              code: NOT_FOUND
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            data: null
+            message: An unexpected error occurred
+            error:
+              code: INTERNAL_ERROR
+
+  # -------------------------------------------------------------------------
+  # Schemas
+  # -------------------------------------------------------------------------
+  schemas:
+
+    # --- Standard Envelope ---
+    ApiResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+        data:
+          description: Response payload (null on error)
+        message:
+          type: string
+        meta:
+          type: object
+          description: Pagination or other metadata
+
+    ErrorResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          example: false
+        data:
+          type: "null"
+        message:
+          type: string
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            details:
+              description: Additional error context
+
+    PaginationMeta:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total number of records
+        page:
+          type: integer
+          description: Current page
+        limit:
+          type: integer
+          description: Items per page
+        total_pages:
+          type: integer
+          description: Total number of pages
+
+    # --- Auth ---
+    RegisterRequest:
+      type: object
+      required: [email, password, username, display_name]
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          minLength: 8
+          description: "Min 8 chars, 1 uppercase, 1 lowercase, 1 digit"
+          example: SecurePass123
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: '^[a-zA-Z0-9_]+$'
+          example: cool_user
+        display_name:
+          type: string
+          minLength: 1
+          maxLength: 50
+          example: Cool User
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          example: SecurePass123
+
+    SocialLoginRequest:
+      type: object
+      required: [provider, id_token]
+      properties:
+        provider:
+          type: string
+          enum: [google, apple]
+        id_token:
+          type: string
+          description: ID token from the social provider
+
+    AuthTokens:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        access_token:
+          type: string
+          description: JWT access token
+        refresh_token:
+          type: string
+          description: Refresh token for obtaining new access tokens
+        expires_in:
+          type: integer
+          description: Access token TTL in seconds
+          example: 3600
+
+    # --- User ---
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+          example: cool_user
+        email:
+          type: string
+          format: email
+          description: Only visible to the user themselves or admins
+        display_name:
+          type: string
+          example: Cool User
+        avatar_url:
+          type: string
+          format: uri
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+          maxLength: 200
+        role:
+          type: string
+          enum: [user, moderator, admin]
+        subscription_tier:
+          type: string
+          enum: [free, pro]
+        coin_balance:
+          type: integer
+        follower_count:
+          type: integer
+        following_count:
+          type: integer
+        submission_count:
+          type: integer
+        total_votes_received:
+          type: integer
+        is_verified:
+          type: boolean
+        is_banned:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        display_name:
+          type: string
+        avatar_url:
+          type: string
+          format: uri
+          nullable: true
+        is_verified:
+          type: boolean
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        display_name:
+          type: string
+          minLength: 1
+          maxLength: 50
+        bio:
+          type: string
+          maxLength: 200
+          nullable: true
+        avatar_url:
+          type: string
+          format: uri
+          nullable: true
+        locale:
+          type: string
+          example: en
+        timezone:
+          type: string
+          example: America/New_York
+
+    # --- Challenge ---
+    Challenge:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          example: Show Your Best Dance Move
+        description:
+          type: string
+        category:
+          type: string
+          example: Dance
+        difficulty:
+          type: string
+          enum: [easy, medium, hard]
+        thumbnail_url:
+          type: string
+          format: uri
+          nullable: true
+        sponsor_name:
+          type: string
+          nullable: true
+        sponsor_logo_url:
+          type: string
+          format: uri
+          nullable: true
+        sponsor_url:
+          type: string
+          format: uri
+          nullable: true
+        status:
+          type: string
+          enum: [draft, scheduled, active, voting, completed, cancelled]
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        voting_ends_at:
+          type: string
+          format: date-time
+        max_submissions:
+          type: integer
+          nullable: true
+        submission_count:
+          type: integer
+        total_votes:
+          type: integer
+        is_premium_early_access:
+          type: boolean
+        early_access_hours:
+          type: integer
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateChallengeRequest:
+      type: object
+      required: [title, description, category, difficulty, starts_at, ends_at, voting_ends_at]
+      properties:
+        title:
+          type: string
+          minLength: 3
+          maxLength: 200
+        description:
+          type: string
+          minLength: 10
+          maxLength: 2000
+        category:
+          type: string
+          minLength: 1
+          maxLength: 100
+        difficulty:
+          type: string
+          enum: [easy, medium, hard]
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+          description: Must be after starts_at
+        voting_ends_at:
+          type: string
+          format: date-time
+          description: Must be after ends_at
+        thumbnail_url:
+          type: string
+          format: uri
+        is_premium_early_access:
+          type: boolean
+          default: false
+        early_access_hours:
+          type: integer
+          minimum: 0
+          maximum: 72
+          default: 2
+
+    UpdateChallengeRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 3
+          maxLength: 200
+        description:
+          type: string
+          minLength: 10
+          maxLength: 2000
+        category:
+          type: string
+        difficulty:
+          type: string
+          enum: [easy, medium, hard]
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        voting_ends_at:
+          type: string
+          format: date-time
+        thumbnail_url:
+          type: string
+          format: uri
+          nullable: true
+        is_premium_early_access:
+          type: boolean
+        early_access_hours:
+          type: integer
+          minimum: 0
+          maximum: 72
+        status:
+          type: string
+          enum: [draft, scheduled, active, voting, completed, cancelled]
+
+    # --- Submission ---
+    Submission:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        challenge_id:
+          type: string
+          format: uuid
+        caption:
+          type: string
+          nullable: true
+          maxLength: 200
+        video_url:
+          type: string
+          format: uri
+          nullable: true
+        thumbnail_url:
+          type: string
+          format: uri
+          nullable: true
+        hls_url:
+          type: string
+          format: uri
+          nullable: true
+        video_duration:
+          type: number
+          nullable: true
+          description: Duration in seconds
+        video_width:
+          type: integer
+          nullable: true
+        video_height:
+          type: integer
+          nullable: true
+        file_size_bytes:
+          type: integer
+          nullable: true
+        transcode_status:
+          type: string
+          enum: [pending, processing, completed, failed]
+        moderation_status:
+          type: string
+          enum: [pending, approved, rejected, manual_review]
+        moderation_reason:
+          type: string
+          nullable: true
+        vote_count:
+          type: integer
+        super_vote_count:
+          type: integer
+        wilson_score:
+          type: number
+        rank:
+          type: integer
+          nullable: true
+        total_views:
+          type: integer
+        gift_coins_received:
+          type: integer
+        is_hidden:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        user:
+          $ref: '#/components/schemas/UserSummary'
+
+    InitiateUploadRequest:
+      type: object
+      required: [challenge_id, content_type]
+      properties:
+        challenge_id:
+          type: string
+          format: uuid
+        caption:
+          type: string
+          maxLength: 200
+        content_type:
+          type: string
+          description: MIME type of the video (e.g., video/mp4)
+          example: video/mp4
+        file_size:
+          type: integer
+          description: File size in bytes
+
+    CastVoteRequest:
+      type: object
+      required: [submission_id, value]
+      properties:
+        submission_id:
+          type: string
+          format: uuid
+        value:
+          type: integer
+          enum: [1, -1]
+          description: "1 for upvote, -1 for downvote"
+        is_super_vote:
+          type: boolean
+          default: false
+        source:
+          type: string
+          enum: [organic, rewarded_ad]
+          default: organic
+
+    # --- Leaderboard ---
+    LeaderboardEntry:
+      type: object
+      properties:
+        rank:
+          type: integer
+        user:
+          $ref: '#/components/schemas/UserSummary'
+        score:
+          type: number
+          description: Wilson score or point total
+        vote_count:
+          type: integer
+        submission_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: Present on challenge leaderboards
+
+    # --- Notification ---
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          description: "Notification type (e.g., new_follower, vote, challenge_start)"
+        title:
+          type: string
+        body:
+          type: string
+        data:
+          type: object
+          description: Arbitrary JSON payload for deep linking
+        is_read:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    NotificationPreferences:
+      type: object
+      properties:
+        push_enabled:
+          type: boolean
+        email_enabled:
+          type: boolean
+        new_follower:
+          type: boolean
+        vote_received:
+          type: boolean
+        challenge_start:
+          type: boolean
+        challenge_results:
+          type: boolean
+        gift_received:
+          type: boolean
+        system_announcements:
+          type: boolean
+
+    # --- Subscription ---
+    SubscriptionPlan:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          example: Pro Monthly
+        tier:
+          type: string
+          enum: [pro]
+        period:
+          type: string
+          enum: [monthly, yearly]
+        price:
+          type: number
+          example: 4.99
+        currency:
+          type: string
+          example: USD
+        features:
+          type: array
+          items:
+            type: string
+        apple_product_id:
+          type: string
+        google_product_id:
+          type: string
+
+    SubscriptionStatus:
+      type: object
+      properties:
+        tier:
+          type: string
+          enum: [free, pro]
+        is_active:
+          type: boolean
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        auto_renew:
+          type: boolean
+        platform:
+          type: string
+          enum: [ios, android]
+          nullable: true
+
+    # --- Coins ---
+    CoinPackage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Starter Pack
+        coins:
+          type: integer
+          example: 100
+        price:
+          type: number
+          example: 0.99
+        currency:
+          type: string
+          example: USD
+        bonus_coins:
+          type: integer
+          example: 10
+        apple_product_id:
+          type: string
+        google_product_id:
+          type: string
+
+    CoinTransaction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [earned, spent, purchased, gifted]
+        amount:
+          type: integer
+          description: Positive for credits, negative for debits
+        balance_after:
+          type: integer
+        description:
+          type: string
+        reference_type:
+          type: string
+          nullable: true
+          description: "Related entity type (e.g., gift, ad_reward, purchase)"
+        reference_id:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    # --- Gifts ---
+    GiftItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Fire
+        emoji:
+          type: string
+          example: "\U0001F525"
+        animation_url:
+          type: string
+          format: uri
+          nullable: true
+        coin_cost:
+          type: integer
+          example: 10
+        coin_value:
+          type: integer
+          description: How many coins the recipient receives
+          example: 8
+        is_premium:
+          type: boolean
+
+    GiftTransaction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        gift:
+          $ref: '#/components/schemas/GiftItem'
+        sender:
+          $ref: '#/components/schemas/UserSummary'
+        receiver:
+          $ref: '#/components/schemas/UserSummary'
+        submission_id:
+          type: string
+          format: uuid
+        message:
+          type: string
+          nullable: true
+        coin_cost:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    # --- Report ---
+    Report:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        reporter:
+          $ref: '#/components/schemas/UserSummary'
+        target_type:
+          type: string
+          enum: [user, submission]
+        target_id:
+          type: string
+          format: uuid
+        reason:
+          type: string
+        details:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [pending, resolved, dismissed]
+        resolution:
+          type: string
+          nullable: true
+        resolved_by:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        resolved_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    # --- Analytics ---
+    AnalyticsDataPoint:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        value:
+          type: number
