@@ -15,7 +15,6 @@ export async function seed(knex: Knex): Promise<void> {
       is_active: true,
       features: JSON.stringify({
         ad_free: true,
-        early_access: true,
         premium_effects: true,
         pro_badge: true,
         free_super_votes: 3,
@@ -36,7 +35,6 @@ export async function seed(knex: Knex): Promise<void> {
       is_active: true,
       features: JSON.stringify({
         ad_free: true,
-        early_access: true,
         premium_effects: true,
         pro_badge: true,
         free_super_votes: 3,

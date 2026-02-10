@@ -6,24 +6,6 @@ import '../entities/user.dart';
 /// The data layer provides [AuthRepositoryImpl] which coordinates between
 /// the remote API and local secure storage.
 abstract class AuthRepository {
-  /// Register a new user account.
-  ///
-  /// Returns the created [User] and the initial [AuthTokens].
-  Future<(User, AuthTokens)> register({
-    required String email,
-    required String password,
-    required String username,
-    required String displayName,
-  });
-
-  /// Authenticate with email and password.
-  ///
-  /// Returns the authenticated [User] and the [AuthTokens].
-  Future<(User, AuthTokens)> login({
-    required String email,
-    required String password,
-  });
-
   /// Authenticate via a social identity provider (Google, Apple).
   ///
   /// [provider] should be `"google"` or `"apple"`.
@@ -42,6 +24,6 @@ abstract class AuthRepository {
   /// Sign out and invalidate tokens on both client and server.
   Future<void> logout();
 
-  /// Request a password-reset email.
-  Future<void> forgotPassword(String email);
+  /// Soft-delete the current user's account.
+  Future<void> deleteAccount();
 }

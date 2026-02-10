@@ -45,6 +45,8 @@ export function getDb(): Knex {
  */
 const TABLES_IN_TRUNCATION_ORDER: string[] = [
   // Leaf / junction tables first
+  'daily_login_rewards',
+  'submission_boosts',
   'ad_events',
   'analytics_events',
   'push_tokens',

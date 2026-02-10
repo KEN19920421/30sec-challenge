@@ -1,4 +1,5 @@
 import 'env.dart';
+import '../constants/ad_constants.dart';
 
 /// Central configuration for environment-specific values.
 ///
@@ -9,9 +10,6 @@ class AppConfig {
   final String s3BaseUrl;
   final String cdnUrl;
   final String webSocketUrl;
-  final String bannerAdUnitId;
-  final String interstitialAdUnitId;
-  final String rewardedAdUnitId;
   final Duration tokenRefreshThreshold;
   final Duration apiTimeout;
 
@@ -20,23 +18,23 @@ class AppConfig {
     required this.s3BaseUrl,
     required this.cdnUrl,
     required this.webSocketUrl,
-    required this.bannerAdUnitId,
-    required this.interstitialAdUnitId,
-    required this.rewardedAdUnitId,
     this.tokenRefreshThreshold = const Duration(minutes: 5),
     this.apiTimeout = const Duration(seconds: 30),
   });
 
+  /// Ad unit IDs are now provided by [AdConstants], which automatically
+  /// selects test vs production IDs based on [EnvironmentConfig].
+  String get bannerAdUnitId => AdConstants.bannerId;
+  String get interstitialAdUnitId => AdConstants.interstitialId;
+  String get rewardedAdUnitId => AdConstants.rewardedId;
+
   /// Development configuration pointing to local/dev servers.
   factory AppConfig.dev() {
     return const AppConfig(
-      apiBaseUrl: 'http://localhost:3000/api/v1',
+      apiBaseUrl: 'http://localhost:3000',
       s3BaseUrl: 'https://dev-30sec-challenge.s3.amazonaws.com',
       cdnUrl: 'https://dev-cdn.30secchallenge.com',
       webSocketUrl: 'ws://localhost:3000/ws',
-      bannerAdUnitId: 'ca-app-pub-3940256099942544/6300978111', // Test ad
-      interstitialAdUnitId: 'ca-app-pub-3940256099942544/1033173712', // Test ad
-      rewardedAdUnitId: 'ca-app-pub-3940256099942544/5224354917', // Test ad
       apiTimeout: Duration(seconds: 60),
     );
   }
@@ -48,9 +46,6 @@ class AppConfig {
       s3BaseUrl: 'https://staging-30sec-challenge.s3.amazonaws.com',
       cdnUrl: 'https://staging-cdn.30secchallenge.com',
       webSocketUrl: 'wss://staging-api.30secchallenge.com/ws',
-      bannerAdUnitId: 'ca-app-pub-3940256099942544/6300978111', // Test ad
-      interstitialAdUnitId: 'ca-app-pub-3940256099942544/1033173712', // Test ad
-      rewardedAdUnitId: 'ca-app-pub-3940256099942544/5224354917', // Test ad
     );
   }
 
@@ -61,9 +56,6 @@ class AppConfig {
       s3BaseUrl: 'https://30sec-challenge.s3.amazonaws.com',
       cdnUrl: 'https://cdn.30secchallenge.com',
       webSocketUrl: 'wss://api.30secchallenge.com/ws',
-      bannerAdUnitId: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',
-      interstitialAdUnitId: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',
-      rewardedAdUnitId: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',
     );
   }
 

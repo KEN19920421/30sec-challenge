@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/api_client.dart';
+import '../domain/boost_tier.dart';
 import '../domain/subscription_plan.dart';
 
 /// Repository handling all shop / monetization API communication.
@@ -92,6 +93,106 @@ class ShopRepository {
       },
     );
     return response.data?['data']?['newBalance'] as int? ?? 0;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Daily Login Reward
+  // ---------------------------------------------------------------------------
+
+  /// Checks if the daily login reward has been claimed today.
+  Future<Map<String, dynamic>> getDailyRewardStatus() async {
+    final response = await _apiClient.get<Map<String, dynamic>>(
+      '/api/v1/coins/daily-reward/status',
+    );
+    return response.data?['data'] as Map<String, dynamic>? ?? {};
+  }
+
+  /// Claims the daily login reward.
+  Future<Map<String, dynamic>> claimDailyReward() async {
+    final response = await _apiClient.post<Map<String, dynamic>>(
+      '/api/v1/coins/daily-reward',
+    );
+    return response.data?['data'] as Map<String, dynamic>? ?? {};
+  }
+
+  // ---------------------------------------------------------------------------
+  // Ad Rewards
+  // ---------------------------------------------------------------------------
+
+  /// Claims a bonus coins reward after watching a rewarded ad.
+  Future<Map<String, dynamic>> claimAdReward() async {
+    final response = await _apiClient.post<Map<String, dynamic>>(
+      '/api/v1/ads/claim-reward',
+      data: {
+        'ad_type': 'rewarded',
+        'placement': 'bonus_coins',
+      },
+    );
+    return response.data?['data'] as Map<String, dynamic>? ?? {};
+  }
+
+  /// Gets daily ad stats (remaining rewards, etc.).
+  Future<Map<String, dynamic>> getAdStats() async {
+    final response = await _apiClient.get<Map<String, dynamic>>(
+      '/api/v1/ads/stats',
+    );
+    return response.data?['data'] as Map<String, dynamic>? ?? {};
+  }
+
+  // ---------------------------------------------------------------------------
+  // Boosts
+  // ---------------------------------------------------------------------------
+
+  /// Fetches available boost tiers with first-boost-free flag.
+  Future<Map<String, dynamic>> getBoostTiersWithMeta() async {
+    final response = await _apiClient.get<Map<String, dynamic>>(
+      '/api/v1/boosts/tiers',
+    );
+    return response.data?['data'] as Map<String, dynamic>? ?? {};
+  }
+
+  /// Fetches available boost tiers.
+  Future<List<BoostTier>> getBoostTiers() async {
+    final response = await _apiClient.get<Map<String, dynamic>>(
+      '/api/v1/boosts/tiers',
+    );
+    final body = response.data;
+    if (body == null) return [];
+    final data = body['data'] as Map<String, dynamic>?;
+    // Support both new format { tiers: [...], firstBoostFree: bool }
+    // and old format (direct list) for backward compatibility.
+    final list = data?['tiers'] as List<dynamic>? ??
+        (body['data'] is List ? body['data'] as List<dynamic> : []);
+    return list
+        .map((item) => BoostTier.fromJson(item as Map<String, dynamic>))
+        .toList();
+  }
+
+  /// Purchases a boost for a submission.
+  Future<Map<String, dynamic>> purchaseBoost({
+    required String submissionId,
+    required String tier,
+  }) async {
+    final response = await _apiClient.post<Map<String, dynamic>>(
+      '/api/v1/boosts/purchase',
+      data: {
+        'submission_id': submissionId,
+        'tier': tier,
+      },
+    );
+    return response.data?['data'] as Map<String, dynamic>? ?? {};
+  }
+
+  /// Gets active boosts for a submission.
+  Future<List<Map<String, dynamic>>> getSubmissionBoosts(
+      String submissionId) async {
+    final response = await _apiClient.get<Map<String, dynamic>>(
+      '/api/v1/boosts/submission/$submissionId',
+    );
+    final body = response.data;
+    if (body == null) return [];
+    final list = body['data'] as List<dynamic>? ?? [];
+    return list.cast<Map<String, dynamic>>();
   }
 
   // ---------------------------------------------------------------------------

@@ -14,4 +14,8 @@ router.get('/balance', authenticate, coinController.getBalance);
 router.post('/purchase', authenticate, validate(purchaseCoinsSchema), coinController.purchaseCoins);
 router.get('/history', authenticate, validate(transactionHistorySchema, 'query'), coinController.getTransactionHistory);
 
+// Daily login reward
+router.get('/daily-reward/status', authenticate, coinController.getDailyRewardStatus);
+router.post('/daily-reward', authenticate, coinController.claimDailyReward);
+
 export default router;

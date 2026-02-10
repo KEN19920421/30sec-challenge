@@ -115,7 +115,7 @@ export async function getById(id: string): Promise<Record<string, unknown>> {
  */
 export async function getUpcoming(
   _userId?: string,
-  userTier?: string,
+  _userTier?: string,
 ): Promise<Record<string, unknown>[]> {
   const now = new Date();
 
@@ -124,18 +124,8 @@ export async function getUpcoming(
     .where('starts_at', '>', now.toISOString())
     .orderBy('starts_at', 'asc');
 
-  // Non-pro users should not see early-access-only challenges that haven't
-  // reached their public visibility window yet.
-  const isProUser = userTier === 'pro' || userTier === 'premium';
-
-  if (!isProUser) {
-    query = query.where((builder) => {
-      builder
-        .where('is_premium_early_access', false)
-        .orWhereNull('is_premium_early_access');
-    });
-  }
-
+  // Early access gating removed — all upcoming challenges are now visible
+  // to all users regardless of subscription tier.
   const challenges = await query;
 
   return challenges;

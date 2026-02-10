@@ -40,23 +40,25 @@ class LeaderboardEntry {
     final user = json['user'] as Map<String, dynamic>?;
 
     return LeaderboardEntry(
-      submissionId: json['submissionId'] as String? ?? json['id'] as String,
-      userId: json['userId'] as String? ??
+      submissionId: (json['submission_id'] ?? json['submissionId'] ?? json['id']) as String,
+      userId: (json['user_id'] ?? json['userId']) as String? ??
           user?['id'] as String? ??
           '',
       username: json['username'] as String? ??
           user?['username'] as String? ??
           'Unknown',
-      displayName: json['displayName'] as String? ??
+      displayName: (json['display_name'] ?? json['displayName']) as String? ??
+          user?['display_name'] as String? ??
           user?['displayName'] as String? ??
           '',
-      avatarUrl: json['avatarUrl'] as String? ??
+      avatarUrl: (json['avatar_url'] ?? json['avatarUrl']) as String? ??
+          user?['avatar_url'] as String? ??
           user?['avatarUrl'] as String?,
-      thumbnailUrl: json['thumbnailUrl'] as String?,
+      thumbnailUrl: (json['thumbnail_url'] ?? json['thumbnailUrl']) as String?,
       rank: json['rank'] as int? ?? 0,
       score: (json['score'] as num?)?.toDouble() ?? 0.0,
-      voteCount: json['voteCount'] as int? ?? 0,
-      superVoteCount: json['superVoteCount'] as int? ?? 0,
+      voteCount: (json['vote_count'] ?? json['voteCount']) as int? ?? 0,
+      superVoteCount: (json['super_vote_count'] ?? json['superVoteCount']) as int? ?? 0,
     );
   }
 
@@ -139,4 +141,40 @@ class UserRank {
   @override
   String toString() =>
       'UserRank(rank: $rank, score: $score, total: $totalParticipants)';
+}
+
+/// Represents a top creator in the global rankings.
+class TopCreator {
+  final int rank;
+  final String userId;
+  final String username;
+  final String displayName;
+  final String? avatarUrl;
+  final double aggregateScore;
+  final int submissionCount;
+
+  const TopCreator({
+    required this.rank,
+    required this.userId,
+    required this.username,
+    required this.displayName,
+    this.avatarUrl,
+    required this.aggregateScore,
+    required this.submissionCount,
+  });
+
+  String get displayNameOrUsername =>
+      displayName.isNotEmpty ? displayName : username;
+
+  factory TopCreator.fromJson(Map<String, dynamic> json) {
+    return TopCreator(
+      rank: json['rank'] as int? ?? 0,
+      userId: (json['user_id'] ?? json['userId']) as String? ?? '',
+      username: json['username'] as String? ?? 'Unknown',
+      displayName: (json['display_name'] ?? json['displayName']) as String? ?? '',
+      avatarUrl: (json['avatar_url'] ?? json['avatarUrl']) as String?,
+      aggregateScore: ((json['aggregateScore'] ?? json['aggregate_score']) as num?)?.toDouble() ?? 0.0,
+      submissionCount: ((json['submissionCount'] ?? json['submission_count']) as num?)?.toInt() ?? 0,
+    );
+  }
 }

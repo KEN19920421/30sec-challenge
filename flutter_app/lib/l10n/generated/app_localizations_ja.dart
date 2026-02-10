@@ -18,75 +18,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get register => '新規登録';
 
   @override
-  String get email => 'メールアドレス';
-
-  @override
-  String get password => 'パスワード';
-
-  @override
   String get username => 'ユーザー名';
 
   @override
   String get displayName => '表示名';
 
   @override
-  String get forgotPassword => 'パスワードをお忘れですか？';
-
-  @override
-  String get orContinueWith => 'または以下で続ける';
-
-  @override
-  String get dontHaveAccount => 'アカウントをお持ちでないですか？ ';
-
-  @override
-  String get alreadyHaveAccount => 'すでにアカウントをお持ちですか？ ';
-
-  @override
-  String get welcomeBack => 'おかえりなさい';
-
-  @override
   String get signInToContinue => 'ログインして続ける';
-
-  @override
-  String get emailPlaceholder => 'you@example.com';
-
-  @override
-  String get emailRequired => 'メールアドレスを入力してください';
-
-  @override
-  String get enterValidEmail => '有効なメールアドレスを入力してください';
-
-  @override
-  String get passwordRequired => 'パスワードを入力してください';
-
-  @override
-  String passwordMinLength(int length) {
-    return 'パスワードは$length文字以上必要です';
-  }
 
   @override
   String get continueWithGoogle => 'Googleで続ける';
 
   @override
   String get continueWithApple => 'Appleで続ける';
-
-  @override
-  String get createAccount => 'アカウント作成';
-
-  @override
-  String get joinApp => 'コミュニティに参加';
-
-  @override
-  String get displayNamePlaceholder => '山田 太郎';
-
-  @override
-  String get usernamePlaceholder => 'taro_yamada';
-
-  @override
-  String get usernameHelperText => '英数字とアンダースコアのみ';
-
-  @override
-  String get confirmPassword => 'パスワード確認';
 
   @override
   String get displayNameRequired => '表示名を入力してください';
@@ -113,45 +57,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get usernameInvalidChars => '英数字とアンダースコアのみ使用可能';
 
   @override
-  String get confirmPasswordRequired => 'パスワードを再入力してください';
-
-  @override
-  String get passwordsDoNotMatch => 'パスワードが一致しません';
-
-  @override
   String minCharacters(int count) {
     return '$count文字以上必要です';
   }
 
   @override
   String get usernameNotAvailable => 'このユーザー名は使用できません';
-
-  @override
-  String get resetPassword => 'パスワードリセット';
-
-  @override
-  String get forgotPasswordHeading => 'パスワードをお忘れですか？';
-
-  @override
-  String get forgotPasswordDescription =>
-      'アカウントに登録されたメールアドレスを入力してください。パスワードリセット用のリンクをお送りします。';
-
-  @override
-  String get sendResetLink => 'リセットリンクを送信';
-
-  @override
-  String get checkYourEmail => 'メールをご確認ください';
-
-  @override
-  String resetEmailSentMessage(String email) {
-    return 'パスワードリセット用のリンクを\n$email に送信しました';
-  }
-
-  @override
-  String get backToLogin => 'ログインに戻る';
-
-  @override
-  String get resetEmailError => 'リセットメールの送信に失敗しました。もう一度お試しください。';
 
   @override
   String get onboardingTitle1 => '毎日のチャレンジ';
@@ -611,9 +522,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get accountSection => 'アカウント';
 
   @override
-  String get changePassword => 'パスワード変更';
-
-  @override
   String get subscriptionSection => 'サブスクリプション';
 
   @override
@@ -665,21 +573,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String appVersion(String version) {
     return 'バージョン $version';
   }
-
-  @override
-  String get currentPassword => '現在のパスワード';
-
-  @override
-  String get newPassword => '新しいパスワード';
-
-  @override
-  String get confirmNewPassword => '新しいパスワード（確認）';
-
-  @override
-  String get update => '更新';
-
-  @override
-  String get passwordUpdated => 'パスワードが更新されました！';
 
   @override
   String get deleteAccountWarning => 'この操作は元に戻せません。すべてのデータ、投稿、コイン残高が失われます。';
@@ -753,4 +646,84 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get comeBackLater => '後でまた来てください。';
+
+  @override
+  String get firstBoostFree => '初回ブースト無料！';
+
+  @override
+  String get firstBoostFreeDesc => '初めてのSmallブーストを無料で体験 — スパーク不要！';
+
+  @override
+  String get freeTrialLabel => '無料';
+
+  @override
+  String get dailyRewardTitle => 'デイリーログインボーナス';
+
+  @override
+  String get dailyRewardDesc => 'おかえりなさい！毎日のスパークをどうぞ。';
+
+  @override
+  String get claimReward => '受け取る';
+
+  @override
+  String get dailyBonusClaimed => '本日受取済み';
+
+  @override
+  String get dailyBonusAvailable => '+3 スパークを受け取れます';
+
+  @override
+  String get earnFreeSparks => '無料でスパークを獲得';
+
+  @override
+  String get watchAdForSparks => '広告を見てスパークを獲得';
+
+  @override
+  String get watchAdForSparksDesc => '短い動画を見て10スパークを無料で獲得！';
+
+  @override
+  String get watchAdEarn10Sparks => '広告を見て10スパーク獲得';
+
+  @override
+  String adsRemaining(int count) {
+    return '本日残り$count回';
+  }
+
+  @override
+  String get dailyAdLimitReached => '本日の広告上限に達しました';
+
+  @override
+  String get boostSubmission => '投稿をブースト';
+
+  @override
+  String get boostDescription => 'この投稿をブーストしてフィードでの表示を増やしましょう';
+
+  @override
+  String get boost => 'ブースト';
+
+  @override
+  String get boostPurchased => 'ブーストを購入しました！';
+
+  @override
+  String get boosted => 'ブースト中';
+
+  @override
+  String get pickFromGallery => 'ギャラリー';
+
+  @override
+  String get editVideo => '動画を編集';
+
+  @override
+  String get trimVideo => 'トリミング';
+
+  @override
+  String get filters => 'フィルター';
+
+  @override
+  String get addText => 'テキスト';
+
+  @override
+  String get exporting => 'エクスポート中...';
+
+  @override
+  String get exportFailed => 'エクスポートに失敗しました';
 }

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../challenge/data/submission_repository.dart';
@@ -74,10 +75,12 @@ class RecordingInProgress extends RecordingState {
 class RecordingCompleted extends RecordingState {
   final String filePath;
   final Duration duration;
+  final String? editedFilePath;
 
   const RecordingCompleted({
     required this.filePath,
     required this.duration,
+    this.editedFilePath,
   });
 }
 
@@ -239,6 +242,38 @@ class RecordingNotifier extends StateNotifier<RecordingState> {
 
     state = const RecordingInitializing();
     await _initController(camera);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Gallery selection
+  // ---------------------------------------------------------------------------
+
+  Future<void> pickFromGallery() async {
+    try {
+      final picker = ImagePicker();
+      final video = await picker.pickVideo(
+        source: ImageSource.gallery,
+        maxDuration: const Duration(seconds: 30),
+      );
+
+      if (video != null) {
+        state = RecordingCompleted(
+          filePath: video.path,
+          duration: const Duration(seconds: 30), // will be trimmed in editor
+        );
+      }
+    } catch (e) {
+      state = RecordingError(message: 'Failed to pick video: $e');
+    }
+  }
+
+  /// Sets the edited file path after editing is complete.
+  void setEditedFile(String editedPath, Duration duration) {
+    state = RecordingCompleted(
+      filePath: editedPath,
+      duration: duration,
+      editedFilePath: editedPath,
+    );
   }
 
   // ---------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { successResponse, paginatedResponse } from '../../shared/types/api-response';
 import * as coinService from './coin.service';
+import * as dailyRewardService from './daily-reward.service';
 
 /**
  * GET /coins/balance
@@ -82,6 +83,46 @@ export async function getTransactionHistory(
 
     res.status(200).json(
       paginatedResponse(result, 'Transaction history retrieved'),
+    );
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * POST /coins/daily-reward
+ */
+export async function claimDailyReward(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const userId = req.user!.id;
+    const result = await dailyRewardService.claimDailyReward(userId);
+
+    res.status(200).json(
+      successResponse(result, result.claimed ? 'Daily reward claimed' : 'Daily reward already claimed'),
+    );
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * GET /coins/daily-reward/status
+ */
+export async function getDailyRewardStatus(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const userId = req.user!.id;
+    const result = await dailyRewardService.getDailyRewardStatus(userId);
+
+    res.status(200).json(
+      successResponse(result, 'Daily reward status retrieved'),
     );
   } catch (err) {
     next(err);

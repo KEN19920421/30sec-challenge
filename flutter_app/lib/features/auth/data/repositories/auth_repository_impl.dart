@@ -19,56 +19,6 @@ class AuthRepositoryImpl implements AuthRepository {
         _local = local;
 
   @override
-  Future<(User, AuthTokens)> register({
-    required String email,
-    required String password,
-    required String username,
-    required String displayName,
-  }) async {
-    final response = await _remote.register(
-      email: email,
-      password: password,
-      username: username,
-      displayName: displayName,
-    );
-
-    final tokens = AuthTokens(
-      accessToken: response.accessToken,
-      refreshToken: response.refreshToken,
-      expiresIn: response.expiresIn,
-    );
-
-    // Persist tokens and user locally.
-    await _local.saveTokens(tokens);
-    if (response.user != null) {
-      await _local.saveUser(response.user!);
-    }
-
-    return (response.user! as User, tokens);
-  }
-
-  @override
-  Future<(User, AuthTokens)> login({
-    required String email,
-    required String password,
-  }) async {
-    final response = await _remote.login(email: email, password: password);
-
-    final tokens = AuthTokens(
-      accessToken: response.accessToken,
-      refreshToken: response.refreshToken,
-      expiresIn: response.expiresIn,
-    );
-
-    await _local.saveTokens(tokens);
-    if (response.user != null) {
-      await _local.saveUser(response.user!);
-    }
-
-    return (response.user! as User, tokens);
-  }
-
-  @override
   Future<(User, AuthTokens)> socialLogin({
     required String provider,
     required String idToken,
@@ -128,7 +78,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> forgotPassword(String email) {
-    return _remote.forgotPassword(email);
+  Future<void> deleteAccount() async {
+    await _remote.deleteAccount();
+    await _local.clearAll();
   }
 }

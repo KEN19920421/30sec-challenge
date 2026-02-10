@@ -51,7 +51,8 @@ type CoinTransactionType =
   | 'reward'
   | 'achievement'
   | 'refund'
-  | 'admin_adjustment';
+  | 'admin_adjustment'
+  | 'boost_spent';
 
 // ---------------------------------------------------------------------------
 // Constants

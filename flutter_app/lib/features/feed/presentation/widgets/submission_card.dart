@@ -11,6 +11,7 @@ class SubmissionCard extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onUserTap;
   final VoidCallback? onGiftTap;
+  final VoidCallback? onBoostTap;
 
   const SubmissionCard({
     super.key,
@@ -18,6 +19,7 @@ class SubmissionCard extends StatelessWidget {
     this.onTap,
     this.onUserTap,
     this.onGiftTap,
+    this.onBoostTap,
   });
 
   @override
@@ -73,6 +75,39 @@ class SubmissionCard extends StatelessWidget {
                       size: 56,
                     ),
                   ),
+
+                  // Boost badge
+                  if (submission.isBoosted)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: GestureDetector(
+                        onTap: onBoostTap,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: AppColors.accent.withValues(alpha: 0.9),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.bolt, color: Colors.white, size: 14),
+                              SizedBox(width: 2),
+                              Text(
+                                'Boosted',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
 
                   // Duration badge
                   if (submission.videoDuration != null)

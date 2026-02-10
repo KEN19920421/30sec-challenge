@@ -12,44 +12,6 @@ class AuthRemoteDataSource {
 
   const AuthRemoteDataSource(this._client);
 
-  /// POST /auth/register
-  Future<AuthResponseModel> register({
-    required String email,
-    required String password,
-    required String username,
-    required String displayName,
-  }) async {
-    final response = await _client.post(
-      ApiConstants.register,
-      data: {
-        'email': email,
-        'password': password,
-        'username': username,
-        'display_name': displayName,
-      },
-    );
-    return AuthResponseModel.fromJson(
-      response.data as Map<String, dynamic>,
-    );
-  }
-
-  /// POST /auth/login
-  Future<AuthResponseModel> login({
-    required String email,
-    required String password,
-  }) async {
-    final response = await _client.post(
-      ApiConstants.login,
-      data: {
-        'email': email,
-        'password': password,
-      },
-    );
-    return AuthResponseModel.fromJson(
-      response.data as Map<String, dynamic>,
-    );
-  }
-
   /// POST /auth/social
   Future<AuthResponseModel> socialLogin({
     required String provider,
@@ -97,11 +59,8 @@ class AuthRemoteDataSource {
     await _client.post(ApiConstants.logout);
   }
 
-  /// POST /auth/forgot-password
-  Future<void> forgotPassword(String email) async {
-    await _client.post(
-      ApiConstants.forgotPassword,
-      data: {'email': email},
-    );
+  /// DELETE /users/account
+  Future<void> deleteAccount() async {
+    await _client.delete(ApiConstants.deleteAccount);
   }
 }

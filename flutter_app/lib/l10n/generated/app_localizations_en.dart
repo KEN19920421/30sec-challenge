@@ -18,75 +18,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get register => 'Sign Up';
 
   @override
-  String get email => 'Email';
-
-  @override
-  String get password => 'Password';
-
-  @override
   String get username => 'Username';
 
   @override
   String get displayName => 'Display Name';
 
   @override
-  String get forgotPassword => 'Forgot Password?';
-
-  @override
-  String get orContinueWith => 'or continue with';
-
-  @override
-  String get dontHaveAccount => 'Don\'t have an account? ';
-
-  @override
-  String get alreadyHaveAccount => 'Already have an account? ';
-
-  @override
-  String get welcomeBack => 'Welcome Back';
-
-  @override
   String get signInToContinue => 'Sign in to continue';
-
-  @override
-  String get emailPlaceholder => 'you@example.com';
-
-  @override
-  String get emailRequired => 'Email is required';
-
-  @override
-  String get enterValidEmail => 'Enter a valid email';
-
-  @override
-  String get passwordRequired => 'Password is required';
-
-  @override
-  String passwordMinLength(int length) {
-    return 'Password must be at least $length characters';
-  }
 
   @override
   String get continueWithGoogle => 'Continue with Google';
 
   @override
   String get continueWithApple => 'Continue with Apple';
-
-  @override
-  String get createAccount => 'Create Account';
-
-  @override
-  String get joinApp => 'Join the community';
-
-  @override
-  String get displayNamePlaceholder => 'John Doe';
-
-  @override
-  String get usernamePlaceholder => 'johndoe';
-
-  @override
-  String get usernameHelperText => 'Letters, numbers and underscores only';
-
-  @override
-  String get confirmPassword => 'Confirm Password';
 
   @override
   String get displayNameRequired => 'Display name is required';
@@ -113,45 +57,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get usernameInvalidChars => 'Only letters, numbers, and underscores';
 
   @override
-  String get confirmPasswordRequired => 'Please confirm your password';
-
-  @override
-  String get passwordsDoNotMatch => 'Passwords do not match';
-
-  @override
   String minCharacters(int count) {
     return 'Must be at least $count characters';
   }
 
   @override
   String get usernameNotAvailable => 'Username is not available';
-
-  @override
-  String get resetPassword => 'Reset Password';
-
-  @override
-  String get forgotPasswordHeading => 'Forgot your password?';
-
-  @override
-  String get forgotPasswordDescription =>
-      'Enter the email address associated with your account and we\'ll send you a link to reset your password.';
-
-  @override
-  String get sendResetLink => 'Send Reset Link';
-
-  @override
-  String get checkYourEmail => 'Check your email';
-
-  @override
-  String resetEmailSentMessage(String email) {
-    return 'We\'ve sent a password reset link to\n$email';
-  }
-
-  @override
-  String get backToLogin => 'Back to Log In';
-
-  @override
-  String get resetEmailError => 'Failed to send reset email. Please try again.';
 
   @override
   String get onboardingTitle1 => 'Daily Challenges';
@@ -615,9 +526,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountSection => 'Account';
 
   @override
-  String get changePassword => 'Change Password';
-
-  @override
   String get subscriptionSection => 'Subscription';
 
   @override
@@ -669,21 +577,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String appVersion(String version) {
     return 'Version $version';
   }
-
-  @override
-  String get currentPassword => 'Current Password';
-
-  @override
-  String get newPassword => 'New Password';
-
-  @override
-  String get confirmNewPassword => 'Confirm New Password';
-
-  @override
-  String get update => 'Update';
-
-  @override
-  String get passwordUpdated => 'Password updated!';
 
   @override
   String get deleteAccountWarning =>
@@ -758,4 +651,87 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get comeBackLater => 'Come back later for more.';
+
+  @override
+  String get firstBoostFree => 'First Boost Free!';
+
+  @override
+  String get firstBoostFreeDesc =>
+      'Try your first Small boost for free — no Sparks needed!';
+
+  @override
+  String get freeTrialLabel => 'FREE';
+
+  @override
+  String get dailyRewardTitle => 'Daily Login Bonus';
+
+  @override
+  String get dailyRewardDesc => 'Welcome back! Here are your daily Sparks.';
+
+  @override
+  String get claimReward => 'Claim Reward';
+
+  @override
+  String get dailyBonusClaimed => 'Claimed today!';
+
+  @override
+  String get dailyBonusAvailable => '+3 Sparks available';
+
+  @override
+  String get earnFreeSparks => 'Earn Free Sparks';
+
+  @override
+  String get watchAdForSparks => 'Watch Ad for Sparks';
+
+  @override
+  String get watchAdForSparksDesc =>
+      'Watch a short video to earn 10 free Sparks!';
+
+  @override
+  String get watchAdEarn10Sparks => 'Watch Ad & Earn 10 Sparks';
+
+  @override
+  String adsRemaining(int count) {
+    return '$count ads remaining today';
+  }
+
+  @override
+  String get dailyAdLimitReached => 'Daily ad limit reached';
+
+  @override
+  String get boostSubmission => 'Boost Submission';
+
+  @override
+  String get boostDescription =>
+      'Boost this submission to increase its visibility in the feed';
+
+  @override
+  String get boost => 'Boost';
+
+  @override
+  String get boostPurchased => 'Boost purchased!';
+
+  @override
+  String get boosted => 'Boosted';
+
+  @override
+  String get pickFromGallery => 'Gallery';
+
+  @override
+  String get editVideo => 'Edit Video';
+
+  @override
+  String get trimVideo => 'Trim';
+
+  @override
+  String get filters => 'Filters';
+
+  @override
+  String get addText => 'Text';
+
+  @override
+  String get exporting => 'Exporting...';
+
+  @override
+  String get exportFailed => 'Export failed';
 }

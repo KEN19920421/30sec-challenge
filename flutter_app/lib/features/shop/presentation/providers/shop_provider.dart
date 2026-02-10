@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../data/shop_repository.dart';
+import '../../domain/boost_tier.dart';
 import '../../domain/subscription_plan.dart';
 
 // =============================================================================
@@ -367,6 +368,177 @@ class GiftNotifier extends StateNotifier<GiftState> {
 }
 
 // =============================================================================
+// Boost State
+// =============================================================================
+
+enum BoostStatus { initial, loading, loaded, purchasing, error }
+
+class BoostState {
+  final BoostStatus status;
+  final List<BoostTier> tiers;
+  final String? errorMessage;
+
+  const BoostState({
+    this.status = BoostStatus.initial,
+    this.tiers = const [],
+    this.errorMessage,
+  });
+
+  bool get isLoading =>
+      status == BoostStatus.loading || status == BoostStatus.purchasing;
+
+  BoostState copyWith({
+    BoostStatus? status,
+    List<BoostTier>? tiers,
+    String? errorMessage,
+  }) {
+    return BoostState(
+      status: status ?? this.status,
+      tiers: tiers ?? this.tiers,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+}
+
+// =============================================================================
+// Boost Notifier
+// =============================================================================
+
+class BoostNotifier extends StateNotifier<BoostState> {
+  final ShopRepository _shopRepo;
+
+  BoostNotifier({required ShopRepository shopRepo})
+      : _shopRepo = shopRepo,
+        super(const BoostState());
+
+  /// Loads available boost tiers.
+  Future<void> loadTiers() async {
+    state = state.copyWith(status: BoostStatus.loading);
+    try {
+      final tiers = await _shopRepo.getBoostTiers();
+      state = state.copyWith(
+        status: BoostStatus.loaded,
+        tiers: tiers,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        status: BoostStatus.error,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+  /// Purchases a boost for a submission.
+  Future<bool> purchaseBoost({
+    required String submissionId,
+    required String tier,
+  }) async {
+    state = state.copyWith(status: BoostStatus.purchasing);
+    try {
+      await _shopRepo.purchaseBoost(
+        submissionId: submissionId,
+        tier: tier,
+      );
+      state = state.copyWith(status: BoostStatus.loaded);
+      return true;
+    } catch (e) {
+      state = state.copyWith(
+        status: BoostStatus.error,
+        errorMessage: e.toString(),
+      );
+      return false;
+    }
+  }
+}
+
+// =============================================================================
+// Daily Reward State
+// =============================================================================
+
+enum DailyRewardStatus { initial, loading, claimed, available, error }
+
+class DailyRewardState {
+  final DailyRewardStatus status;
+  final bool claimedToday;
+  final int amount;
+  final String? errorMessage;
+
+  const DailyRewardState({
+    this.status = DailyRewardStatus.initial,
+    this.claimedToday = false,
+    this.amount = 3,
+    this.errorMessage,
+  });
+
+  DailyRewardState copyWith({
+    DailyRewardStatus? status,
+    bool? claimedToday,
+    int? amount,
+    String? errorMessage,
+  }) {
+    return DailyRewardState(
+      status: status ?? this.status,
+      claimedToday: claimedToday ?? this.claimedToday,
+      amount: amount ?? this.amount,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+}
+
+// =============================================================================
+// Daily Reward Notifier
+// =============================================================================
+
+class DailyRewardNotifier extends StateNotifier<DailyRewardState> {
+  final ShopRepository _shopRepo;
+
+  DailyRewardNotifier({required ShopRepository shopRepo})
+      : _shopRepo = shopRepo,
+        super(const DailyRewardState());
+
+  /// Checks if the daily reward is available.
+  Future<void> checkStatus() async {
+    state = state.copyWith(status: DailyRewardStatus.loading);
+    try {
+      final data = await _shopRepo.getDailyRewardStatus();
+      final claimed = data['claimedToday'] as bool? ?? false;
+      final amount = data['amount'] as int? ?? 3;
+      state = state.copyWith(
+        status:
+            claimed ? DailyRewardStatus.claimed : DailyRewardStatus.available,
+        claimedToday: claimed,
+        amount: amount,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        status: DailyRewardStatus.error,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+  /// Claims the daily reward.
+  Future<bool> claimReward() async {
+    state = state.copyWith(status: DailyRewardStatus.loading);
+    try {
+      final data = await _shopRepo.claimDailyReward();
+      final claimed = data['claimed'] as bool? ?? false;
+      state = state.copyWith(
+        status: DailyRewardStatus.claimed,
+        claimedToday: true,
+      );
+      return claimed;
+    } catch (e) {
+      state = state.copyWith(
+        status: DailyRewardStatus.error,
+        errorMessage: e.toString(),
+      );
+      return false;
+    }
+  }
+}
+
+// =============================================================================
 // Riverpod Providers
 // =============================================================================
 
@@ -383,4 +555,14 @@ final coinProvider =
 final giftProvider =
     StateNotifierProvider<GiftNotifier, GiftState>((ref) {
   return GiftNotifier(shopRepo: ref.watch(shopRepositoryProvider));
+});
+
+final boostProvider =
+    StateNotifierProvider<BoostNotifier, BoostState>((ref) {
+  return BoostNotifier(shopRepo: ref.watch(shopRepositoryProvider));
+});
+
+final dailyRewardProvider =
+    StateNotifierProvider<DailyRewardNotifier, DailyRewardState>((ref) {
+  return DailyRewardNotifier(shopRepo: ref.watch(shopRepositoryProvider));
 });

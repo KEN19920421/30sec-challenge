@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../../../../core/constants/ad_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../l10n/l10n.dart';
@@ -66,8 +67,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
 
   void _loadBannerAd() {
     _bannerAd = BannerAd(
-      // Test ad unit ID. Replace in production.
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      adUnitId: AdConstants.bannerId,
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(

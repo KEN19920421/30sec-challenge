@@ -6,8 +6,6 @@ class RouteNames {
   // Auth
   // ---------------------------------------------------------------------------
   static const String login = 'login';
-  static const String register = 'register';
-  static const String forgotPassword = 'forgotPassword';
   static const String onboarding = 'onboarding';
 
   // ---------------------------------------------------------------------------
@@ -17,12 +15,14 @@ class RouteNames {
   static const String discover = 'discover';
   static const String record = 'record';
   static const String leaderboard = 'leaderboard';
+  static const String challengeLeaderboard = 'challengeLeaderboard';
   static const String profile = 'profile';
 
   // ---------------------------------------------------------------------------
   // Challenge
   // ---------------------------------------------------------------------------
   static const String challengeDetail = 'challengeDetail';
+  static const String videoEditor = 'videoEditor';
   static const String preview = 'preview';
   static const String voting = 'voting';
 

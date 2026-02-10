@@ -141,7 +141,9 @@ export async function getChallengeLeaderboard(
   const query = db('submissions as s')
     .join('users as u', 's.user_id', 'u.id')
     .where('s.challenge_id', challengeId)
-    .where('s.status', 'approved');
+    .where('s.moderation_status', 'approved')
+    .where('s.transcode_status', 'completed')
+    .whereNull('s.deleted_at');
 
   const dateFilter = periodStartDate(period);
   if (dateFilter) {
@@ -196,14 +198,18 @@ export async function getUserRank(
 ): Promise<UserRankResult> {
   // Find the user's submission for this challenge
   const submission = await db('submissions')
-    .where({ user_id: userId, challenge_id: challengeId, status: 'approved' })
+    .where({ user_id: userId, challenge_id: challengeId, moderation_status: 'approved' })
+    .where('transcode_status', 'completed')
+    .whereNull('deleted_at')
     .orderBy('wilson_score', 'desc')
     .first('id', 'wilson_score');
 
   if (!submission) {
     // User has no submission in this challenge
     const totalResult = await db('submissions')
-      .where({ challenge_id: challengeId, status: 'approved' })
+      .where({ challenge_id: challengeId, moderation_status: 'approved' })
+      .where('transcode_status', 'completed')
+      .whereNull('deleted_at')
       .count('id as count')
       .first();
 
@@ -234,7 +240,9 @@ export async function getUserRank(
 
   // Fallback: count how many submissions score higher
   const query = db('submissions')
-    .where({ challenge_id: challengeId, status: 'approved' })
+    .where({ challenge_id: challengeId, moderation_status: 'approved' })
+    .where('transcode_status', 'completed')
+    .whereNull('deleted_at')
     .where('wilson_score', '>', submission.wilson_score);
 
   const dateFilter = periodStartDate(period);
@@ -246,7 +254,9 @@ export async function getUserRank(
   const higherCount = parseInt(higherResult?.count as string ?? '0', 10);
 
   const totalResult = await db('submissions')
-    .where({ challenge_id: challengeId, status: 'approved' })
+    .where({ challenge_id: challengeId, moderation_status: 'approved' })
+    .where('transcode_status', 'completed')
+    .whereNull('deleted_at')
     .count('id as count')
     .first();
 
@@ -280,7 +290,9 @@ export async function getFriendsLeaderboard(
   const baseQuery = db('submissions as s')
     .join('users as u', 's.user_id', 'u.id')
     .where('s.challenge_id', challengeId)
-    .where('s.status', 'approved')
+    .where('s.moderation_status', 'approved')
+    .where('s.transcode_status', 'completed')
+    .whereNull('s.deleted_at')
     .whereIn('s.user_id', friendIds);
 
   const countResult = await baseQuery.clone().count('s.id as count').first();
@@ -333,7 +345,9 @@ export async function computeLeaderboard(challengeId: string): Promise<void> {
   const submissions = await db('submissions as s')
     .leftJoin('votes as v', 's.id', 'v.submission_id')
     .where('s.challenge_id', challengeId)
-    .where('s.status', 'approved')
+    .where('s.moderation_status', 'approved')
+    .where('s.transcode_status', 'completed')
+    .whereNull('s.deleted_at')
     .groupBy('s.id')
     .select(
       's.id',
@@ -424,7 +438,9 @@ export async function getTopCreators(
       // Get submission counts
       const countRows = await db('submissions')
         .whereIn('user_id', userIds)
-        .where('status', 'approved')
+        .where('moderation_status', 'approved')
+        .where('transcode_status', 'completed')
+        .whereNull('deleted_at')
         .groupBy('user_id')
         .select('user_id', db.raw('COUNT(*) as count'));
 
@@ -450,7 +466,9 @@ export async function getTopCreators(
   // Fallback to database
   const query = db('submissions as s')
     .join('users as u', 's.user_id', 'u.id')
-    .where('s.status', 'approved');
+    .where('s.moderation_status', 'approved')
+    .where('s.transcode_status', 'completed')
+    .whereNull('s.deleted_at');
 
   const dateFilter = periodStartDate(period);
   if (dateFilter) {

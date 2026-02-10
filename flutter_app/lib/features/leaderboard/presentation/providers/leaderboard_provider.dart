@@ -241,3 +241,78 @@ final leaderboardProvider = StateNotifierProvider.family<LeaderboardNotifier,
     );
   },
 );
+
+// ---------------------------------------------------------------------------
+// Top Creators
+// ---------------------------------------------------------------------------
+
+enum TopCreatorsStatus { initial, loading, loaded, error }
+
+class TopCreatorsState {
+  final TopCreatorsStatus status;
+  final List<TopCreator> creators;
+  final LeaderboardPeriod period;
+  final String? errorMessage;
+
+  const TopCreatorsState({
+    this.status = TopCreatorsStatus.initial,
+    this.creators = const [],
+    this.period = LeaderboardPeriod.weekly,
+    this.errorMessage,
+  });
+
+  TopCreatorsState copyWith({
+    TopCreatorsStatus? status,
+    List<TopCreator>? creators,
+    LeaderboardPeriod? period,
+    String? errorMessage,
+  }) {
+    return TopCreatorsState(
+      status: status ?? this.status,
+      creators: creators ?? this.creators,
+      period: period ?? this.period,
+      errorMessage: errorMessage,
+    );
+  }
+}
+
+class TopCreatorsNotifier extends StateNotifier<TopCreatorsState> {
+  final LeaderboardRepository _repository;
+
+  TopCreatorsNotifier({required LeaderboardRepository repository})
+      : _repository = repository,
+        super(const TopCreatorsState()) {
+    load();
+  }
+
+  Future<void> load() async {
+    state = state.copyWith(status: TopCreatorsStatus.loading, errorMessage: null);
+    try {
+      final creators = await _repository.getTopCreators(
+        period: state.period,
+        limit: 20,
+      );
+      state = state.copyWith(
+        status: TopCreatorsStatus.loaded,
+        creators: creators,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        status: TopCreatorsStatus.error,
+        errorMessage: e.toString().replaceAll('Exception: ', ''),
+      );
+    }
+  }
+
+  void changePeriod(LeaderboardPeriod period) {
+    if (state.period == period) return;
+    state = state.copyWith(period: period, creators: []);
+    load();
+  }
+}
+
+final topCreatorsProvider =
+    StateNotifierProvider<TopCreatorsNotifier, TopCreatorsState>((ref) {
+  final repository = ref.watch(leaderboardRepositoryProvider);
+  return TopCreatorsNotifier(repository: repository);
+});

@@ -27,6 +27,8 @@ import giftRoutes from './modules/gift/gift.routes';
 import adRoutes from './modules/ad/ad.routes';
 import adminRoutes from './modules/admin/admin.routes';
 import shareRoutes from './modules/share/share.routes';
+import feedRoutes from './modules/feed/feed.routes';
+import boostRoutes from './modules/boost/boost.routes';
 
 // ---------------------------------------------------------------------------
 // Create Express application
@@ -93,6 +95,8 @@ app.use(`${v1}/gifts`, giftRoutes);
 app.use(`${v1}/ads`, adRoutes);
 app.use(`${v1}/admin`, adminRoutes);
 app.use(`${v1}/share`, shareRoutes);
+app.use(`${v1}/feed`, feedRoutes);
+app.use(`${v1}/boosts`, boostRoutes);
 
 // ---------------------------------------------------------------------------
 // 404 handler -- must come after all route registrations

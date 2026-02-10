@@ -7,6 +7,11 @@ import rateLimit from 'express-rate-limit';
 const standardHeaders = true; // Return rate-limit info in `RateLimit-*` headers
 const legacyHeaders = false; // Disable the `X-RateLimit-*` headers
 
+/** Skip rate limiting entirely when RATE_LIMIT_DISABLED is set (E2E tests). */
+const skipAll = process.env.RATE_LIMIT_DISABLED === 'true'
+  ? () => true
+  : undefined;
+
 /**
  * Default rate limiter for general API endpoints.
  *
@@ -17,6 +22,7 @@ export const defaultLimiter = rateLimit({
   max: 100,
   standardHeaders,
   legacyHeaders,
+  skip: skipAll,
   message: {
     success: false,
     data: null,
@@ -35,6 +41,7 @@ export const authLimiter = rateLimit({
   max: 20,
   standardHeaders,
   legacyHeaders,
+  skip: skipAll,
   message: {
     success: false,
     data: null,
@@ -53,6 +60,7 @@ export const uploadLimiter = rateLimit({
   max: 10,
   standardHeaders,
   legacyHeaders,
+  skip: skipAll,
   message: {
     success: false,
     data: null,
@@ -71,6 +79,7 @@ export const voteLimiter = rateLimit({
   max: 300,
   standardHeaders,
   legacyHeaders,
+  skip: skipAll,
   message: {
     success: false,
     data: null,

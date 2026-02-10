@@ -2,6 +2,7 @@ import cron from 'node-cron';
 import { redis } from '../../config/redis';
 import { logger } from '../../config/logger';
 import { addJob } from '../queues';
+import { expireBoosts } from '../../modules/boost/boost.service';
 
 // ---------------------------------------------------------------------------
 // Distributed lock helper
@@ -98,7 +99,28 @@ export function startMaintenanceScheduler(): void {
     }),
   );
 
-  logger.info('Maintenance scheduler started (3 cron jobs)');
+  // -----------------------------------------------------------------------
+  // Every 5 minutes: expire stale boosts and recalculate scores
+  // -----------------------------------------------------------------------
+  tasks.push(
+    cron.schedule('*/5 * * * *', async () => {
+      const lockKey = 'lock:scheduler:expire_boosts';
+      if (!(await acquireLock(lockKey, 240))) return; // Lock for 4 minutes
+
+      try {
+        const cleaned = await expireBoosts();
+        if (cleaned > 0) {
+          logger.debug('Maintenance scheduler: expired boosts cleaned', { count: cleaned });
+        }
+      } catch (err) {
+        logger.error('Maintenance scheduler: failed to expire boosts', {
+          error: (err as Error).message,
+        });
+      }
+    }),
+  );
+
+  logger.info('Maintenance scheduler started (4 cron jobs)');
 }
 
 /**

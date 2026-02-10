@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -9,6 +8,8 @@ import '../../../../core/utils/extensions.dart';
 import '../../../../l10n/l10n.dart';
 import '../../domain/subscription_plan.dart';
 import '../providers/shop_provider.dart';
+import '../widgets/daily_reward_dialog.dart';
+import '../widgets/earn_sparks_ad_prompt.dart';
 
 /// Coin (Sparks) store screen with package grid and ad reward.
 class CoinStoreScreen extends ConsumerStatefulWidget {
@@ -19,43 +20,14 @@ class CoinStoreScreen extends ConsumerStatefulWidget {
 }
 
 class _CoinStoreScreenState extends ConsumerState<CoinStoreScreen> {
-  RewardedAd? _rewardedAd;
-
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => ref.read(coinProvider.notifier).load());
-    _loadRewardedAd();
+    Future.microtask(() {
+      ref.read(coinProvider.notifier).load();
+      ref.read(dailyRewardProvider.notifier).checkStatus();
+    });
   }
-
-  @override
-  void dispose() {
-    _rewardedAd?.dispose();
-    super.dispose();
-  }
-
-  void _loadRewardedAd() {
-    RewardedAd.load(
-      adUnitId: _rewardedAdUnitId,
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (ad) {
-          if (mounted) {
-            setState(() => _rewardedAd = ad);
-          }
-        },
-        onAdFailedToLoad: (_) {
-          if (mounted) {
-            setState(() => _rewardedAd = null);
-          }
-        },
-      ),
-    );
-  }
-
-  /// Test ad unit IDs. Replace with production IDs.
-  static const String _rewardedAdUnitId =
-      'ca-app-pub-3940256099942544/5224354917'; // Test ID
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +58,18 @@ class _CoinStoreScreenState extends ConsumerState<CoinStoreScreen> {
                   const SizedBox(height: 12),
                   _buildPackagesGrid(state),
 
+                  // Free Sparks section
+                  const SizedBox(height: 24),
+                  Text(
+                    context.l10n.earnFreeSparks,
+                    style: AppTextStyles.heading3,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildDailyBonusCard(isDark),
+                  const SizedBox(height: 8),
+
                   // Watch ad bonus (free users only)
                   if (isFreeUser) ...[
-                    const SizedBox(height: 24),
                     _buildAdRewardCard(isDark),
                   ],
 
@@ -165,9 +146,76 @@ class _CoinStoreScreenState extends ConsumerState<CoinStoreScreen> {
     );
   }
 
+  Widget _buildDailyBonusCard(bool isDark) {
+    final dailyState = ref.watch(dailyRewardProvider);
+    final isClaimed = dailyState.claimedToday;
+
+    return GestureDetector(
+      onTap: isClaimed
+          ? null
+          : () async {
+              await DailyRewardDialog.show(context);
+            },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: AppColors.success.withValues(alpha: 0.5),
+            width: 1.5,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: AppColors.success.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.calendar_today_rounded,
+                  color: AppColors.success, size: 24),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.l10n.dailyRewardTitle,
+                    style: AppTextStyles.bodyMediumBold,
+                  ),
+                  Text(
+                    isClaimed
+                        ? context.l10n.dailyBonusClaimed
+                        : context.l10n.dailyBonusAvailable,
+                    style: AppTextStyles.caption.copyWith(
+                      color: isClaimed ? AppColors.success : AppColors.accent,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              isClaimed ? Icons.check_circle : Icons.chevron_right,
+              color: isClaimed ? AppColors.success : AppColors.lightDisabled,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildAdRewardCard(bool isDark) {
     return GestureDetector(
-      onTap: _rewardedAd != null ? _showRewardedAd : null,
+      onTap: () async {
+        final earned = await EarnSparksAdPrompt.show(context);
+        if (earned && mounted) {
+          ref.read(coinProvider.notifier).refreshBalance();
+        }
+      },
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -196,11 +244,11 @@ class _CoinStoreScreenState extends ConsumerState<CoinStoreScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Watch Ad for Bonus Sparks',
+                    context.l10n.watchAdForSparks,
                     style: AppTextStyles.bodyMediumBold,
                   ),
                   Text(
-                    'Earn 5 free Sparks!',
+                    context.l10n.watchAdForSparksDesc,
                     style: AppTextStyles.caption.copyWith(
                       color: AppColors.accent,
                     ),
@@ -208,28 +256,14 @@ class _CoinStoreScreenState extends ConsumerState<CoinStoreScreen> {
                 ],
               ),
             ),
-            Icon(
+            const Icon(
               Icons.chevron_right,
-              color: _rewardedAd != null
-                  ? AppColors.accent
-                  : AppColors.lightDisabled,
+              color: AppColors.accent,
             ),
           ],
         ),
       ),
     );
-  }
-
-  void _showRewardedAd() {
-    _rewardedAd?.show(onUserEarnedReward: (ad, reward) {
-      // Grant bonus coins.
-      ref.read(coinProvider.notifier).refreshBalance();
-      if (mounted) {
-        context.showSuccessSnackBar('You earned 5 bonus Sparks!');
-      }
-    });
-    _rewardedAd = null;
-    _loadRewardedAd();
   }
 
   Future<void> _purchasePackage(CoinPackage package) async {

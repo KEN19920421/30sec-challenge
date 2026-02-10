@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -87,6 +88,24 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     context.pop();
   }
 
+  Future<void> _onPickFromGallery() async {
+    final picker = ImagePicker();
+    final video = await picker.pickVideo(
+      source: ImageSource.gallery,
+      maxDuration: const Duration(seconds: 30),
+    );
+
+    if (video != null && mounted) {
+      context.push(
+        '/record/edit',
+        extra: {
+          'challengeId': widget.challengeId,
+          'filePath': video.path,
+        },
+      );
+    }
+  }
+
   Future<void> _onRecordPressed() async {
     final notifier =
         ref.read(recordingProvider(widget.challengeId).notifier);
@@ -123,17 +142,17 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     final state = ref.watch(recordingProvider(widget.challengeId));
     final challenge = ref.watch(currentChallengeProvider);
 
-    // Navigate to preview when recording is completed.
+    // Navigate to editor when recording is completed.
     ref.listen<RecordingState>(
       recordingProvider(widget.challengeId),
       (previous, next) {
         if (next is RecordingCompleted) {
           context.push(
-            '/record/preview',
+            '/record/edit',
             extra: {
               'challengeId': widget.challengeId,
               'filePath': next.filePath,
-              'duration': next.duration.inMilliseconds,
+              'durationMs': next.duration.inMilliseconds,
             },
           );
         }
@@ -291,12 +310,48 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
 
             const SizedBox(height: 12),
 
-            // Helper text.
-            Text(
-              isRecording ? 'Tap to stop' : 'Tap to record',
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.white.withValues(alpha: 0.7),
-              ),
+            // Helper text + gallery button row.
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Gallery button (only when not recording)
+                if (!isRecording)
+                  GestureDetector(
+                    onTap: _onPickFromGallery,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: AppColors.white.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.photo_library_outlined,
+                            color: AppColors.white.withValues(alpha: 0.9),
+                            size: 18,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            context.l10n.pickFromGallery,
+                            style: AppTextStyles.caption.copyWith(
+                              color: AppColors.white.withValues(alpha: 0.9),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  Text(
+                    'Tap to stop',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.white.withValues(alpha: 0.7),
+                    ),
+                  ),
+              ],
             ),
           ],
         ),

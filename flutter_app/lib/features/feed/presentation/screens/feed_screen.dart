@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../../../../core/constants/ad_constants.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -317,9 +318,7 @@ class _NativeAdCardState extends State<_NativeAdCard> {
     super.dispose();
   }
 
-  /// Test ad unit IDs. Replace with production IDs.
-  static const String _adUnitId =
-      'ca-app-pub-3940256099942544/2247696110'; // Test ID
+  static String get _adUnitId => AdConstants.nativeId;
 
   @override
   Widget build(BuildContext context) {

@@ -5,50 +5,33 @@
 
   "login": "ログイン",
   "register": "新規登録",
-  "email": "メールアドレス",
-  "password": "パスワード",
   "username": "ユーザー名",
   "displayName": "表示名",
-  "forgotPassword": "パスワードをお忘れですか？",
-  "orContinueWith": "または以下で続ける",
-  "dontHaveAccount": "アカウントをお持ちでないですか？ ",
-  "alreadyHaveAccount": "すでにアカウントをお持ちですか？ ",
 
-  "welcomeBack": "おかえりなさい",
   "signInToContinue": "ログインして続ける",
-  "emailPlaceholder": "you@example.com",
-  "emailRequired": "メールアドレスを入力してください",
-  "enterValidEmail": "有効なメールアドレスを入力してください",
-  "passwordRequired": "パスワードを入力してください",
-  "passwordMinLength": "パスワードは{length}文字以上必要です",
   "continueWithGoogle": "Googleで続ける",
   "continueWithApple": "Appleで続ける",
 
-  "createAccount": "アカウント作成",
-  "joinApp": "コミュニティに参加",
-  "displayNamePlaceholder": "山田 太郎",
-  "usernamePlaceholder": "taro_yamada",
-  "usernameHelperText": "英数字とアンダースコアのみ",
-  "confirmPassword": "パスワード確認",
   "displayNameRequired": "表示名を入力してください",
   "displayNameMaxLength": "最大{length}文字",
+  "@displayNameMaxLength": {
+    "placeholders": { "length": { "type": "int" } }
+  },
   "usernameRequired": "ユーザー名を入力してください",
   "usernameMinLength": "{length}文字以上",
+  "@usernameMinLength": {
+    "placeholders": { "length": { "type": "int" } }
+  },
   "usernameMaxLength": "最大{length}文字",
+  "@usernameMaxLength": {
+    "placeholders": { "length": { "type": "int" } }
+  },
   "usernameInvalidChars": "英数字とアンダースコアのみ使用可能",
-  "confirmPasswordRequired": "パスワードを再入力してください",
-  "passwordsDoNotMatch": "パスワードが一致しません",
   "minCharacters": "{count}文字以上必要です",
+  "@minCharacters": {
+    "placeholders": { "count": { "type": "int" } }
+  },
   "usernameNotAvailable": "このユーザー名は使用できません",
-
-  "resetPassword": "パスワードリセット",
-  "forgotPasswordHeading": "パスワードをお忘れですか？",
-  "forgotPasswordDescription": "アカウントに登録されたメールアドレスを入力してください。パスワードリセット用のリンクをお送りします。",
-  "sendResetLink": "リセットリンクを送信",
-  "checkYourEmail": "メールをご確認ください",
-  "resetEmailSentMessage": "パスワードリセット用のリンクを\n{email} に送信しました",
-  "backToLogin": "ログインに戻る",
-  "resetEmailError": "リセットメールの送信に失敗しました。もう一度お試しください。",
 
   "onboardingTitle1": "毎日のチャレンジ",
   "onboardingDesc1": "毎日新しいクリエイティブなお題が登場。30秒であなただけの作品を世界に見せよう。",
@@ -68,6 +51,9 @@
   "seeAll": "すべて見る",
   "live": "LIVE",
   "entriesCount": "{count}件のエントリー",
+  "@entriesCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
   "recordYourEntry": "エントリーを撮影",
   "viewResults": "結果を見る",
   "results": "結果",
@@ -125,6 +111,9 @@
 
   "recording": "録画中...",
   "minimumRecordingDuration": "{seconds}秒以上録画してください",
+  "@minimumRecordingDuration": {
+    "placeholders": { "seconds": { "type": "int" } }
+  },
   "close": "閉じる",
   "preview": "プレビュー",
   "captionPlaceholder": "キャプションを追加...",
@@ -142,6 +131,9 @@
   "unlockPotential": "あなたの可能性を最大限に",
   "proMember": "Proメンバーです！",
   "renewsOn": "{date}に更新",
+  "@renewsOn": {
+    "placeholders": { "date": { "type": "String" } }
+  },
   "proBenefits": "Proの特典",
   "choosePlan": "プランを選択",
   "restorePurchases": "購入を復元",
@@ -174,6 +166,9 @@
   "premiumTab": "プレミアム",
   "giftMessageHint": "メッセージを追加（任意）",
   "sendGiftButton": "{name}を送る ({cost} スパーク)",
+  "@sendGiftButton": {
+    "placeholders": { "name": { "type": "String" }, "cost": { "type": "int" } }
+  },
   "getMoreSparks": "スパークを追加購入",
   "gifts": "ギフト",
   "shop": "ショップ",
@@ -210,7 +205,6 @@
   "userBlocked": "ユーザーをブロックしました。",
 
   "accountSection": "アカウント",
-  "changePassword": "パスワード変更",
   "subscriptionSection": "サブスクリプション",
   "currentPlan": "現在のプラン",
   "pro": "PRO",
@@ -228,11 +222,9 @@
   "termsOfService": "利用規約",
   "privacyPolicy": "プライバシーポリシー",
   "appVersion": "バージョン {version}",
-  "currentPassword": "現在のパスワード",
-  "newPassword": "新しいパスワード",
-  "confirmNewPassword": "新しいパスワード（確認）",
-  "update": "更新",
-  "passwordUpdated": "パスワードが更新されました！",
+  "@appVersion": {
+    "placeholders": { "version": { "type": "String" } }
+  },
   "deleteAccountWarning": "この操作は元に戻せません。すべてのデータ、投稿、コイン残高が失われます。",
   "selectLanguage": "言語を選択",
   "selectTheme": "テーマを選択",
@@ -255,7 +247,47 @@
   "upgradeToUnlock": "Proにアップグレードして解除",
 
   "challengeEndsIn": "チャレンジ終了まで {time}",
+  "@challengeEndsIn": {
+    "placeholders": { "time": { "type": "String" } }
+  },
   "votesRemaining": "残り {count} 票",
+  "@votesRemaining": {
+    "placeholders": { "count": { "type": "int" } }
+  },
   "noMoreEntries": "すべてのエントリーに投票しました！",
-  "comeBackLater": "後でまた来てください。"
+  "comeBackLater": "後でまた来てください。",
+
+  "firstBoostFree": "初回ブースト無料！",
+  "firstBoostFreeDesc": "初めてのSmallブーストを無料で体験 — スパーク不要！",
+  "freeTrialLabel": "無料",
+
+  "dailyRewardTitle": "デイリーログインボーナス",
+  "dailyRewardDesc": "おかえりなさい！毎日のスパークをどうぞ。",
+  "claimReward": "受け取る",
+  "dailyBonusClaimed": "本日受取済み",
+  "dailyBonusAvailable": "+3 スパークを受け取れます",
+
+  "earnFreeSparks": "無料でスパークを獲得",
+  "watchAdForSparks": "広告を見てスパークを獲得",
+  "watchAdForSparksDesc": "短い動画を見て10スパークを無料で獲得！",
+  "watchAdEarn10Sparks": "広告を見て10スパーク獲得",
+  "adsRemaining": "本日残り{count}回",
+  "@adsRemaining": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "dailyAdLimitReached": "本日の広告上限に達しました",
+
+  "boostSubmission": "投稿をブースト",
+  "boostDescription": "この投稿をブーストしてフィードでの表示を増やしましょう",
+  "boost": "ブースト",
+  "boostPurchased": "ブーストを購入しました！",
+  "boosted": "ブースト中",
+
+  "pickFromGallery": "ギャラリー",
+  "editVideo": "動画を編集",
+  "trimVideo": "トリミング",
+  "filters": "フィルター",
+  "addText": "テキスト",
+  "exporting": "エクスポート中...",
+  "exportFailed": "エクスポートに失敗しました"
 }

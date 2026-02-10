@@ -45,6 +45,21 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Google Sign-In: reversed client ID URL scheme -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.312153915766-fcg511u99gv26jtc8d1d20b0t8un69un</string>
+			</array>
+		</dict>
+	</array>
+	<!-- TODO: Replace with your production AdMob App ID from https://admob.google.com/ -->
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-3940256099942544~1458002511</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs camera access to record 30-second challenge videos.</string>
 	<key>NSMicrophoneUsageDescription</key>

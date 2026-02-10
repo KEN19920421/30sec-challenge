@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../../../../core/constants/ad_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 
@@ -67,8 +68,7 @@ class _RewardedAdPromptState extends State<RewardedAdPrompt> {
     });
 
     RewardedAd.load(
-      // Use test ad unit ID. Replace with real ID in production.
-      adUnitId: 'ca-app-pub-3940256099942544/5224354917',
+      adUnitId: AdConstants.rewardedId,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../../../../core/constants/ad_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../l10n/l10n.dart';
@@ -58,8 +59,7 @@ class _VotingScreenState extends ConsumerState<VotingScreen> {
   void _loadNativeAd() {
     _nativeAd?.dispose();
     _nativeAd = NativeAd(
-      // Test ad unit ID. Replace in production.
-      adUnitId: 'ca-app-pub-3940256099942544/2247696110',
+      adUnitId: AdConstants.nativeId,
       request: const AdRequest(),
       listener: NativeAdListener(
         onAdLoaded: (ad) {

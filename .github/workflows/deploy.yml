@@ -1,0 +1,195 @@
+# =============================================================================
+# 30sec Challenge Backend -- CI/CD Pipeline
+# =============================================================================
+# Triggers on push to main branch.
+# 1. Runs the test suite
+# 2. Builds the Docker image
+# 3. Pushes to GitHub Container Registry (ghcr.io)
+# 4. Deploys to production server via SSH
+#
+# Required GitHub Secrets:
+#   DEPLOY_HOST     - Production server hostname or IP
+#   DEPLOY_USER     - SSH username on production server
+#   DEPLOY_SSH_KEY  - Private SSH key for authentication
+# =============================================================================
+
+name: Deploy Backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/backend
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Job 1: Test
+  # ---------------------------------------------------------------------------
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: app_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: video_challenge_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U app_user -d video_challenge_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run migrations
+        env:
+          DATABASE_URL: postgres://app_user:test_password@localhost:5432/video_challenge_test
+          NODE_ENV: test
+        run: npm run migrate
+
+      - name: Run tests
+        env:
+          DATABASE_URL: postgres://app_user:test_password@localhost:5432/video_challenge_test
+          REDIS_URL: redis://localhost:6379
+          NODE_ENV: test
+          JWT_SECRET: ci-test-jwt-secret-not-for-production
+          JWT_REFRESH_SECRET: ci-test-jwt-refresh-secret-not-for-production
+        run: npm test
+
+  # ---------------------------------------------------------------------------
+  # Job 2: Build and Push Docker Image
+  # ---------------------------------------------------------------------------
+  build:
+    name: Build & Push Image
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: read
+      packages: write
+
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tags }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: backend
+          file: backend/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ---------------------------------------------------------------------------
+  # Job 3: Deploy to Production
+  # ---------------------------------------------------------------------------
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://api.yourdomain.com/api/health
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            set -euo pipefail
+
+            echo "--- Pulling latest code ---"
+            cd /opt/30sec-challenge
+            git pull origin main
+
+            echo "--- Rebuilding containers ---"
+            cd backend
+            docker compose -f docker-compose.prod.yml up -d --build
+
+            echo "--- Running database migrations ---"
+            docker exec vc_app node -e "
+              const knex = require('knex');
+              const db = knex({ client: 'pg', connection: process.env.DATABASE_URL });
+              db.migrate.latest({ directory: '/app/migrations' })
+                .then(([b, log]) => { console.log('Migrated batch', b, log); return db.destroy(); })
+                .catch(e => { console.error(e); process.exit(1); });
+            "
+
+            echo "--- Waiting for health check ---"
+            for i in $(seq 1 30); do
+              if curl -sf http://localhost:3000/api/health > /dev/null 2>&1; then
+                echo "Health check passed on attempt $i"
+                exit 0
+              fi
+              echo "Attempt $i/30 -- waiting 2s..."
+              sleep 2
+            done
+
+            echo "ERROR: Health check failed after 30 attempts"
+            docker logs vc_app --tail 30
+            exit 1

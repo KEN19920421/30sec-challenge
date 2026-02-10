@@ -92,7 +92,7 @@ class PaginatedResponse<T> {
       total: meta['total'] as int? ?? 0,
       page: meta['page'] as int? ?? 1,
       limit: meta['limit'] as int? ?? 20,
-      totalPages: meta['totalPages'] as int? ?? 1,
+      totalPages: (meta['total_pages'] ?? meta['totalPages']) as int? ?? 1,
     );
   }
 }

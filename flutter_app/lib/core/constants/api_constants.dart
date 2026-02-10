@@ -16,8 +16,6 @@ class ApiConstants {
   static const String resetPassword = '/auth/reset-password';
   static const String verifyEmail = '/auth/verify-email';
   static const String socialLogin = '/auth/social';
-  static const String googleSignIn = '/auth/google';
-  static const String appleSignIn = '/auth/apple';
   static const String me = '/auth/me';
 
   // ---------------------------------------------------------------------------
@@ -26,6 +24,8 @@ class ApiConstants {
   static const String currentUser = '/users/me';
   static const String updateProfile = '/users/me';
   static const String uploadAvatar = '/users/me/avatar';
+  static const String changePassword = '/users/change-password';
+  static const String deleteAccount = '/users/account';
   static String userProfile(String userId) => '/users/$userId';
   static String userVideos(String userId) => '/users/$userId/videos';
   static String userStats(String userId) => '/users/$userId/stats';

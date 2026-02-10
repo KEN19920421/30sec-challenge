@@ -7,3 +7,23 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.*.local
+!.env.example
+
+# Signing keys
+*.jks
+*.keystore
+key.properties
+
+# Firebase Admin SDK
+firebase-adminsdk*.json
+
+# Playwright automation
+scripts/_cf-profile/
+scripts/_gcp-profile/
+scripts/_screenshots/

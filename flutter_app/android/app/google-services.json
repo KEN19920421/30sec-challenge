@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_number": "312153915766",
+    "project_id": "sec-challenge-34060",
+    "storage_bucket": "sec-challenge-34060.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:312153915766:android:b552953eb347864af9ba57",
+        "android_client_info": {
+          "package_name": "com.thirtysecchallenge.thirty_sec_challenge"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "312153915766-8hckqo65khcmj84sihem8niucavngpb8.apps.googleusercontent.com",
+          "client_type": 1
+        },
+        {
+          "client_id": "312153915766-q2a7fpf65q9rj01ffip5oitav2hk5ato.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDafjOXup8ib6aRGGibIVjj3sr59CgAhgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "312153915766-q2a7fpf65q9rj01ffip5oitav2hk5ato.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

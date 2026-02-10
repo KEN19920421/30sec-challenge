@@ -25,6 +25,7 @@ class Submission {
   final int? rank;
   final int totalViews;
   final int giftCoinsReceived;
+  final double boostScore;
   final DateTime createdAt;
 
   // User info for display (denormalized for convenience).
@@ -49,6 +50,7 @@ class Submission {
     this.rank,
     this.totalViews = 0,
     this.giftCoinsReceived = 0,
+    this.boostScore = 0.0,
     required this.createdAt,
     this.username,
     this.displayName,
@@ -68,6 +70,9 @@ class Submission {
   /// Whether the submission is publicly visible.
   bool get isVisible => isReady && isApproved;
 
+  /// Whether this submission is currently boosted.
+  bool get isBoosted => boostScore > 0;
+
   /// Total weighted votes including super votes (each super vote counts as 3).
   int get weightedVoteCount => voteCount + (superVoteCount * 3);
 
@@ -84,27 +89,28 @@ class Submission {
 
     return Submission(
       id: json['id'] as String,
-      userId: json['userId'] as String,
-      challengeId: json['challengeId'] as String,
+      userId: (json['user_id'] ?? json['userId']) as String,
+      challengeId: (json['challenge_id'] ?? json['challengeId']) as String,
       caption: json['caption'] as String?,
-      videoUrl: json['videoUrl'] as String?,
-      thumbnailUrl: json['thumbnailUrl'] as String?,
-      hlsUrl: json['hlsUrl'] as String?,
-      videoDuration: (json['videoDuration'] as num?)?.toDouble(),
-      transcodeStatus: json['transcodeStatus'] as String? ?? 'pending',
-      moderationStatus: json['moderationStatus'] as String? ?? 'pending',
-      voteCount: json['voteCount'] as int? ?? 0,
-      superVoteCount: json['superVoteCount'] as int? ?? 0,
-      wilsonScore: (json['wilsonScore'] as num?)?.toDouble() ?? 0.0,
+      videoUrl: (json['video_url'] ?? json['videoUrl']) as String?,
+      thumbnailUrl: (json['thumbnail_url'] ?? json['thumbnailUrl']) as String?,
+      hlsUrl: (json['hls_url'] ?? json['hlsUrl']) as String?,
+      videoDuration: ((json['video_duration'] ?? json['videoDuration']) as num?)?.toDouble(),
+      transcodeStatus: (json['transcode_status'] ?? json['transcodeStatus']) as String? ?? 'pending',
+      moderationStatus: (json['moderation_status'] ?? json['moderationStatus']) as String? ?? 'pending',
+      voteCount: (json['vote_count'] ?? json['voteCount']) as int? ?? 0,
+      superVoteCount: (json['super_vote_count'] ?? json['superVoteCount']) as int? ?? 0,
+      wilsonScore: ((json['wilson_score'] ?? json['wilsonScore']) as num?)?.toDouble() ?? 0.0,
       rank: json['rank'] as int?,
-      totalViews: json['totalViews'] as int? ?? 0,
-      giftCoinsReceived: json['giftCoinsReceived'] as int? ?? 0,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      totalViews: (json['total_views'] ?? json['totalViews']) as int? ?? 0,
+      giftCoinsReceived: (json['gift_coins_received'] ?? json['giftCoinsReceived']) as int? ?? 0,
+      boostScore: ((json['boost_score'] ?? json['boostScore']) as num?)?.toDouble() ?? 0.0,
+      createdAt: DateTime.parse((json['created_at'] ?? json['createdAt']) as String),
       username: user?['username'] as String? ?? json['username'] as String?,
       displayName:
-          user?['displayName'] as String? ?? json['displayName'] as String?,
+          user?['display_name'] as String? ?? user?['displayName'] as String? ?? json['display_name'] as String? ?? json['displayName'] as String?,
       avatarUrl:
-          user?['avatarUrl'] as String? ?? json['avatarUrl'] as String?,
+          user?['avatar_url'] as String? ?? user?['avatarUrl'] as String? ?? json['avatar_url'] as String? ?? json['avatarUrl'] as String?,
     );
   }
 
@@ -126,6 +132,7 @@ class Submission {
       'rank': rank,
       'totalViews': totalViews,
       'giftCoinsReceived': giftCoinsReceived,
+      'boostScore': boostScore,
       'createdAt': createdAt.toIso8601String(),
       'username': username,
       'displayName': displayName,
@@ -150,6 +157,7 @@ class Submission {
     int? rank,
     int? totalViews,
     int? giftCoinsReceived,
+    double? boostScore,
     DateTime? createdAt,
     String? username,
     String? displayName,
@@ -172,6 +180,7 @@ class Submission {
       rank: rank ?? this.rank,
       totalViews: totalViews ?? this.totalViews,
       giftCoinsReceived: giftCoinsReceived ?? this.giftCoinsReceived,
+      boostScore: boostScore ?? this.boostScore,
       createdAt: createdAt ?? this.createdAt,
       username: username ?? this.username,
       displayName: displayName ?? this.displayName,

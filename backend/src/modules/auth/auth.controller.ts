@@ -3,53 +3,6 @@ import { successResponse } from '../../shared/types/api-response';
 import * as authService from './auth.service';
 
 /**
- * POST /auth/register
- */
-export async function register(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> {
-  try {
-    const { email, password, username, display_name } = req.body;
-
-    const result = await authService.register({
-      email,
-      password,
-      username,
-      display_name,
-    });
-
-    res.status(201).json(
-      successResponse(result, 'Registration successful'),
-    );
-  } catch (err) {
-    next(err);
-  }
-}
-
-/**
- * POST /auth/login
- */
-export async function login(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> {
-  try {
-    const { email, password } = req.body;
-
-    const result = await authService.login(email, password);
-
-    res.status(200).json(
-      successResponse(result, 'Login successful'),
-    );
-  } catch (err) {
-    next(err);
-  }
-}
-
-/**
  * POST /auth/social
  */
 export async function socialLogin(
@@ -92,49 +45,6 @@ export async function refreshToken(
 }
 
 /**
- * POST /auth/forgot-password
- */
-export async function forgotPassword(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> {
-  try {
-    const { email } = req.body;
-
-    await authService.forgotPassword(email);
-
-    // Always return 200 to avoid leaking whether the email exists.
-    res.status(200).json(
-      successResponse(null, 'If the email exists, a reset link has been sent'),
-    );
-  } catch (err) {
-    next(err);
-  }
-}
-
-/**
- * POST /auth/reset-password
- */
-export async function resetPassword(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> {
-  try {
-    const { token, password } = req.body;
-
-    await authService.resetPassword(token, password);
-
-    res.status(200).json(
-      successResponse(null, 'Password has been reset successfully'),
-    );
-  } catch (err) {
-    next(err);
-  }
-}
-
-/**
  * GET /auth/me
  */
 export async function getMe(
@@ -153,17 +63,17 @@ export async function getMe(
 
 /**
  * POST /auth/logout
- *
- * Placeholder -- in a full implementation this would blacklist the refresh
- * token (e.g., add it to a Redis deny-list) so it can no longer be used.
  */
 export async function logout(
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> {
   try {
-    // TODO: Invalidate the refresh token (add to Redis blacklist)
+    const { refresh_token } = req.body;
+    if (refresh_token) {
+      await authService.logout(refresh_token);
+    }
     res.status(200).json(
       successResponse(null, 'Logged out successfully'),
     );

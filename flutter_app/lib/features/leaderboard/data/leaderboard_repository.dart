@@ -91,6 +91,37 @@ class LeaderboardRepository {
   // Friends Leaderboard
   // ---------------------------------------------------------------------------
 
+  // ---------------------------------------------------------------------------
+  // Top Creators
+  // ---------------------------------------------------------------------------
+
+  /// Fetches the top creators ranked by aggregate Wilson Scores.
+  Future<List<TopCreator>> getTopCreators({
+    LeaderboardPeriod period = LeaderboardPeriod.weekly,
+    int limit = 20,
+  }) async {
+    final response = await _apiClient.get<Map<String, dynamic>>(
+      '/api/v1/leaderboards/top-creators',
+      queryParameters: {
+        'period': period.value,
+        'limit': limit,
+      },
+    );
+
+    final apiResponse = ApiResponse<List<TopCreator>>.fromJson(
+      response.data!,
+      (data) => (data as List<dynamic>)
+          .map((item) => TopCreator.fromJson(item as Map<String, dynamic>))
+          .toList(),
+    );
+
+    return apiResponse.data ?? [];
+  }
+
+  // ---------------------------------------------------------------------------
+  // Friends Leaderboard
+  // ---------------------------------------------------------------------------
+
   /// Fetches a paginated leaderboard filtered to just the user's friends.
   ///
   /// Same response shape as [getLeaderboard] but only includes entries from

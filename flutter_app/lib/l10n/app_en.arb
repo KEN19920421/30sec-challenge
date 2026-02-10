@@ -5,34 +5,13 @@
 
   "login": "Log In",
   "register": "Sign Up",
-  "email": "Email",
-  "password": "Password",
   "username": "Username",
   "displayName": "Display Name",
-  "forgotPassword": "Forgot Password?",
-  "orContinueWith": "or continue with",
-  "dontHaveAccount": "Don't have an account? ",
-  "alreadyHaveAccount": "Already have an account? ",
 
-  "welcomeBack": "Welcome Back",
   "signInToContinue": "Sign in to continue",
-  "emailPlaceholder": "you@example.com",
-  "emailRequired": "Email is required",
-  "enterValidEmail": "Enter a valid email",
-  "passwordRequired": "Password is required",
-  "passwordMinLength": "Password must be at least {length} characters",
-  "@passwordMinLength": {
-    "placeholders": { "length": { "type": "int" } }
-  },
   "continueWithGoogle": "Continue with Google",
   "continueWithApple": "Continue with Apple",
 
-  "createAccount": "Create Account",
-  "joinApp": "Join the community",
-  "displayNamePlaceholder": "John Doe",
-  "usernamePlaceholder": "johndoe",
-  "usernameHelperText": "Letters, numbers and underscores only",
-  "confirmPassword": "Confirm Password",
   "displayNameRequired": "Display name is required",
   "displayNameMaxLength": "Max {length} characters",
   "@displayNameMaxLength": {
@@ -48,25 +27,11 @@
     "placeholders": { "length": { "type": "int" } }
   },
   "usernameInvalidChars": "Only letters, numbers, and underscores",
-  "confirmPasswordRequired": "Please confirm your password",
-  "passwordsDoNotMatch": "Passwords do not match",
   "minCharacters": "Must be at least {count} characters",
   "@minCharacters": {
     "placeholders": { "count": { "type": "int" } }
   },
   "usernameNotAvailable": "Username is not available",
-
-  "resetPassword": "Reset Password",
-  "forgotPasswordHeading": "Forgot your password?",
-  "forgotPasswordDescription": "Enter the email address associated with your account and we'll send you a link to reset your password.",
-  "sendResetLink": "Send Reset Link",
-  "checkYourEmail": "Check your email",
-  "resetEmailSentMessage": "We've sent a password reset link to\n{email}",
-  "@resetEmailSentMessage": {
-    "placeholders": { "email": { "type": "String" } }
-  },
-  "backToLogin": "Back to Log In",
-  "resetEmailError": "Failed to send reset email. Please try again.",
 
   "onboardingTitle1": "Daily Challenges",
   "onboardingDesc1": "Every day brings a new creative challenge. Show the world your unique take in just 30 seconds.",
@@ -240,7 +205,6 @@
   "userBlocked": "User blocked.",
 
   "accountSection": "Account",
-  "changePassword": "Change Password",
   "subscriptionSection": "Subscription",
   "currentPlan": "Current Plan",
   "pro": "PRO",
@@ -261,11 +225,6 @@
   "@appVersion": {
     "placeholders": { "version": { "type": "String" } }
   },
-  "currentPassword": "Current Password",
-  "newPassword": "New Password",
-  "confirmNewPassword": "Confirm New Password",
-  "update": "Update",
-  "passwordUpdated": "Password updated!",
   "deleteAccountWarning": "This action is permanent and cannot be undone. All your data, submissions, and coin balance will be lost.",
   "selectLanguage": "Select Language",
   "selectTheme": "Select Theme",
@@ -296,5 +255,39 @@
     "placeholders": { "count": { "type": "int" } }
   },
   "noMoreEntries": "You've voted on all entries!",
-  "comeBackLater": "Come back later for more."
+  "comeBackLater": "Come back later for more.",
+
+  "firstBoostFree": "First Boost Free!",
+  "firstBoostFreeDesc": "Try your first Small boost for free — no Sparks needed!",
+  "freeTrialLabel": "FREE",
+
+  "dailyRewardTitle": "Daily Login Bonus",
+  "dailyRewardDesc": "Welcome back! Here are your daily Sparks.",
+  "claimReward": "Claim Reward",
+  "dailyBonusClaimed": "Claimed today!",
+  "dailyBonusAvailable": "+3 Sparks available",
+
+  "earnFreeSparks": "Earn Free Sparks",
+  "watchAdForSparks": "Watch Ad for Sparks",
+  "watchAdForSparksDesc": "Watch a short video to earn 10 free Sparks!",
+  "watchAdEarn10Sparks": "Watch Ad & Earn 10 Sparks",
+  "adsRemaining": "{count} ads remaining today",
+  "@adsRemaining": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "dailyAdLimitReached": "Daily ad limit reached",
+
+  "boostSubmission": "Boost Submission",
+  "boostDescription": "Boost this submission to increase its visibility in the feed",
+  "boost": "Boost",
+  "boostPurchased": "Boost purchased!",
+  "boosted": "Boosted",
+
+  "pickFromGallery": "Gallery",
+  "editVideo": "Edit Video",
+  "trimVideo": "Trim",
+  "filters": "Filters",
+  "addText": "Text",
+  "exporting": "Exporting...",
+  "exportFailed": "Export failed"
 }

@@ -1,13 +1,10 @@
-import crypto from 'crypto';
 import { db } from '../../config/database';
 import { redis } from '../../config/redis';
 import { logger } from '../../config/logger';
 import {
   AuthenticationError,
   NotFoundError,
-  ValidationError,
 } from '../../shared/errors';
-import { hashPassword, comparePassword } from './password.service';
 import { generateTokenPair, verifyRefreshToken } from './token.service';
 import type { TokenPair } from './token.service';
 import { verifyGoogleToken } from './google.strategy';
@@ -55,12 +52,45 @@ export interface AuthResult {
 // Constants
 // ---------------------------------------------------------------------------
 
-const PASSWORD_RESET_TTL_SECONDS = 60 * 60; // 1 hour
-const PASSWORD_RESET_PREFIX = 'password_reset:';
+const TOKEN_BLACKLIST_PREFIX = 'token_blacklist:';
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+/**
+ * Parses a duration string (e.g. '7d', '24h', '30m', '120s') into seconds.
+ * Falls back to 7 days (604800) if the format is unrecognised.
+ */
+function parseDurationToSeconds(duration: string): number {
+  const match = duration.match(/^(\d+)([smhd])$/);
+  if (!match) return 604800; // default 7 days
+  const value = parseInt(match[1], 10);
+  switch (match[2]) {
+    case 's': return value;
+    case 'm': return value * 60;
+    case 'h': return value * 3600;
+    case 'd': return value * 86400;
+    default: return 604800;
+  }
+}
+
+/**
+ * Adds a refresh token to the Redis blacklist with a TTL matching the maximum
+ * refresh token lifetime so that entries automatically expire.
+ */
+async function blacklistToken(token: string): Promise<void> {
+  const ttl = parseDurationToSeconds(process.env.JWT_REFRESH_EXPIRES_IN || '7d');
+  await redis.set(`${TOKEN_BLACKLIST_PREFIX}${token}`, '1', 'EX', ttl);
+}
+
+/**
+ * Checks whether a refresh token has been blacklisted.
+ */
+async function isTokenBlacklisted(token: string): Promise<boolean> {
+  const result = await redis.get(`${TOKEN_BLACKLIST_PREFIX}${token}`);
+  return result !== null;
+}
 
 /**
  * Strips `password_hash` from a user row so it never leaks to clients.
@@ -97,95 +127,6 @@ const SAFE_USER_COLUMNS = USER_COLUMNS.filter(
 // ---------------------------------------------------------------------------
 // Service methods
 // ---------------------------------------------------------------------------
-
-/**
- * Registers a new user with email and password.
- */
-export async function register(data: {
-  email: string;
-  password: string;
-  username: string;
-  display_name: string;
-}): Promise<AuthResult> {
-  // Check for existing email
-  const existingEmail = await db('users')
-    .where('email', data.email)
-    .first('id');
-
-  if (existingEmail) {
-    throw new ValidationError('Validation failed', [
-      { field: 'email', message: 'Email is already registered' },
-    ]);
-  }
-
-  // Check for existing username
-  const existingUsername = await db('users')
-    .where('username', data.username)
-    .first('id');
-
-  if (existingUsername) {
-    throw new ValidationError('Validation failed', [
-      { field: 'username', message: 'Username is already taken' },
-    ]);
-  }
-
-  const hashedPassword = await hashPassword(data.password);
-
-  const [user] = await db('users')
-    .insert({
-      email: data.email,
-      username: data.username,
-      display_name: data.display_name,
-      password_hash: hashedPassword,
-      role: 'user',
-      subscription_tier: 'free',
-    })
-    .returning(USER_COLUMNS as unknown as string[]);
-
-  logger.info('User registered', { userId: user.id, email: user.email });
-
-  const tokens = generateTokenPair({
-    id: user.id,
-    email: user.email,
-    role: user.role,
-    subscription_tier: user.subscription_tier,
-  });
-
-  return { user: sanitizeUser(user), tokens };
-}
-
-/**
- * Authenticates a user by email and password.
- */
-export async function login(
-  email: string,
-  password: string,
-): Promise<AuthResult> {
-  const user: UserRow | undefined = await db('users')
-    .where('email', email)
-    .first(USER_COLUMNS as unknown as string[]);
-
-  if (!user || !user.password_hash) {
-    throw new AuthenticationError('Invalid email or password');
-  }
-
-  const isValid = await comparePassword(password, user.password_hash);
-
-  if (!isValid) {
-    throw new AuthenticationError('Invalid email or password');
-  }
-
-  logger.info('User logged in', { userId: user.id, email: user.email });
-
-  const tokens = generateTokenPair({
-    id: user.id,
-    email: user.email,
-    role: user.role,
-    subscription_tier: user.subscription_tier,
-  });
-
-  return { user: sanitizeUser(user), tokens };
-}
 
 /**
  * Authenticates or registers a user via a third-party social provider.
@@ -237,8 +178,8 @@ export async function socialLogin(
 
   // Step 3b -- no existing link; create user + auth provider in a transaction
   const result = await db.transaction(async (trx) => {
-    // Check if a user with this email already exists (maybe registered via
-    // email/password) and link the provider to that account.
+    // Check if a user with this email already exists and link the provider
+    // to that account.
     let user: UserRow | undefined = await trx('users')
       .where('email', profile.email)
       .first(USER_COLUMNS as unknown as string[]);
@@ -308,6 +249,10 @@ export async function socialLogin(
 export async function refreshToken(
   token: string,
 ): Promise<TokenPair> {
+  if (await isTokenBlacklisted(token)) {
+    throw new AuthenticationError('Token has been revoked');
+  }
+
   const payload = verifyRefreshToken(token);
 
   const user: UserRow | undefined = await db('users')
@@ -329,76 +274,11 @@ export async function refreshToken(
 }
 
 /**
- * Generates a password reset token, stores it in Redis with a 1-hour TTL,
- * and returns a success message.
- *
- * In production you would dispatch an email with the reset link here.
+ * Blacklists the provided refresh token so it can no longer be used.
  */
-export async function forgotPassword(email: string): Promise<void> {
-  const user = await db('users').where('email', email).first('id', 'email');
-
-  // Always return success to avoid leaking whether an email exists.
-  if (!user) {
-    logger.warn('Password reset requested for unknown email', { email });
-    return;
-  }
-
-  const resetToken = crypto.randomBytes(32).toString('hex');
-  const hashedToken = crypto
-    .createHash('sha256')
-    .update(resetToken)
-    .digest('hex');
-
-  await redis.set(
-    `${PASSWORD_RESET_PREFIX}${hashedToken}`,
-    user.id,
-    'EX',
-    PASSWORD_RESET_TTL_SECONDS,
-  );
-
-  // TODO: Send email with reset link containing `resetToken`
-  logger.info('Password reset token generated', {
-    userId: user.id,
-    // In production, NEVER log the actual token. This is here only as a
-    // development convenience; remove before deploying.
-    ...(process.env.NODE_ENV === 'development' && { resetToken }),
-  });
-}
-
-/**
- * Resets the user password given a valid reset token.
- */
-export async function resetPassword(
-  token: string,
-  newPassword: string,
-): Promise<void> {
-  const hashedToken = crypto
-    .createHash('sha256')
-    .update(token)
-    .digest('hex');
-
-  const userId = await redis.get(`${PASSWORD_RESET_PREFIX}${hashedToken}`);
-
-  if (!userId) {
-    throw new AuthenticationError(
-      'Password reset token is invalid or has expired',
-    );
-  }
-
-  const hashedPassword = await hashPassword(newPassword);
-
-  const updated = await db('users')
-    .where('id', userId)
-    .update({ password_hash: hashedPassword, updated_at: db.fn.now() });
-
-  if (!updated) {
-    throw new NotFoundError('User', userId);
-  }
-
-  // Invalidate the token so it cannot be reused
-  await redis.del(`${PASSWORD_RESET_PREFIX}${hashedToken}`);
-
-  logger.info('Password reset completed', { userId });
+export async function logout(refreshToken: string): Promise<void> {
+  await blacklistToken(refreshToken);
+  logger.info('Refresh token blacklisted on logout');
 }
 
 /**

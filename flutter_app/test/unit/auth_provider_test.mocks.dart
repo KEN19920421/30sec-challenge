@@ -7,23 +7,19 @@ import 'dart:async' as _i5;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:thirty_sec_challenge/features/auth/data/datasources/auth_local_datasource.dart'
-    as _i10;
+    as _i8;
 import 'package:thirty_sec_challenge/features/auth/data/models/user_model.dart'
-    as _i11;
+    as _i9;
 import 'package:thirty_sec_challenge/features/auth/domain/entities/auth_tokens.dart'
     as _i3;
 import 'package:thirty_sec_challenge/features/auth/domain/entities/user.dart'
     as _i2;
 import 'package:thirty_sec_challenge/features/auth/domain/repositories/auth_repository.dart'
     as _i4;
-import 'package:thirty_sec_challenge/features/auth/domain/usecases/login_usecase.dart'
-    as _i6;
 import 'package:thirty_sec_challenge/features/auth/domain/usecases/logout_usecase.dart'
-    as _i9;
-import 'package:thirty_sec_challenge/features/auth/domain/usecases/register_usecase.dart'
     as _i7;
 import 'package:thirty_sec_challenge/features/auth/domain/usecases/social_login_usecase.dart'
-    as _i8;
+    as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -66,94 +62,6 @@ class MockAuthRepository extends _i1.Mock implements _i4.AuthRepository {
   MockAuthRepository() {
     _i1.throwOnMissingStub(this);
   }
-
-  @override
-  _i5.Future<(_i2.User, _i3.AuthTokens)> register({
-    required String? email,
-    required String? password,
-    required String? username,
-    required String? displayName,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #register,
-          [],
-          {
-            #email: email,
-            #password: password,
-            #username: username,
-            #displayName: displayName,
-          },
-        ),
-        returnValue: _i5.Future<(_i2.User, _i3.AuthTokens)>.value((
-          _FakeUser_0(
-            this,
-            Invocation.method(
-              #register,
-              [],
-              {
-                #email: email,
-                #password: password,
-                #username: username,
-                #displayName: displayName,
-              },
-            ),
-          ),
-          _FakeAuthTokens_1(
-            this,
-            Invocation.method(
-              #register,
-              [],
-              {
-                #email: email,
-                #password: password,
-                #username: username,
-                #displayName: displayName,
-              },
-            ),
-          )
-        )),
-      ) as _i5.Future<(_i2.User, _i3.AuthTokens)>);
-
-  @override
-  _i5.Future<(_i2.User, _i3.AuthTokens)> login({
-    required String? email,
-    required String? password,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #login,
-          [],
-          {
-            #email: email,
-            #password: password,
-          },
-        ),
-        returnValue: _i5.Future<(_i2.User, _i3.AuthTokens)>.value((
-          _FakeUser_0(
-            this,
-            Invocation.method(
-              #login,
-              [],
-              {
-                #email: email,
-                #password: password,
-              },
-            ),
-          ),
-          _FakeAuthTokens_1(
-            this,
-            Invocation.method(
-              #login,
-              [],
-              {
-                #email: email,
-                #password: password,
-              },
-            ),
-          )
-        )),
-      ) as _i5.Future<(_i2.User, _i3.AuthTokens)>);
 
   @override
   _i5.Future<(_i2.User, _i3.AuthTokens)> socialLogin({
@@ -237,127 +145,21 @@ class MockAuthRepository extends _i1.Mock implements _i4.AuthRepository {
       ) as _i5.Future<void>);
 
   @override
-  _i5.Future<void> forgotPassword(String? email) => (super.noSuchMethod(
+  _i5.Future<void> deleteAccount() => (super.noSuchMethod(
         Invocation.method(
-          #forgotPassword,
-          [email],
+          #deleteAccount,
+          [],
         ),
         returnValue: _i5.Future<void>.value(),
         returnValueForMissingStub: _i5.Future<void>.value(),
       ) as _i5.Future<void>);
 }
 
-/// A class which mocks [LoginUseCase].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockLoginUseCase extends _i1.Mock implements _i6.LoginUseCase {
-  MockLoginUseCase() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i5.Future<(_i2.User, _i3.AuthTokens)> call({
-    required String? email,
-    required String? password,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #call,
-          [],
-          {
-            #email: email,
-            #password: password,
-          },
-        ),
-        returnValue: _i5.Future<(_i2.User, _i3.AuthTokens)>.value((
-          _FakeUser_0(
-            this,
-            Invocation.method(
-              #call,
-              [],
-              {
-                #email: email,
-                #password: password,
-              },
-            ),
-          ),
-          _FakeAuthTokens_1(
-            this,
-            Invocation.method(
-              #call,
-              [],
-              {
-                #email: email,
-                #password: password,
-              },
-            ),
-          )
-        )),
-      ) as _i5.Future<(_i2.User, _i3.AuthTokens)>);
-}
-
-/// A class which mocks [RegisterUseCase].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockRegisterUseCase extends _i1.Mock implements _i7.RegisterUseCase {
-  MockRegisterUseCase() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i5.Future<(_i2.User, _i3.AuthTokens)> call({
-    required String? email,
-    required String? password,
-    required String? username,
-    required String? displayName,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #call,
-          [],
-          {
-            #email: email,
-            #password: password,
-            #username: username,
-            #displayName: displayName,
-          },
-        ),
-        returnValue: _i5.Future<(_i2.User, _i3.AuthTokens)>.value((
-          _FakeUser_0(
-            this,
-            Invocation.method(
-              #call,
-              [],
-              {
-                #email: email,
-                #password: password,
-                #username: username,
-                #displayName: displayName,
-              },
-            ),
-          ),
-          _FakeAuthTokens_1(
-            this,
-            Invocation.method(
-              #call,
-              [],
-              {
-                #email: email,
-                #password: password,
-                #username: username,
-                #displayName: displayName,
-              },
-            ),
-          )
-        )),
-      ) as _i5.Future<(_i2.User, _i3.AuthTokens)>);
-}
-
 /// A class which mocks [SocialLoginUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSocialLoginUseCase extends _i1.Mock
-    implements _i8.SocialLoginUseCase {
+    implements _i6.SocialLoginUseCase {
   MockSocialLoginUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -406,7 +208,7 @@ class MockSocialLoginUseCase extends _i1.Mock
 /// A class which mocks [LogoutUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLogoutUseCase extends _i1.Mock implements _i9.LogoutUseCase {
+class MockLogoutUseCase extends _i1.Mock implements _i7.LogoutUseCase {
   MockLogoutUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -426,7 +228,7 @@ class MockLogoutUseCase extends _i1.Mock implements _i9.LogoutUseCase {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthLocalDataSource extends _i1.Mock
-    implements _i10.AuthLocalDataSource {
+    implements _i8.AuthLocalDataSource {
   MockAuthLocalDataSource() {
     _i1.throwOnMissingStub(this);
   }
@@ -470,7 +272,7 @@ class MockAuthLocalDataSource extends _i1.Mock
       ) as _i5.Future<bool>);
 
   @override
-  _i5.Future<void> saveUser(_i11.UserModel? user) => (super.noSuchMethod(
+  _i5.Future<void> saveUser(_i9.UserModel? user) => (super.noSuchMethod(
         Invocation.method(
           #saveUser,
           [user],

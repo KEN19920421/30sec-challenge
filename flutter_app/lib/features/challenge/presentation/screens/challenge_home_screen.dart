@@ -10,6 +10,8 @@ import '../providers/challenge_provider.dart';
 import '../widgets/challenge_card.dart';
 import '../widgets/challenge_countdown.dart';
 import '../widgets/sponsor_badge.dart';
+import '../../../shop/presentation/providers/shop_provider.dart';
+import '../../../shop/presentation/widgets/daily_reward_dialog.dart';
 
 /// Main home screen showing today's active challenge.
 ///
@@ -17,11 +19,38 @@ import '../widgets/sponsor_badge.dart';
 /// badge, difficulty indicator, and a countdown timer. Below the hero is a
 /// "Record Now" CTA button, submission count badge, and scrollable upcoming
 /// challenges preview.
-class ChallengeHomeScreen extends ConsumerWidget {
+class ChallengeHomeScreen extends ConsumerStatefulWidget {
   const ChallengeHomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ChallengeHomeScreen> createState() =>
+      _ChallengeHomeScreenState();
+}
+
+class _ChallengeHomeScreenState extends ConsumerState<ChallengeHomeScreen> {
+  bool _dailyRewardChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(_checkDailyReward);
+  }
+
+  Future<void> _checkDailyReward() async {
+    if (_dailyRewardChecked) return;
+    _dailyRewardChecked = true;
+
+    // Only check for logged-in users
+    final notifier = ref.read(dailyRewardProvider.notifier);
+    await notifier.checkStatus();
+    final state = ref.read(dailyRewardProvider);
+    if (state.status == DailyRewardStatus.available && mounted) {
+      DailyRewardDialog.show(context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(challengeNotifierProvider);
     final theme = Theme.of(context);
 

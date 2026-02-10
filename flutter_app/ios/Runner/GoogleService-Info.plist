@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyB4GdzqOKnWruZViJ_2p01psrneXP6Zbuc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>312153915766</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.thirtysecchallenge.thirtySecChallenge</string>
+	<key>PROJECT_ID</key>
+	<string>sec-challenge-34060</string>
+	<key>STORAGE_BUCKET</key>
+	<string>sec-challenge-34060.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>CLIENT_ID</key>
+	<string>312153915766-fcg511u99gv26jtc8d1d20b0t8un69un.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.312153915766-fcg511u99gv26jtc8d1d20b0t8un69un</string>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:312153915766:ios:81304beb43aab625f9ba57</string>
+</dict>
+</plist>

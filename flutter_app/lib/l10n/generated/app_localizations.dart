@@ -116,18 +116,6 @@ abstract class AppLocalizations {
   /// **'Sign Up'**
   String get register;
 
-  /// No description provided for @email.
-  ///
-  /// In en, this message translates to:
-  /// **'Email'**
-  String get email;
-
-  /// No description provided for @password.
-  ///
-  /// In en, this message translates to:
-  /// **'Password'**
-  String get password;
-
   /// No description provided for @username.
   ///
   /// In en, this message translates to:
@@ -140,71 +128,11 @@ abstract class AppLocalizations {
   /// **'Display Name'**
   String get displayName;
 
-  /// No description provided for @forgotPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Forgot Password?'**
-  String get forgotPassword;
-
-  /// No description provided for @orContinueWith.
-  ///
-  /// In en, this message translates to:
-  /// **'or continue with'**
-  String get orContinueWith;
-
-  /// No description provided for @dontHaveAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Don\'t have an account? '**
-  String get dontHaveAccount;
-
-  /// No description provided for @alreadyHaveAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Already have an account? '**
-  String get alreadyHaveAccount;
-
-  /// No description provided for @welcomeBack.
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome Back'**
-  String get welcomeBack;
-
   /// No description provided for @signInToContinue.
   ///
   /// In en, this message translates to:
   /// **'Sign in to continue'**
   String get signInToContinue;
-
-  /// No description provided for @emailPlaceholder.
-  ///
-  /// In en, this message translates to:
-  /// **'you@example.com'**
-  String get emailPlaceholder;
-
-  /// No description provided for @emailRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Email is required'**
-  String get emailRequired;
-
-  /// No description provided for @enterValidEmail.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter a valid email'**
-  String get enterValidEmail;
-
-  /// No description provided for @passwordRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Password is required'**
-  String get passwordRequired;
-
-  /// No description provided for @passwordMinLength.
-  ///
-  /// In en, this message translates to:
-  /// **'Password must be at least {length} characters'**
-  String passwordMinLength(int length);
 
   /// No description provided for @continueWithGoogle.
   ///
@@ -217,42 +145,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue with Apple'**
   String get continueWithApple;
-
-  /// No description provided for @createAccount.
-  ///
-  /// In en, this message translates to:
-  /// **'Create Account'**
-  String get createAccount;
-
-  /// No description provided for @joinApp.
-  ///
-  /// In en, this message translates to:
-  /// **'Join the community'**
-  String get joinApp;
-
-  /// No description provided for @displayNamePlaceholder.
-  ///
-  /// In en, this message translates to:
-  /// **'John Doe'**
-  String get displayNamePlaceholder;
-
-  /// No description provided for @usernamePlaceholder.
-  ///
-  /// In en, this message translates to:
-  /// **'johndoe'**
-  String get usernamePlaceholder;
-
-  /// No description provided for @usernameHelperText.
-  ///
-  /// In en, this message translates to:
-  /// **'Letters, numbers and underscores only'**
-  String get usernameHelperText;
-
-  /// No description provided for @confirmPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm Password'**
-  String get confirmPassword;
 
   /// No description provided for @displayNameRequired.
   ///
@@ -290,18 +182,6 @@ abstract class AppLocalizations {
   /// **'Only letters, numbers, and underscores'**
   String get usernameInvalidChars;
 
-  /// No description provided for @confirmPasswordRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Please confirm your password'**
-  String get confirmPasswordRequired;
-
-  /// No description provided for @passwordsDoNotMatch.
-  ///
-  /// In en, this message translates to:
-  /// **'Passwords do not match'**
-  String get passwordsDoNotMatch;
-
   /// No description provided for @minCharacters.
   ///
   /// In en, this message translates to:
@@ -313,54 +193,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Username is not available'**
   String get usernameNotAvailable;
-
-  /// No description provided for @resetPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Reset Password'**
-  String get resetPassword;
-
-  /// No description provided for @forgotPasswordHeading.
-  ///
-  /// In en, this message translates to:
-  /// **'Forgot your password?'**
-  String get forgotPasswordHeading;
-
-  /// No description provided for @forgotPasswordDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter the email address associated with your account and we\'ll send you a link to reset your password.'**
-  String get forgotPasswordDescription;
-
-  /// No description provided for @sendResetLink.
-  ///
-  /// In en, this message translates to:
-  /// **'Send Reset Link'**
-  String get sendResetLink;
-
-  /// No description provided for @checkYourEmail.
-  ///
-  /// In en, this message translates to:
-  /// **'Check your email'**
-  String get checkYourEmail;
-
-  /// No description provided for @resetEmailSentMessage.
-  ///
-  /// In en, this message translates to:
-  /// **'We\'ve sent a password reset link to\n{email}'**
-  String resetEmailSentMessage(String email);
-
-  /// No description provided for @backToLogin.
-  ///
-  /// In en, this message translates to:
-  /// **'Back to Log In'**
-  String get backToLogin;
-
-  /// No description provided for @resetEmailError.
-  ///
-  /// In en, this message translates to:
-  /// **'Failed to send reset email. Please try again.'**
-  String get resetEmailError;
 
   /// No description provided for @onboardingTitle1.
   ///
@@ -1256,12 +1088,6 @@ abstract class AppLocalizations {
   /// **'Account'**
   String get accountSection;
 
-  /// No description provided for @changePassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Change Password'**
-  String get changePassword;
-
   /// No description provided for @subscriptionSection.
   ///
   /// In en, this message translates to:
@@ -1363,36 +1189,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Version {version}'**
   String appVersion(String version);
-
-  /// No description provided for @currentPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Current Password'**
-  String get currentPassword;
-
-  /// No description provided for @newPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'New Password'**
-  String get newPassword;
-
-  /// No description provided for @confirmNewPassword.
-  ///
-  /// In en, this message translates to:
-  /// **'Confirm New Password'**
-  String get confirmNewPassword;
-
-  /// No description provided for @update.
-  ///
-  /// In en, this message translates to:
-  /// **'Update'**
-  String get update;
-
-  /// No description provided for @passwordUpdated.
-  ///
-  /// In en, this message translates to:
-  /// **'Password updated!'**
-  String get passwordUpdated;
 
   /// No description provided for @deleteAccountWarning.
   ///
@@ -1531,6 +1327,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Come back later for more.'**
   String get comeBackLater;
+
+  /// No description provided for @firstBoostFree.
+  ///
+  /// In en, this message translates to:
+  /// **'First Boost Free!'**
+  String get firstBoostFree;
+
+  /// No description provided for @firstBoostFreeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Try your first Small boost for free — no Sparks needed!'**
+  String get firstBoostFreeDesc;
+
+  /// No description provided for @freeTrialLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'FREE'**
+  String get freeTrialLabel;
+
+  /// No description provided for @dailyRewardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Login Bonus'**
+  String get dailyRewardTitle;
+
+  /// No description provided for @dailyRewardDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back! Here are your daily Sparks.'**
+  String get dailyRewardDesc;
+
+  /// No description provided for @claimReward.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim Reward'**
+  String get claimReward;
+
+  /// No description provided for @dailyBonusClaimed.
+  ///
+  /// In en, this message translates to:
+  /// **'Claimed today!'**
+  String get dailyBonusClaimed;
+
+  /// No description provided for @dailyBonusAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'+3 Sparks available'**
+  String get dailyBonusAvailable;
+
+  /// No description provided for @earnFreeSparks.
+  ///
+  /// In en, this message translates to:
+  /// **'Earn Free Sparks'**
+  String get earnFreeSparks;
+
+  /// No description provided for @watchAdForSparks.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch Ad for Sparks'**
+  String get watchAdForSparks;
+
+  /// No description provided for @watchAdForSparksDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch a short video to earn 10 free Sparks!'**
+  String get watchAdForSparksDesc;
+
+  /// No description provided for @watchAdEarn10Sparks.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch Ad & Earn 10 Sparks'**
+  String get watchAdEarn10Sparks;
+
+  /// No description provided for @adsRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} ads remaining today'**
+  String adsRemaining(int count);
+
+  /// No description provided for @dailyAdLimitReached.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily ad limit reached'**
+  String get dailyAdLimitReached;
+
+  /// No description provided for @boostSubmission.
+  ///
+  /// In en, this message translates to:
+  /// **'Boost Submission'**
+  String get boostSubmission;
+
+  /// No description provided for @boostDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Boost this submission to increase its visibility in the feed'**
+  String get boostDescription;
+
+  /// No description provided for @boost.
+  ///
+  /// In en, this message translates to:
+  /// **'Boost'**
+  String get boost;
+
+  /// No description provided for @boostPurchased.
+  ///
+  /// In en, this message translates to:
+  /// **'Boost purchased!'**
+  String get boostPurchased;
+
+  /// No description provided for @boosted.
+  ///
+  /// In en, this message translates to:
+  /// **'Boosted'**
+  String get boosted;
+
+  /// No description provided for @pickFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get pickFromGallery;
+
+  /// No description provided for @editVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Video'**
+  String get editVideo;
+
+  /// No description provided for @trimVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Trim'**
+  String get trimVideo;
+
+  /// No description provided for @filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filters;
+
+  /// No description provided for @addText.
+  ///
+  /// In en, this message translates to:
+  /// **'Text'**
+  String get addText;
+
+  /// No description provided for @exporting.
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting...'**
+  String get exporting;
+
+  /// No description provided for @exportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed'**
+  String get exportFailed;
 }
 
 class _AppLocalizationsDelegate

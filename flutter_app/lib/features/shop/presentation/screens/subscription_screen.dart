@@ -358,11 +358,6 @@ List<_Benefit> _buildBenefits(BuildContext context) => [
     description: 'Enjoy an ad-free experience',
   ),
   _Benefit(
-    icon: Icons.access_time,
-    title: context.l10n.earlyAccess,
-    description: 'Get notified and submit before others',
-  ),
-  _Benefit(
     icon: Icons.auto_awesome,
     title: context.l10n.premiumEffects,
     description: 'Exclusive video filters and effects',

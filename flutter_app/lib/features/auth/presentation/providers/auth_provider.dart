@@ -9,9 +9,7 @@ import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
-import '../../domain/usecases/register_usecase.dart';
 import '../../domain/usecases/social_login_usecase.dart';
 
 // =============================================================================
@@ -88,16 +86,6 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepositoryImpl(remote: remote, local: local);
 });
 
-/// Provides the [LoginUseCase].
-final loginUseCaseProvider = Provider<LoginUseCase>((ref) {
-  return LoginUseCase(ref.watch(authRepositoryProvider));
-});
-
-/// Provides the [RegisterUseCase].
-final registerUseCaseProvider = Provider<RegisterUseCase>((ref) {
-  return RegisterUseCase(ref.watch(authRepositoryProvider));
-});
-
 /// Provides the [SocialLoginUseCase].
 final socialLoginUseCaseProvider = Provider<SocialLoginUseCase>((ref) {
   return SocialLoginUseCase(ref.watch(authRepositoryProvider));
@@ -117,23 +105,17 @@ final logoutUseCaseProvider = Provider<LogoutUseCase>((ref) {
 /// On creation it calls [checkAuthStatus] to restore a previous session
 /// from local storage.
 class AuthNotifier extends StateNotifier<AuthState> {
-  final LoginUseCase _login;
-  final RegisterUseCase _register;
   final SocialLoginUseCase _socialLogin;
   final LogoutUseCase _logout;
   final AuthRepository _repository;
   final AuthLocalDataSource _local;
 
   AuthNotifier({
-    required LoginUseCase login,
-    required RegisterUseCase register,
     required SocialLoginUseCase socialLogin,
     required LogoutUseCase logout,
     required AuthRepository repository,
     required AuthLocalDataSource local,
-  })  : _login = login,
-        _register = register,
-        _socialLogin = socialLogin,
+  })  : _socialLogin = socialLogin,
         _logout = logout,
         _repository = repository,
         _local = local,
@@ -171,45 +153,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // If we already set a cached user above, keep it.
       if (state.user != null) return;
       state = const AuthState.unauthenticated();
-    }
-  }
-
-  // ---------------------------------------------------------------------------
-  // Email / password auth
-  // ---------------------------------------------------------------------------
-
-  /// Log in with email and password.
-  Future<void> login({
-    required String email,
-    required String password,
-  }) async {
-    state = const AuthState.loading();
-    try {
-      final (user, _) = await _login(email: email, password: password);
-      state = AuthState.authenticated(user);
-    } catch (e) {
-      state = AuthState.error(_messageFromError(e));
-    }
-  }
-
-  /// Create a new account.
-  Future<void> register({
-    required String email,
-    required String password,
-    required String username,
-    required String displayName,
-  }) async {
-    state = const AuthState.loading();
-    try {
-      final (user, _) = await _register(
-        email: email,
-        password: password,
-        username: username,
-        displayName: displayName,
-      );
-      state = AuthState.authenticated(user);
-    } catch (e) {
-      state = AuthState.error(_messageFromError(e));
     }
   }
 
@@ -284,13 +227,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   // ---------------------------------------------------------------------------
-  // Password reset
+  // Account deletion
   // ---------------------------------------------------------------------------
 
-  /// Send a password reset email. Returns `true` on success.
-  Future<bool> forgotPassword(String email) async {
+  /// Delete the current user's account. Returns `true` on success.
+  Future<bool> deleteAccount() async {
     try {
-      await _repository.forgotPassword(email);
+      await _repository.deleteAccount();
+      state = const AuthState.unauthenticated();
       return true;
     } catch (_) {
       return false;
@@ -319,8 +263,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
 /// The main authentication provider used throughout the app.
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   return AuthNotifier(
-    login: ref.watch(loginUseCaseProvider),
-    register: ref.watch(registerUseCaseProvider),
     socialLogin: ref.watch(socialLoginUseCaseProvider),
     logout: ref.watch(logoutUseCaseProvider),
     repository: ref.watch(authRepositoryProvider),

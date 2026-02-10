@@ -35,11 +35,6 @@ class SettingsScreen extends ConsumerWidget {
             title: context.l10n.editProfile,
             onTap: () => context.pushNamed(RouteNames.editProfile),
           ),
-          _SettingsTile(
-            icon: Icons.lock_outline,
-            title: context.l10n.changePassword,
-            onTap: () => _showChangePasswordDialog(context),
-          ),
 
           // ------------------------------------------------------------------
           // Subscription
@@ -181,49 +176,6 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showChangePasswordDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(context.l10n.changePassword),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: context.l10n.currentPassword),
-              obscureText: true,
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              decoration: InputDecoration(labelText: context.l10n.newPassword),
-              obscureText: true,
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              decoration: InputDecoration(labelText: context.l10n.confirmNewPassword),
-              obscureText: true,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(context.l10n.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.l10n.passwordUpdated)),
-              );
-            },
-            child: Text(context.l10n.update),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _showDeleteAccountDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
@@ -238,10 +190,17 @@ class SettingsScreen extends ConsumerWidget {
             child: Text(context.l10n.cancel),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(ctx).pop();
-              // Call delete account API then logout
-              ref.read(authProvider.notifier).logout();
+              final success =
+                  await ref.read(authProvider.notifier).deleteAccount();
+              if (success && context.mounted) {
+                context.go('/login');
+              } else if (context.mounted) {
+                context.showSnackBar(
+                  'Failed to delete account. Please try again.',
+                );
+              }
             },
             child: Text(
               context.l10n.deleteAccount,
