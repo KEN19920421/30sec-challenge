@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -23,6 +25,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   late final AnimationController _fadeController;
   late final Animation<double> _fadeAnimation;
 
+  final _emailController = TextEditingController(text: 'alice@example.com');
+  final _passwordController = TextEditingController(text: 'Test1234!');
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +44,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 
   @override
   void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
     _fadeController.dispose();
     super.dispose();
   }
@@ -55,6 +62,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   Future<void> _onAppleSignIn() async {
     await ref.read(authProvider.notifier).signInWithApple();
     _checkSocialError();
+  }
+
+  Future<void> _onDevLogin() async {
+    await ref.read(authProvider.notifier).signInWithDevCredentials(
+      _emailController.text.trim(),
+      _passwordController.text,
+    );
+    if (!mounted) return;
+    final state = ref.read(authProvider);
+    if (state.status == AuthStatus.authenticated) {
+      context.go('/');
+    } else {
+      _checkSocialError();
+    }
   }
 
   void _checkSocialError() {
@@ -155,6 +176,48 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                             isLoading: isLoading,
                           ),
                           const SizedBox(height: 12),
+                        ],
+
+                        // ---- Dev Login (debug mode only) ----
+                        if (kDebugMode) ...[
+                          const SizedBox(height: 24),
+                          const Divider(),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Dev Login',
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: _emailController,
+                            decoration: const InputDecoration(
+                              labelText: 'Email',
+                              prefixIcon: Icon(Icons.email_outlined),
+                              border: OutlineInputBorder(),
+                              isDense: true,
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: _passwordController,
+                            decoration: const InputDecoration(
+                              labelText: 'Password',
+                              prefixIcon: Icon(Icons.lock_outlined),
+                              border: OutlineInputBorder(),
+                              isDense: true,
+                            ),
+                            obscureText: true,
+                          ),
+                          const SizedBox(height: 12),
+                          FilledButton.icon(
+                            onPressed: isLoading ? null : _onDevLogin,
+                            icon: const Icon(Icons.developer_mode),
+                            label: const Text('Dev Login'),
+                          ),
                         ],
 
                         const SizedBox(height: 32),

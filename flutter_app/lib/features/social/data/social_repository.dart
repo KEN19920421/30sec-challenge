@@ -2,64 +2,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/api_client.dart';
 import '../../../core/network/api_response.dart';
+import '../domain/entities/social_user.dart';
+import '../domain/repositories/social_repository.dart';
+import 'models/social_user_model.dart';
 
-/// Lightweight user model used in follower/following lists.
-class SocialUser {
-  final String id;
-  final String username;
-  final String displayName;
-  final String? avatarUrl;
-  final bool isVerified;
-  final bool isFollowing;
-  final String subscriptionTier;
-
-  const SocialUser({
-    required this.id,
-    required this.username,
-    required this.displayName,
-    this.avatarUrl,
-    this.isVerified = false,
-    this.isFollowing = false,
-    this.subscriptionTier = 'free',
-  });
-
-  bool get isPro => subscriptionTier != 'free';
-
-  factory SocialUser.fromJson(Map<String, dynamic> json) {
-    return SocialUser(
-      id: json['id'] as String,
-      username: json['username'] as String,
-      displayName: json['displayName'] as String? ?? json['username'] as String,
-      avatarUrl: json['avatarUrl'] as String?,
-      isVerified: json['isVerified'] as bool? ?? false,
-      isFollowing: json['isFollowing'] as bool? ?? false,
-      subscriptionTier: json['subscriptionTier'] as String? ?? 'free',
-    );
-  }
-
-  SocialUser copyWith({bool? isFollowing}) {
-    return SocialUser(
-      id: id,
-      username: username,
-      displayName: displayName,
-      avatarUrl: avatarUrl,
-      isVerified: isVerified,
-      isFollowing: isFollowing ?? this.isFollowing,
-      subscriptionTier: subscriptionTier,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SocialUser && runtimeType == other.runtimeType && id == other.id;
-
-  @override
-  int get hashCode => id.hashCode;
-}
+// Re-export domain entity so existing imports continue to work.
+export '../domain/entities/social_user.dart';
 
 /// Repository handling all social-related API communication.
-class SocialRepository {
+class SocialRepository implements SocialRepositoryContract {
   final ApiClient _apiClient;
 
   SocialRepository({required ApiClient apiClient}) : _apiClient = apiClient;
@@ -69,11 +20,13 @@ class SocialRepository {
   // ---------------------------------------------------------------------------
 
   /// Follow a user.
+  @override
   Future<void> follow(String userId) async {
     await _apiClient.post('/api/v1/social/follow/$userId');
   }
 
   /// Unfollow a user.
+  @override
   Future<void> unfollow(String userId) async {
     await _apiClient.delete('/api/v1/social/follow/$userId');
   }
@@ -83,6 +36,7 @@ class SocialRepository {
   // ---------------------------------------------------------------------------
 
   /// Fetches the followers of the user with the given [userId].
+  @override
   Future<PaginatedResponse<SocialUser>> getFollowers(
     String userId, {
     int page = 1,
@@ -113,11 +67,12 @@ class SocialRepository {
     }
     return PaginatedResponse<SocialUser>.fromJson(
       body,
-      (json) => SocialUser.fromJson(json),
+      (json) => SocialUserModel.fromJson(json),
     );
   }
 
   /// Fetches the users that [userId] is following.
+  @override
   Future<PaginatedResponse<SocialUser>> getFollowing(
     String userId, {
     int page = 1,
@@ -148,7 +103,7 @@ class SocialRepository {
     }
     return PaginatedResponse<SocialUser>.fromJson(
       body,
-      (json) => SocialUser.fromJson(json),
+      (json) => SocialUserModel.fromJson(json),
     );
   }
 
@@ -157,16 +112,19 @@ class SocialRepository {
   // ---------------------------------------------------------------------------
 
   /// Block a user.
+  @override
   Future<void> blockUser(String userId) async {
     await _apiClient.post('/api/v1/social/block/$userId');
   }
 
   /// Unblock a user.
+  @override
   Future<void> unblockUser(String userId) async {
     await _apiClient.delete('/api/v1/social/block/$userId');
   }
 
   /// Report a user for abuse.
+  @override
   Future<void> reportUser(String userId, {required String reason}) async {
     await _apiClient.post(
       '/api/v1/social/report/user',
@@ -175,6 +133,7 @@ class SocialRepository {
   }
 
   /// Report a submission for abuse.
+  @override
   Future<void> reportSubmission(
     String submissionId, {
     required String reason,

@@ -26,7 +26,7 @@ dependencies:
   video_player: ^2.8.2
   chewie: ^1.7.4
   video_editor: ^3.0.0
-  ffmpeg_kit_flutter_new: ^4.1.0
+  # ffmpeg_kit_flutter_new: ^4.1.0  # Disabled: no arm64 simulator support; re-enable for production builds
   # UI
   cached_network_image: ^3.3.1
   shimmer: ^3.0.0
@@ -61,6 +61,15 @@ dev_dependencies:
   riverpod_generator: ^2.3.9
   mockito: ^5.4.4
   build_verify: ^3.1.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/app_icon.png"
+  remove_alpha_ios: true
+  web:
+    generate: false
 
 flutter:
   uses-material-design: true

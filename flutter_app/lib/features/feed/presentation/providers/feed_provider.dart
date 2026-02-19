@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/network/api_response.dart';
 import '../../../challenge/domain/submission.dart';
+import '../../data/repositories/feed_repository_impl.dart';
+import '../../domain/repositories/feed_repository.dart';
 
 // =============================================================================
 // Feed State
@@ -61,10 +63,10 @@ class FeedState {
 // =============================================================================
 
 class FeedNotifier extends StateNotifier<FeedState> {
-  final ApiClient _apiClient;
+  final FeedRepository _repository;
 
-  FeedNotifier({required ApiClient apiClient})
-      : _apiClient = apiClient,
+  FeedNotifier({required FeedRepository repository})
+      : _repository = repository,
         super(const FeedState());
 
   /// Loads the initial feed: trending + first page of submissions.
@@ -72,8 +74,12 @@ class FeedNotifier extends StateNotifier<FeedState> {
     state = state.copyWith(status: FeedStatus.loading);
     try {
       final results = await Future.wait([
-        _fetchTrending(),
-        _fetchSubmissions(page: 1),
+        _repository.getTrending(),
+        _repository.getSubmissions(
+          page: 1,
+          category: state.selectedCategory,
+          search: state.searchQuery,
+        ),
       ]);
 
       final trending = results[0] as List<Submission>;
@@ -99,7 +105,11 @@ class FeedNotifier extends StateNotifier<FeedState> {
     if (!state.hasMore || state.isLoading) return;
     try {
       final nextPage = state.currentPage + 1;
-      final page = await _fetchSubmissions(page: nextPage);
+      final page = await _repository.getSubmissions(
+        page: nextPage,
+        category: state.selectedCategory,
+        search: state.searchQuery,
+      );
       state = state.copyWith(
         submissions: [...state.submissions, ...page.data],
         hasMore: page.hasNextPage,
@@ -119,66 +129,21 @@ class FeedNotifier extends StateNotifier<FeedState> {
     state = state.copyWith(searchQuery: query, currentPage: 0);
     await loadFeed();
   }
-
-  // ---------------------------------------------------------------------------
-  // Private helpers
-  // ---------------------------------------------------------------------------
-
-  Future<List<Submission>> _fetchTrending() async {
-    final response = await _apiClient.get<Map<String, dynamic>>(
-      '/api/v1/feed/trending',
-      queryParameters: {'limit': 10},
-    );
-    final body = response.data;
-    if (body == null) return [];
-    final list = body['data'] as List<dynamic>? ?? [];
-    return list
-        .map((item) => Submission.fromJson(item as Map<String, dynamic>))
-        .toList();
-  }
-
-  Future<PaginatedResponse<Submission>> _fetchSubmissions({
-    int page = 1,
-  }) async {
-    final queryParams = <String, dynamic>{
-      'page': page,
-      'limit': 20,
-    };
-    if (state.selectedCategory != null) {
-      queryParams['category'] = state.selectedCategory;
-    }
-    if (state.searchQuery != null && state.searchQuery!.isNotEmpty) {
-      queryParams['search'] = state.searchQuery;
-    }
-
-    final response = await _apiClient.get<Map<String, dynamic>>(
-      '/api/v1/feed/for-you',
-      queryParameters: queryParams,
-    );
-    final body = response.data;
-    if (body == null) {
-      return const PaginatedResponse<Submission>(
-        data: [],
-        total: 0,
-        page: 1,
-        limit: 20,
-        totalPages: 1,
-      );
-    }
-    return PaginatedResponse<Submission>.fromJson(
-      body,
-      (json) => Submission.fromJson(json),
-    );
-  }
 }
 
 // =============================================================================
 // Riverpod Providers
 // =============================================================================
 
+/// Provides the [FeedRepository] implementation.
+final feedRepositoryProvider = Provider<FeedRepository>((ref) {
+  return FeedRepositoryImpl(apiClient: ref.watch(apiClientProvider));
+});
+
+/// Provides the [FeedNotifier] state notifier.
 final feedProvider =
     StateNotifierProvider<FeedNotifier, FeedState>((ref) {
-  return FeedNotifier(apiClient: ref.watch(apiClientProvider));
+  return FeedNotifier(repository: ref.watch(feedRepositoryProvider));
 });
 
 /// Available feed categories.

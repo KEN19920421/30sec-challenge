@@ -718,6 +718,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pickFromGallery => 'Gallery';
 
   @override
+  String get cameraUnavailable => 'Camera Unavailable';
+
+  @override
+  String get cameraUnavailableDescription =>
+      'Camera could not be started. You can choose a video from your gallery instead.';
+
+  @override
   String get editVideo => 'Edit Video';
 
   @override
@@ -734,4 +741,59 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exportFailed => 'Export failed';
+
+  @override
+  String get comments => 'Comments';
+
+  @override
+  String get addComment => 'Add a comment...';
+
+  @override
+  String get noCommentsYet => 'No comments yet';
+
+  @override
+  String get beFirstToComment => 'Be the first to comment!';
+
+  @override
+  String replyingTo(String username) {
+    return 'Replying to @$username';
+  }
+
+  @override
+  String repliesCount(int count) {
+    return '$count replies';
+  }
+
+  @override
+  String get reply => 'Reply';
+
+  @override
+  String get deleteComment => 'Delete';
+
+  @override
+  String get commentDeleted => 'Comment deleted';
+
+  @override
+  String get deletedComment => '[Deleted]';
+
+  @override
+  String replyTo(String username) {
+    return 'Replying to @$username';
+  }
+
+  @override
+  String get deleteCommentConfirm =>
+      'Are you sure you want to delete this comment?';
+
+  @override
+  String get commentAdded => 'Comment added';
+
+  @override
+  String get viewReplies => 'View replies';
+
+  @override
+  String get mute => 'Mute';
+
+  @override
+  String get unmute => 'Unmute';
 }

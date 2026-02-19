@@ -192,10 +192,10 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       case 'vote_received':
       case 'gift_received':
       case 'submission_status':
-        if (data['submissionId'] != null) {
+        if (data['challengeId'] != null) {
           context.pushNamed(
             RouteNames.challengeDetail,
-            pathParameters: {'id': data['challengeId'] as String? ?? ''},
+            pathParameters: {'id': data['challengeId'] as String},
           );
         }
         break;

@@ -7,11 +7,14 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/onboarding_screen.dart';
 import '../../features/challenge/presentation/screens/challenge_detail_screen.dart';
 import '../../features/challenge/presentation/screens/challenge_home_screen.dart';
+import '../../features/challenge/presentation/screens/challenge_history_screen.dart';
+import '../../features/challenge/presentation/screens/challenge_results_screen.dart';
 import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/leaderboard/data/leaderboard_repository.dart';
 import '../../features/leaderboard/domain/leaderboard_entry.dart';
 import '../../features/leaderboard/presentation/providers/leaderboard_provider.dart';
 import '../../features/leaderboard/presentation/screens/leaderboard_screen.dart';
+import '../../features/notifications/presentation/screens/notification_settings_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/profile/presentation/screens/followers_screen.dart';
@@ -19,40 +22,51 @@ import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/profile/presentation/screens/settings_screen.dart';
 import '../../features/recording/presentation/screens/camera_screen.dart';
 import '../../features/recording/presentation/screens/preview_screen.dart';
+import '../../features/recording/presentation/screens/upload_progress_screen.dart';
 import '../../features/recording/presentation/screens/video_editor_screen.dart';
 import '../../features/shop/presentation/screens/coin_store_screen.dart';
 import '../../features/shop/presentation/screens/subscription_screen.dart';
 import '../../features/voting/presentation/screens/voting_screen.dart';
-import '../services/auth_storage_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/bottom_nav_bar.dart';
 import 'route_names.dart';
 
 // =============================================================================
+// Router auth refresh notifier
+// =============================================================================
+
+/// A [ChangeNotifier] that bridges Riverpod's auth state to GoRouter's
+/// [refreshListenable]. When the auth state changes, this notifier fires,
+/// causing GoRouter to re-evaluate its redirect function synchronously.
+class _RouterAuthNotifier extends ChangeNotifier {
+  bool _isLoggedIn = false;
+  bool get isLoggedIn => _isLoggedIn;
+
+  void update(bool isLoggedIn) {
+    if (_isLoggedIn != isLoggedIn) {
+      _isLoggedIn = isLoggedIn;
+      notifyListeners();
+    }
+  }
+}
+
+// =============================================================================
 // Shell scaffold with bottom nav (TikTok-style: auth gate for Record & Profile)
 // =============================================================================
 
-class _MainShell extends ConsumerWidget {
+class _MainShell extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
   const _MainShell({required this.navigationShell});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: AppBottomNavBar(
         currentIndex: navigationShell.currentIndex,
         onTap: (index) {
-          // Auth-required tabs: Record (2) and Profile (4)
-          if (index == 2 || index == 4) {
-            final isLoggedIn = ref.read(isLoggedInProvider);
-            if (!isLoggedIn) {
-              context.push('/login');
-              return;
-            }
-          }
           navigationShell.goBranch(
             index,
             initialLocation: index == navigationShell.currentIndex,
@@ -68,25 +82,37 @@ class _MainShell extends ConsumerWidget {
 // =============================================================================
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final authStorage = ref.read(authStorageServiceProvider);
+  // Bridge Riverpod auth state → GoRouter via a ChangeNotifier so the
+  // redirect function can read auth synchronously and GoRouter re-evaluates
+  // whenever auth state changes.
+  final authNotifier = _RouterAuthNotifier();
+  ref.listen<bool>(isLoggedInProvider, (_, isLoggedIn) {
+    authNotifier.update(isLoggedIn);
+  });
+  // Seed the initial value.
+  authNotifier._isLoggedIn = ref.read(isLoggedInProvider);
+
+  ref.onDispose(() => authNotifier.dispose());
 
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: true,
+    refreshListenable: authNotifier,
 
     // -------------------------------------------------------------------------
     // Auth redirect -- TikTok style: only gate actions, not browsing
     // -------------------------------------------------------------------------
-    redirect: (context, state) async {
-      final isLoggedIn = await authStorage.isLoggedIn();
+    redirect: (context, state) {
+      final isLoggedIn = authNotifier.isLoggedIn;
       final currentPath = state.matchedLocation;
 
       // Auth pages (login, onboarding).
       const authPaths = {'/login', '/onboarding'};
 
       // Routes that require authentication (actions, not browsing).
+      // Note: /record is public so users can try recording without login.
+      // Upload still requires auth at the API level.
       const authRequiredPrefixes = [
-        '/record',
         '/profile',
         '/notifications',
         '/settings',
@@ -152,6 +178,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       return ChallengeDetailScreen(challengeId: id);
                     },
                   ),
+                  GoRoute(
+                    path: 'challenges/history',
+                    name: RouteNames.challengeHistory,
+                    builder: (context, state) =>
+                        const ChallengeHistoryScreen(),
+                  ),
+                  GoRoute(
+                    path: 'challenges/:challengeId/results',
+                    name: RouteNames.challengeResults,
+                    builder: (context, state) {
+                      final challengeId =
+                          state.pathParameters['challengeId']!;
+                      return ChallengeResultsScreen(
+                          challengeId: challengeId);
+                    },
+                  ),
                 ],
               ),
             ],
@@ -201,6 +243,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                         challengeId: extra?['challengeId'] as String? ?? '',
                         filePath: extra?['filePath'] as String? ?? '',
                         durationMs: extra?['durationMs'] as int? ?? 0,
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: 'upload',
+                    name: RouteNames.recordUpload,
+                    builder: (context, state) {
+                      final extra = state.extra as Map<String, dynamic>?;
+                      return UploadProgressScreen(
+                        challengeId: extra?['challengeId'] as String? ?? '',
+                        caption: extra?['caption'] as String?,
                       );
                     },
                   ),
@@ -301,6 +354,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/notifications',
         name: RouteNames.notifications,
         builder: (context, state) => const NotificationsScreen(),
+        routes: [
+          GoRoute(
+            path: 'settings',
+            name: RouteNames.notificationSettings,
+            builder: (context, state) => const NotificationSettingsScreen(),
+          ),
+        ],
       ),
       GoRoute(
         path: '/settings',

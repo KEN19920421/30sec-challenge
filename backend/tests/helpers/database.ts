@@ -25,7 +25,12 @@ export function getDb(): Knex {
     if (!config) {
       throw new Error('No Knex "test" configuration found in knexfile.ts');
     }
-    _db = knex(config);
+    // Always force the test database URL to prevent accidental dev DB destruction
+    const testUrl = 'postgres://app_user:app_password@localhost:5432/video_challenge_test';
+    _db = knex({
+      ...config,
+      connection: testUrl,
+    });
   }
   return _db;
 }

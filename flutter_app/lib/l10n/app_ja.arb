@@ -284,10 +284,39 @@
   "boosted": "ブースト中",
 
   "pickFromGallery": "ギャラリー",
+  "cameraUnavailable": "カメラを利用できません",
+  "cameraUnavailableDescription": "カメラを起動できませんでした。代わりにギャラリーから動画を選択できます。",
   "editVideo": "動画を編集",
   "trimVideo": "トリミング",
   "filters": "フィルター",
   "addText": "テキスト",
   "exporting": "エクスポート中...",
-  "exportFailed": "エクスポートに失敗しました"
+  "exportFailed": "エクスポートに失敗しました",
+
+  "comments": "コメント",
+  "addComment": "コメントを追加...",
+  "noCommentsYet": "まだコメントがありません",
+  "beFirstToComment": "最初のコメントを投稿しよう！",
+  "replyingTo": "@{username}に返信中",
+  "@replyingTo": {
+    "placeholders": { "username": { "type": "String" } }
+  },
+  "repliesCount": "{count}件の返信",
+  "@repliesCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "reply": "返信",
+  "deleteComment": "削除",
+  "commentDeleted": "コメントを削除しました",
+  "deletedComment": "[削除済み]",
+
+  "replyTo": "@{username} に返信",
+  "@replyTo": {
+    "placeholders": { "username": { "type": "String" } }
+  },
+  "deleteCommentConfirm": "このコメントを削除しますか？",
+  "commentAdded": "コメントを追加しました",
+  "viewReplies": "返信を表示",
+  "mute": "ミュート",
+  "unmute": "ミュート解除"
 }

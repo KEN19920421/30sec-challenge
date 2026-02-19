@@ -284,10 +284,39 @@
   "boosted": "Boosted",
 
   "pickFromGallery": "Gallery",
+  "cameraUnavailable": "Camera Unavailable",
+  "cameraUnavailableDescription": "Camera could not be started. You can choose a video from your gallery instead.",
   "editVideo": "Edit Video",
   "trimVideo": "Trim",
   "filters": "Filters",
   "addText": "Text",
   "exporting": "Exporting...",
-  "exportFailed": "Export failed"
+  "exportFailed": "Export failed",
+
+  "comments": "Comments",
+  "addComment": "Add a comment...",
+  "noCommentsYet": "No comments yet",
+  "beFirstToComment": "Be the first to comment!",
+  "replyingTo": "Replying to @{username}",
+  "@replyingTo": {
+    "placeholders": { "username": { "type": "String" } }
+  },
+  "repliesCount": "{count} replies",
+  "@repliesCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "reply": "Reply",
+  "deleteComment": "Delete",
+  "commentDeleted": "Comment deleted",
+  "deletedComment": "[Deleted]",
+
+  "replyTo": "Replying to @{username}",
+  "@replyTo": {
+    "placeholders": { "username": { "type": "String" } }
+  },
+  "deleteCommentConfirm": "Are you sure you want to delete this comment?",
+  "commentAdded": "Comment added",
+  "viewReplies": "View replies",
+  "mute": "Mute",
+  "unmute": "Unmute"
 }

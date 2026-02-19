@@ -1448,6 +1448,18 @@ abstract class AppLocalizations {
   /// **'Gallery'**
   String get pickFromGallery;
 
+  /// No description provided for @cameraUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera Unavailable'**
+  String get cameraUnavailable;
+
+  /// No description provided for @cameraUnavailableDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera could not be started. You can choose a video from your gallery instead.'**
+  String get cameraUnavailableDescription;
+
   /// No description provided for @editVideo.
   ///
   /// In en, this message translates to:
@@ -1483,6 +1495,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Export failed'**
   String get exportFailed;
+
+  /// No description provided for @comments.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments'**
+  String get comments;
+
+  /// No description provided for @addComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a comment...'**
+  String get addComment;
+
+  /// No description provided for @noCommentsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No comments yet'**
+  String get noCommentsYet;
+
+  /// No description provided for @beFirstToComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first to comment!'**
+  String get beFirstToComment;
+
+  /// No description provided for @replyingTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Replying to @{username}'**
+  String replyingTo(String username);
+
+  /// No description provided for @repliesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} replies'**
+  String repliesCount(int count);
+
+  /// No description provided for @reply.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply'**
+  String get reply;
+
+  /// No description provided for @deleteComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteComment;
+
+  /// No description provided for @commentDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment deleted'**
+  String get commentDeleted;
+
+  /// No description provided for @deletedComment.
+  ///
+  /// In en, this message translates to:
+  /// **'[Deleted]'**
+  String get deletedComment;
+
+  /// No description provided for @replyTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Replying to @{username}'**
+  String replyTo(String username);
+
+  /// No description provided for @deleteCommentConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this comment?'**
+  String get deleteCommentConfirm;
+
+  /// No description provided for @commentAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment added'**
+  String get commentAdded;
+
+  /// No description provided for @viewReplies.
+  ///
+  /// In en, this message translates to:
+  /// **'View replies'**
+  String get viewReplies;
+
+  /// No description provided for @mute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute'**
+  String get mute;
+
+  /// No description provided for @unmute.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute'**
+  String get unmute;
 }
 
 class _AppLocalizationsDelegate

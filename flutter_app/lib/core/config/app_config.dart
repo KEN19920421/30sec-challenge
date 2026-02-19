@@ -31,10 +31,10 @@ class AppConfig {
   /// Development configuration pointing to local/dev servers.
   factory AppConfig.dev() {
     return const AppConfig(
-      apiBaseUrl: 'http://localhost:3000',
+      apiBaseUrl: 'http://localhost:4000',
       s3BaseUrl: 'https://dev-30sec-challenge.s3.amazonaws.com',
       cdnUrl: 'https://dev-cdn.30secchallenge.com',
-      webSocketUrl: 'ws://localhost:3000/ws',
+      webSocketUrl: 'ws://localhost:4000/ws',
       apiTimeout: Duration(seconds: 60),
     );
   }
@@ -52,10 +52,10 @@ class AppConfig {
   /// Production configuration for live users.
   factory AppConfig.prod() {
     return const AppConfig(
-      apiBaseUrl: 'https://api.30secchallenge.com/api/v1',
+      apiBaseUrl: 'https://api.30sec-challenge.com',
       s3BaseUrl: 'https://30sec-challenge.s3.amazonaws.com',
-      cdnUrl: 'https://cdn.30secchallenge.com',
-      webSocketUrl: 'wss://api.30secchallenge.com/ws',
+      cdnUrl: 'https://cdn.30sec-challenge.com',
+      webSocketUrl: 'wss://api.30sec-challenge.com/ws',
     );
   }
 

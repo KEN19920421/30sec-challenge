@@ -21,8 +21,9 @@ services:
       dockerfile: Dockerfile
     container_name: vc_app
     restart: unless-stopped
+    # Only expose to localhost - Nginx handles external traffic
     ports:
-      - "${PORT:-3000}:3000"
+      - "127.0.0.1:${PORT:-3000}:3000"
     env_file:
       - .env
     environment:
@@ -63,8 +64,9 @@ services:
     image: postgres:16-alpine
     container_name: vc_postgres
     restart: unless-stopped
+    # Only expose to localhost for admin access, not to the internet
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-app_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
@@ -122,8 +124,9 @@ services:
     image: redis:7-alpine
     container_name: vc_redis
     restart: unless-stopped
+    # Only expose to localhost for admin access, not to the internet
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
     # Password-protected, AOF persistence, sensible memory limits
     command: >
       redis-server

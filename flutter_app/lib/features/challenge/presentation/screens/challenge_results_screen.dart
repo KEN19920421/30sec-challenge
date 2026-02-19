@@ -140,12 +140,6 @@ class _ChallengeResultsScreenState
                                 return _RankedSubmissionTile(
                                   submission: state.submissions[index],
                                   rank: index + 1,
-                                  onTap: () {
-                                    // Navigate to view submission video.
-                                    context.push(
-                                      '/submissions/${state.submissions[index].id}',
-                                    );
-                                  },
                                 );
                               },
                               childCount: state.submissions.length +
@@ -463,12 +457,10 @@ class _PodiumColumn extends StatelessWidget {
 class _RankedSubmissionTile extends StatelessWidget {
   final Submission submission;
   final int rank;
-  final VoidCallback? onTap;
 
   const _RankedSubmissionTile({
     required this.submission,
     required this.rank,
-    this.onTap,
   });
 
   Color get _rankColor {
@@ -488,20 +480,17 @@ class _RankedSubmissionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        decoration: BoxDecoration(
-          color: rank <= 3
-              ? _rankColor.withValues(alpha: 0.05)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
+    return Container(
+      margin: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      decoration: BoxDecoration(
+        color: rank <= 3
+            ? _rankColor.withValues(alpha: 0.05)
+            : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
             // Rank number.
             SizedBox(
               width: 36,
@@ -610,7 +599,6 @@ class _RankedSubmissionTile extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 }

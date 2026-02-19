@@ -164,7 +164,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> signInWithGoogle() async {
     state = const AuthState.loading();
     try {
-      final googleUser = await GoogleSignIn(scopes: ['email']).signIn();
+      final googleUser = await GoogleSignIn(
+        scopes: ['email'],
+        serverClientId:
+            '312153915766-q2a7fpf65q9rj01ffip5oitav2hk5ato.apps.googleusercontent.com',
+      ).signIn();
       if (googleUser == null) {
         // User cancelled the dialog.
         state = const AuthState.unauthenticated();
@@ -205,6 +209,20 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       final (user, _) =
           await _socialLogin(provider: 'apple', idToken: idToken);
+      state = AuthState.authenticated(user);
+    } catch (e) {
+      state = AuthState.error(_messageFromError(e));
+    }
+  }
+
+  /// DEV ONLY: Sign in with email and password.
+  Future<void> signInWithDevCredentials(String email, String password) async {
+    state = const AuthState.loading();
+    try {
+      final (user, _) = await _repository.devLogin(
+        email: email,
+        password: password,
+      );
       state = AuthState.authenticated(user);
     } catch (e) {
       state = AuthState.error(_messageFromError(e));

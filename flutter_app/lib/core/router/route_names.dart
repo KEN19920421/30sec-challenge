@@ -22,8 +22,11 @@ class RouteNames {
   // Challenge
   // ---------------------------------------------------------------------------
   static const String challengeDetail = 'challengeDetail';
+  static const String challengeHistory = 'challengeHistory';
+  static const String challengeResults = 'challengeResults';
   static const String videoEditor = 'videoEditor';
   static const String preview = 'preview';
+  static const String recordUpload = 'recordUpload';
   static const String voting = 'voting';
 
   // ---------------------------------------------------------------------------
@@ -43,6 +46,7 @@ class RouteNames {
   // Notifications
   // ---------------------------------------------------------------------------
   static const String notifications = 'notifications';
+  static const String notificationSettings = 'notificationSettings';
 
   // ---------------------------------------------------------------------------
   // Settings

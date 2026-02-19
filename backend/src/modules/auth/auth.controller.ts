@@ -81,3 +81,22 @@ export async function logout(
     next(err);
   }
 }
+
+/**
+ * POST /auth/dev-login (development only)
+ */
+export async function devLogin(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const { email, password } = req.body;
+    const result = await authService.devLogin(email, password);
+    res.status(200).json(
+      successResponse(result, 'Login successful'),
+    );
+  } catch (err) {
+    next(err);
+  }
+}

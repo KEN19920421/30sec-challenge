@@ -29,27 +29,30 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  late final String _userId;
-  late final bool _isOwnProfile;
-
-  @override
-  void initState() {
-    super.initState();
-    final currentUser = ref.read(currentUserProvider);
-    _userId = widget.userId ?? currentUser?.id ?? '';
-    _isOwnProfile = widget.userId == null || widget.userId == currentUser?.id;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final profileState = ref.watch(profileProvider(_userId));
+    final currentUser = ref.watch(currentUserProvider);
+    final userId = widget.userId ?? currentUser?.id ?? '';
+    final isOwnProfile =
+        widget.userId == null || widget.userId == currentUser?.id;
+
+    // If we don't have a userId yet (auth still loading), show a spinner.
+    if (userId.isEmpty) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(color: AppColors.primary),
+        ),
+      );
+    }
+
+    final profileState = ref.watch(profileProvider(userId));
     final profile = profileState.profile;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(profile?.username != null ? '@${profile!.username}' : 'Profile'),
         actions: [
-          if (_isOwnProfile) ...[
+          if (isOwnProfile) ...[
             const CoinBalanceBadge(),
             const SizedBox(width: 4),
             IconButton(
@@ -85,11 +88,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ],
         ],
       ),
-      body: _buildBody(profileState),
+      body: _buildBody(profileState, userId, isOwnProfile),
     );
   }
 
-  Widget _buildBody(ProfileState profileState) {
+  Widget _buildBody(ProfileState profileState, String userId, bool isOwnProfile) {
     if (profileState.status == ProfileStatus.loading &&
         profileState.profile == null) {
       return const Center(
@@ -112,7 +115,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             const SizedBox(height: 8),
             TextButton(
               onPressed: () =>
-                  ref.read(profileProvider(_userId).notifier).loadProfile(),
+                  ref.read(profileProvider(userId).notifier).loadProfile(),
               child: Text(context.l10n.retry),
             ),
           ],
@@ -126,7 +129,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return RefreshIndicator(
       color: AppColors.primary,
       onRefresh: () =>
-          ref.read(profileProvider(_userId).notifier).loadProfile(),
+          ref.read(profileProvider(userId).notifier).loadProfile(),
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
@@ -135,13 +138,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             // Profile header
             ProfileHeader(
               profile: profile,
-              isOwnProfile: _isOwnProfile,
-              onFollowTap: _isOwnProfile
+              isOwnProfile: isOwnProfile,
+              onFollowTap: isOwnProfile
                   ? null
                   : () => ref
-                      .read(profileProvider(_userId).notifier)
+                      .read(profileProvider(userId).notifier)
                       .toggleFollow(),
-              onEditTap: _isOwnProfile
+              onEditTap: isOwnProfile
                   ? () => context.pushNamed(RouteNames.editProfile)
                   : null,
               onShareTap: () => _shareProfile(profile.username),
@@ -160,14 +163,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 queryParameters: {'tab': 'followers'},
               ),
               onFollowingTap: () => context.pushNamed(
-                RouteNames.followers,
+                RouteNames.following,
                 pathParameters: {'userId': profile.id},
-                queryParameters: {'tab': 'following'},
               ),
             ),
 
             // Gift coins received (own profile)
-            if (_isOwnProfile && profile.coinBalance > 0) ...[
+            if (isOwnProfile && profile.coinBalance > 0) ...[
               const SizedBox(height: 12),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -225,7 +227,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               hasMore: profileState.hasMoreSubmissions,
               isLoading: profileState.isLoading,
               onLoadMore: () => ref
-                  .read(profileProvider(_userId).notifier)
+                  .read(profileProvider(userId).notifier)
                   .loadMoreSubmissions(),
               onSubmissionTap: (submission) {
                 // Navigate to submission detail / video player

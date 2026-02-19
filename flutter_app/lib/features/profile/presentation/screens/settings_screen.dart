@@ -77,7 +77,7 @@ class SettingsScreen extends ConsumerWidget {
           _SettingsTile(
             icon: Icons.notifications_outlined,
             title: context.l10n.notificationSettings,
-            onTap: () => context.pushNamed('notificationSettings'),
+            onTap: () => context.pushNamed(RouteNames.notificationSettings),
           ),
 
           // ------------------------------------------------------------------

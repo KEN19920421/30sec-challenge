@@ -21,6 +21,13 @@ COPY src/ ./src/
 # Compile TypeScript -> JavaScript into dist/
 RUN npm run build
 
+# Also compile migrations to JS for production use
+COPY migrations/ ./migrations/
+RUN npx tsc --outDir dist-migrations --rootDir . --resolveJsonModule --esModuleInterop --module commonjs --target es2020 --skipLibCheck --declaration false migrations/*.ts || true
+# Fallback: also compile knexfile
+COPY knexfile.ts ./
+RUN npx tsc --outDir dist-knexfile --rootDir . --resolveJsonModule --esModuleInterop --module commonjs --target es2020 --skipLibCheck --declaration false knexfile.ts || true
+
 # Prune devDependencies so only production deps remain for the next stage
 RUN npm prune --production
 
@@ -46,11 +53,11 @@ COPY --from=builder /app/dist ./dist
 # Copy package.json (needed for version info / runtime metadata)
 COPY --from=builder /app/package.json ./
 
-# Copy migrations and knexfile for running DB migrations at deploy time.
-# Migrations are TypeScript so we also need ts-node + typescript as runtime
-# dependencies -- but we compiled the knexfile into dist/ during build. If your
-# migration strategy runs migrations outside the container (CI/CD step), you can
-# remove these two COPY lines.
+# Copy compiled migrations (JS) for production migration runs
+COPY --from=builder /app/dist-migrations/migrations/ ./migrations-js/
+COPY --from=builder /app/dist-knexfile/knexfile.js ./knexfile.js
+
+# Also keep TS migrations for compatibility
 COPY migrations/ ./migrations/
 COPY knexfile.ts ./
 

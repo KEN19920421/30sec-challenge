@@ -151,7 +151,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     environment:
       name: production
-      url: https://api.yourdomain.com/api/health
+      url: https://api.30sec-challenge.com/api/health
 
     steps:
       - name: Deploy via SSH

@@ -27,8 +27,11 @@ import giftRoutes from './modules/gift/gift.routes';
 import adRoutes from './modules/ad/ad.routes';
 import adminRoutes from './modules/admin/admin.routes';
 import shareRoutes from './modules/share/share.routes';
+import { assetLinks } from './modules/share/assetlinks';
+import { appleAppSiteAssociation } from './modules/share/apple-app-site-association';
 import feedRoutes from './modules/feed/feed.routes';
 import boostRoutes from './modules/boost/boost.routes';
+import commentRoutes from './modules/comment/comment.routes';
 
 // ---------------------------------------------------------------------------
 // Create Express application
@@ -65,6 +68,12 @@ app.use(
 app.use(defaultLimiter);
 
 // ---------------------------------------------------------------------------
+// Well-known routes for deep linking verification
+// ---------------------------------------------------------------------------
+app.get('/.well-known/assetlinks.json', assetLinks);
+app.get('/.well-known/apple-app-site-association', appleAppSiteAssociation);
+
+// ---------------------------------------------------------------------------
 // Health check (outside /api/v1 -- always available)
 // ---------------------------------------------------------------------------
 app.get('/api/health', (_req: Request, res: Response) => {
@@ -97,6 +106,7 @@ app.use(`${v1}/admin`, adminRoutes);
 app.use(`${v1}/share`, shareRoutes);
 app.use(`${v1}/feed`, feedRoutes);
 app.use(`${v1}/boosts`, boostRoutes);
+app.use(`${v1}/comments`, commentRoutes);
 
 // ---------------------------------------------------------------------------
 // 404 handler -- must come after all route registrations

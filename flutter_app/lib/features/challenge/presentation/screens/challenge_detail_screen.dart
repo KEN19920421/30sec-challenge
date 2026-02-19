@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
 
+import '../../../../core/constants/app_constants.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -81,7 +83,11 @@ class _ChallengeDetailBody extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.share_rounded),
               onPressed: () {
-                // TODO: Share challenge.
+                final url =
+                    'https://${AppConstants.universalLinkHost}/c/${challenge.id}';
+                Share.share(
+                  '${challenge.title} - ${AppConstants.appName}\n$url',
+                );
               },
             ),
           ],

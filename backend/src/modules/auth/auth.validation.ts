@@ -19,6 +19,11 @@ export const logoutSchema = z.object({
   refresh_token: z.string().optional(),
 });
 
+export const devLoginSchema = z.object({
+  email: z.string().email('Valid email is required').toLowerCase().trim(),
+  password: z.string().min(1, 'Password is required'),
+});
+
 // ---------------------------------------------------------------------------
 // Inferred types
 // ---------------------------------------------------------------------------
@@ -26,3 +31,4 @@ export const logoutSchema = z.object({
 export type SocialLoginInput = z.infer<typeof socialLoginSchema>;
 export type RefreshTokenInput = z.infer<typeof refreshTokenSchema>;
 export type LogoutInput = z.infer<typeof logoutSchema>;
+export type DevLoginInput = z.infer<typeof devLoginSchema>;

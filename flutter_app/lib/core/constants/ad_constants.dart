@@ -14,18 +14,18 @@ class AdConstants {
   static const _testRewarded = 'ca-app-pub-3940256099942544/5224354917';
   static const _testNative = 'ca-app-pub-3940256099942544/2247696110';
 
-  // ── Production IDs (TODO: Replace with your actual AdMob IDs) ──
-  // Android
-  static const _prodBannerAndroid = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
-  static const _prodInterstitialAndroid = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
-  static const _prodRewardedAndroid = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
-  static const _prodNativeAndroid = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
+  // ── Production IDs ─────────────────────────────────────────
+  // Android (App ID: ca-app-pub-3076631895164482~3138704463)
+  static const _prodBannerAndroid = 'ca-app-pub-3076631895164482/6659147078';
+  static const _prodInterstitialAndroid = 'ca-app-pub-3076631895164482/4775219768';
+  static const _prodRewardedAndroid = 'ca-app-pub-3076631895164482/2719902068';
+  static const _prodNativeAndroid = 'ca-app-pub-3076631895164482/4672004336';
 
-  // iOS
-  static const _prodBannerIos = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
-  static const _prodInterstitialIos = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
-  static const _prodRewardedIos = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
-  static const _prodNativeIos = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
+  // iOS (App ID: ca-app-pub-3076631895164482~5533767669)
+  static const _prodBannerIos = 'ca-app-pub-3076631895164482/8435263179';
+  static const _prodInterstitialIos = 'ca-app-pub-3076631895164482/7014370298';
+  static const _prodRewardedIos = 'ca-app-pub-3076631895164482/5809099831';
+  static const _prodNativeIos = 'ca-app-pub-3076631895164482/7345542785';
 
   /// Whether to use test ads.
   static bool get _useTestAds => EnvironmentConfig.isDev;

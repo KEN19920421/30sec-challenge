@@ -24,7 +24,7 @@ export interface UserProfile {
   subscription_tier: string;
   follower_count: number;
   following_count: number;
-  total_submissions: number;
+  submission_count: number;
   is_following?: boolean;
   created_at: Date;
   updated_at: Date;
@@ -68,7 +68,7 @@ const SAFE_USER_COLUMNS = [
   'users.subscription_tier',
   'users.follower_count',
   'users.following_count',
-  'users.total_submissions',
+  'users.submission_count',
   'users.created_at',
   'users.updated_at',
 ] as const;
@@ -233,7 +233,7 @@ export async function getUserSubmissions(
       'submissions.video_url',
       'submissions.thumbnail_url',
       'submissions.caption',
-      'submissions.votes_count',
+      'submissions.vote_count',
       'submissions.created_at',
       'challenges.id as challenge_id',
       'challenges.title as challenge_title',
@@ -246,10 +246,11 @@ export async function getUserSubmissions(
   const submissions: UserSubmission[] = rows.map((row: any) => ({
     id: row.id,
     user_id: row.user_id,
+    challenge_id: row.challenge_id,
     video_url: row.video_url,
     thumbnail_url: row.thumbnail_url,
     caption: row.caption,
-    votes_count: row.votes_count,
+    votes_count: row.vote_count,
     created_at: row.created_at,
     challenge: row.challenge_id
       ? { id: row.challenge_id, title: row.challenge_title }

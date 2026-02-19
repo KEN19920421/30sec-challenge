@@ -5,7 +5,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../constants/api_constants.dart';
 import '../constants/app_constants.dart';
+import '../network/api_client.dart';
 import 'storage_service.dart';
 
 /// Top-level handler for background messages. Must be a top-level function
@@ -24,6 +26,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 class PushNotificationService {
   final FirebaseMessaging _messaging;
   final StorageService _storage;
+  final ApiClient? _apiClient;
 
   /// Stream controller that emits notification payloads when a user taps
   /// a notification. Consumers (e.g. the router) can listen to this stream
@@ -31,15 +34,26 @@ class PushNotificationService {
   final StreamController<Map<String, dynamic>> _notificationTapController =
       StreamController<Map<String, dynamic>>.broadcast();
 
+  /// Stream controller for foreground messages so the UI layer can display
+  /// in-app banners or SnackBars.
+  final StreamController<RemoteMessage> _foregroundMessageController =
+      StreamController<RemoteMessage>.broadcast();
+
   /// Public stream of notification tap events containing the message data.
   Stream<Map<String, dynamic>> get onNotificationTap =>
       _notificationTapController.stream;
 
+  /// Public stream of foreground messages for in-app display.
+  Stream<RemoteMessage> get onForegroundMessage =>
+      _foregroundMessageController.stream;
+
   PushNotificationService({
     FirebaseMessaging? messaging,
     required StorageService storage,
+    ApiClient? apiClient,
   })  : _messaging = messaging ?? FirebaseMessaging.instance,
-        _storage = storage;
+        _storage = storage,
+        _apiClient = apiClient;
 
   // ---------------------------------------------------------------------------
   // Initialization
@@ -138,9 +152,24 @@ class PushNotificationService {
     debugPrint('[FCM] Token: $token');
     await _storage.setString(AppConstants.keyFcmToken, token);
 
-    // TODO: Send the token to the backend API so the server can deliver
-    // targeted push notifications to this device.
-    // Example: await _apiClient.post('/devices', data: {'token': token});
+    await _sendTokenToBackend(token);
+  }
+
+  /// Sends the FCM device token to the backend so it can deliver push
+  /// notifications to this device.
+  Future<void> _sendTokenToBackend(String token) async {
+    try {
+      await _apiClient?.post(
+        ApiConstants.registerDevice,
+        data: {
+          'token': token,
+          'platform': Platform.isIOS ? 'ios' : 'android',
+        },
+      );
+      debugPrint('[FCM] Token sent to backend.');
+    } catch (e) {
+      debugPrint('[FCM] Failed to send token to backend: $e');
+    }
   }
 
   /// Returns the currently stored FCM token, or null if not yet obtained.
@@ -166,9 +195,12 @@ class PushNotificationService {
         '[FCM] Foreground message: ${message.notification?.title}',
       );
 
-      // TODO: Display an in-app banner / snackbar / local notification here.
-      // The notification data is available in `message.data` and the display
-      // payload in `message.notification`.
+      // Emit foreground messages so UI consumers (e.g. a global SnackBar
+      // listener) can display an in-app banner.
+      final notification = message.notification;
+      if (notification != null) {
+        _foregroundMessageController.add(message);
+      }
     });
   }
 
@@ -225,6 +257,7 @@ class PushNotificationService {
   /// Dispose the service and close streams.
   void dispose() {
     _notificationTapController.close();
+    _foregroundMessageController.close();
   }
 }
 
@@ -238,5 +271,6 @@ class PushNotificationService {
 final pushNotificationServiceProvider =
     Provider<PushNotificationService>((ref) {
   final storage = ref.watch(storageServiceProvider);
-  return PushNotificationService(storage: storage);
+  final apiClient = ref.watch(apiClientProvider);
+  return PushNotificationService(storage: storage, apiClient: apiClient);
 });

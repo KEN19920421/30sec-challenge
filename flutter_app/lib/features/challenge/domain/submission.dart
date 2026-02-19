@@ -1,3 +1,20 @@
+/// Safely parse a value (num or String) to double.
+double? _toDouble(dynamic v) {
+  if (v == null) return null;
+  if (v is num) return v.toDouble();
+  if (v is String) return double.tryParse(v);
+  return null;
+}
+
+/// Safely parse a value (num or String) to int.
+int? _toInt(dynamic v) {
+  if (v == null) return null;
+  if (v is int) return v;
+  if (v is num) return v.toInt();
+  if (v is String) return int.tryParse(v);
+  return null;
+}
+
 /// Domain entity representing a user's video submission to a challenge.
 ///
 /// A submission is a 30-second video recorded by a user in response to an
@@ -90,21 +107,24 @@ class Submission {
     return Submission(
       id: json['id'] as String,
       userId: (json['user_id'] ?? json['userId']) as String,
-      challengeId: (json['challenge_id'] ?? json['challengeId']) as String,
+      challengeId: (json['challenge_id'] ??
+              json['challengeId'] ??
+              (json['challenge'] as Map<String, dynamic>?)?['id']) as String? ??
+          '',
       caption: json['caption'] as String?,
       videoUrl: (json['video_url'] ?? json['videoUrl']) as String?,
       thumbnailUrl: (json['thumbnail_url'] ?? json['thumbnailUrl']) as String?,
       hlsUrl: (json['hls_url'] ?? json['hlsUrl']) as String?,
-      videoDuration: ((json['video_duration'] ?? json['videoDuration']) as num?)?.toDouble(),
+      videoDuration: _toDouble(json['video_duration'] ?? json['videoDuration']),
       transcodeStatus: (json['transcode_status'] ?? json['transcodeStatus']) as String? ?? 'pending',
       moderationStatus: (json['moderation_status'] ?? json['moderationStatus']) as String? ?? 'pending',
-      voteCount: (json['vote_count'] ?? json['voteCount']) as int? ?? 0,
-      superVoteCount: (json['super_vote_count'] ?? json['superVoteCount']) as int? ?? 0,
-      wilsonScore: ((json['wilson_score'] ?? json['wilsonScore']) as num?)?.toDouble() ?? 0.0,
-      rank: json['rank'] as int?,
-      totalViews: (json['total_views'] ?? json['totalViews']) as int? ?? 0,
-      giftCoinsReceived: (json['gift_coins_received'] ?? json['giftCoinsReceived']) as int? ?? 0,
-      boostScore: ((json['boost_score'] ?? json['boostScore']) as num?)?.toDouble() ?? 0.0,
+      voteCount: _toInt(json['vote_count'] ?? json['voteCount']) ?? 0,
+      superVoteCount: _toInt(json['super_vote_count'] ?? json['superVoteCount']) ?? 0,
+      wilsonScore: _toDouble(json['wilson_score'] ?? json['wilsonScore']) ?? 0.0,
+      rank: _toInt(json['rank']),
+      totalViews: _toInt(json['total_views'] ?? json['totalViews']) ?? 0,
+      giftCoinsReceived: _toInt(json['gift_coins_received'] ?? json['giftCoinsReceived']) ?? 0,
+      boostScore: _toDouble(json['boost_score'] ?? json['boostScore']) ?? 0.0,
       createdAt: DateTime.parse((json['created_at'] ?? json['createdAt']) as String),
       username: user?['username'] as String? ?? json['username'] as String?,
       displayName:

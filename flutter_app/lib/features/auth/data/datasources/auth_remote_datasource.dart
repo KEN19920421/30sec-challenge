@@ -29,6 +29,24 @@ class AuthRemoteDataSource {
     );
   }
 
+
+  /// POST /auth/dev-login (development only)
+  Future<AuthResponseModel> devLogin({
+    required String email,
+    required String password,
+  }) async {
+    final response = await _client.post(
+      ApiConstants.devLogin,
+      data: {
+        'email': email,
+        'password': password,
+      },
+    );
+    return AuthResponseModel.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+  }
+
   /// POST /auth/refresh-token
   Future<AuthResponseModel> refreshToken(String refreshToken) async {
     final response = await _client.post(

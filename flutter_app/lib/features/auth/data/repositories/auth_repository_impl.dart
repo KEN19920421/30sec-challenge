@@ -43,6 +43,30 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<(User, AuthTokens)> devLogin({
+    required String email,
+    required String password,
+  }) async {
+    final response = await _remote.devLogin(
+      email: email,
+      password: password,
+    );
+
+    final tokens = AuthTokens(
+      accessToken: response.accessToken,
+      refreshToken: response.refreshToken,
+      expiresIn: response.expiresIn,
+    );
+
+    await _local.saveTokens(tokens);
+    if (response.user != null) {
+      await _local.saveUser(response.user!);
+    }
+
+    return (response.user! as User, tokens);
+  }
+
+  @override
   Future<AuthTokens> refreshToken(String refreshToken) async {
     final response = await _remote.refreshToken(refreshToken);
 

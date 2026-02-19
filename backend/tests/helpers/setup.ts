@@ -15,6 +15,8 @@ import { getDb, truncateAllTables } from './database';
 // ---------------------------------------------------------------------------
 
 process.env.NODE_ENV = 'test';
+// Force test database to avoid destroying the development database
+process.env.DATABASE_URL = 'postgres://app_user:app_password@localhost:5432/video_challenge_test';
 process.env.JWT_SECRET = 'test-jwt-access-secret-32chars!!';
 process.env.JWT_REFRESH_SECRET = 'test-jwt-refresh-secret-32chars!';
 process.env.JWT_EXPIRES_IN = '15m';

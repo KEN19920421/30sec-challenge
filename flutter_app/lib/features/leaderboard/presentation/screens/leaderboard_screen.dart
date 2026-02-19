@@ -7,6 +7,7 @@ import '../../../../core/constants/ad_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../l10n/l10n.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../domain/leaderboard_entry.dart';
 import '../providers/leaderboard_provider.dart';
 import '../widgets/leaderboard_tab_bar.dart';
@@ -299,8 +300,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                   }
 
                   final entry = state.restEntries[index];
-                  // TODO: Compare with actual current user ID.
-                  final isCurrentUser = false;
+                  final currentUser = ref.watch(currentUserProvider);
+                  final isCurrentUser = currentUser?.id == entry.userId;
 
                   return RankTile(
                     entry: entry,

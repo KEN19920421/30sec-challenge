@@ -15,6 +15,9 @@ abstract class AuthRepository {
     required String idToken,
   });
 
+  /// Authenticate with email & password (dev/testing only).
+  Future<(User, AuthTokens)> devLogin({required String email, required String password});
+
   /// Exchange a refresh token for a fresh token pair.
   Future<AuthTokens> refreshToken(String refreshToken);
 

@@ -710,6 +710,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get pickFromGallery => 'ギャラリー';
 
   @override
+  String get cameraUnavailable => 'カメラを利用できません';
+
+  @override
+  String get cameraUnavailableDescription =>
+      'カメラを起動できませんでした。代わりにギャラリーから動画を選択できます。';
+
+  @override
   String get editVideo => '動画を編集';
 
   @override
@@ -726,4 +733,58 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get exportFailed => 'エクスポートに失敗しました';
+
+  @override
+  String get comments => 'コメント';
+
+  @override
+  String get addComment => 'コメントを追加...';
+
+  @override
+  String get noCommentsYet => 'まだコメントがありません';
+
+  @override
+  String get beFirstToComment => '最初のコメントを投稿しよう！';
+
+  @override
+  String replyingTo(String username) {
+    return '@$usernameに返信中';
+  }
+
+  @override
+  String repliesCount(int count) {
+    return '$count件の返信';
+  }
+
+  @override
+  String get reply => '返信';
+
+  @override
+  String get deleteComment => '削除';
+
+  @override
+  String get commentDeleted => 'コメントを削除しました';
+
+  @override
+  String get deletedComment => '[削除済み]';
+
+  @override
+  String replyTo(String username) {
+    return '@$username に返信';
+  }
+
+  @override
+  String get deleteCommentConfirm => 'このコメントを削除しますか？';
+
+  @override
+  String get commentAdded => 'コメントを追加しました';
+
+  @override
+  String get viewReplies => '返信を表示';
+
+  @override
+  String get mute => 'ミュート';
+
+  @override
+  String get unmute => 'ミュート解除';
 }

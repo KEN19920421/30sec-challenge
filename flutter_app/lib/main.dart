@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,48 +14,70 @@ import 'core/config/env.dart';
 import 'core/services/storage_service.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // Catch all uncaught asynchronous errors.
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize environment and app config.
-  const envName = String.fromEnvironment('ENV', defaultValue: 'dev');
-  final env = envName == 'prod'
-      ? Environment.prod
-      : envName == 'staging'
-          ? Environment.staging
-          : Environment.dev;
-  EnvironmentConfig.initialize(env);
-  AppConfig.initialize();
+    // Catch Flutter framework errors (rendering, layout, etc.).
+    FlutterError.onError = (FlutterErrorDetails details) {
+      FlutterError.presentError(details);
+      if (kReleaseMode) {
+        // In release mode, log silently instead of crashing.
+        debugPrint('FlutterError: ${details.exceptionAsString()}');
+      }
+    };
 
-  // Lock orientation to portrait for consistent video experience.
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+    // Catch errors in platform channel callbacks.
+    PlatformDispatcher.instance.onError = (error, stack) {
+      debugPrint('PlatformDispatcher error: $error');
+      return true;
+    };
 
-  // Initialize Firebase for auth, messaging, analytics, etc.
-  try {
-    await Firebase.initializeApp();
-  } catch (e) {
-    debugPrint('Firebase init failed (dev mode): $e');
-  }
+    // Initialize environment and app config.
+    const envName = String.fromEnvironment('ENV', defaultValue: 'dev');
+    final env = envName == 'prod'
+        ? Environment.prod
+        : envName == 'staging'
+            ? Environment.staging
+            : Environment.dev;
+    EnvironmentConfig.initialize(env);
+    AppConfig.initialize();
 
-  // Initialize Google Mobile Ads SDK.
-  try {
-    await MobileAds.instance.initialize();
-  } catch (e) {
-    debugPrint('MobileAds init failed (dev mode): $e');
-  }
+    // Lock orientation to portrait for consistent video experience.
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
 
-  // Obtain SharedPreferences instance to inject into the provider tree.
-  final sharedPreferences = await SharedPreferences.getInstance();
+    // Initialize Firebase for auth, messaging, analytics, etc.
+    try {
+      await Firebase.initializeApp();
+    } catch (e) {
+      debugPrint('Firebase init failed (dev mode): $e');
+    }
 
-  runApp(
-    ProviderScope(
-      overrides: [
-        storageServiceProvider
-            .overrideWithValue(StorageService(sharedPreferences)),
-      ],
-      child: const App(),
-    ),
-  );
+    // Initialize Google Mobile Ads SDK.
+    try {
+      await MobileAds.instance.initialize();
+    } catch (e) {
+      debugPrint('MobileAds init failed (dev mode): $e');
+    }
+
+    // Obtain SharedPreferences instance to inject into the provider tree.
+    final sharedPreferences = await SharedPreferences.getInstance();
+
+    runApp(
+      ProviderScope(
+        overrides: [
+          storageServiceProvider
+              .overrideWithValue(StorageService(sharedPreferences)),
+        ],
+        child: const App(),
+      ),
+    );
+  }, (error, stackTrace) {
+    // Handle uncaught async errors.
+    debugPrint('Uncaught error: $error');
+    debugPrint('Stack trace: $stackTrace');
+  });
 }

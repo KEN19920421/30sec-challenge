@@ -387,7 +387,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
 
   Widget _buildErrorOverlay(RecordingError errorState) {
     return Container(
-      color: AppColors.black.withValues(alpha: 0.7),
+      color: AppColors.black.withValues(alpha: 0.85),
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
@@ -395,26 +395,44 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(
-                Icons.error_outline_rounded,
-                size: 56,
-                color: AppColors.error,
+                Icons.videocam_off_rounded,
+                size: 64,
+                color: AppColors.white,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               Text(
-                'Camera Error',
+                context.l10n.cameraUnavailable,
                 style: AppTextStyles.heading3.copyWith(
                   color: AppColors.white,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                errorState.message,
+                context.l10n.cameraUnavailableDescription,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.white.withValues(alpha: 0.8),
+                  color: AppColors.white.withValues(alpha: 0.7),
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
+              // Primary action: pick from gallery
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: _onPickFromGallery,
+                  icon: const Icon(Icons.photo_library_outlined),
+                  label: Text(context.l10n.pickFromGallery),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -427,14 +445,14 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
                     child: Text(context.l10n.close),
                   ),
                   const SizedBox(width: 12),
-                  ElevatedButton(
+                  OutlinedButton(
                     onPressed: () => ref
                         .read(
                             recordingProvider(widget.challengeId).notifier)
                         .initCamera(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
+                    style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.white,
+                      side: const BorderSide(color: AppColors.white),
                     ),
                     child: Text(context.l10n.retry),
                   ),

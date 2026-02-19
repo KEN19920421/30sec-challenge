@@ -48,20 +48,39 @@ class UserProfile {
     return UserProfile(
       id: json['id'] as String,
       username: json['username'] as String,
-      displayName: json['displayName'] as String? ?? json['username'] as String,
+      displayName: json['display_name'] as String? ??
+          json['displayName'] as String? ??
+          json['username'] as String,
       email: json['email'] as String? ?? '',
-      avatarUrl: json['avatarUrl'] as String?,
+      avatarUrl: json['avatar_url'] as String? ?? json['avatarUrl'] as String?,
       bio: json['bio'] as String?,
       role: json['role'] as String? ?? 'user',
-      subscriptionTier: json['subscriptionTier'] as String? ?? 'free',
-      coinBalance: json['coinBalance'] as int? ?? 0,
-      followerCount: json['followerCount'] as int? ?? 0,
-      followingCount: json['followingCount'] as int? ?? 0,
-      submissionCount: json['submissionCount'] as int? ?? 0,
-      totalVotesReceived: json['totalVotesReceived'] as int? ?? 0,
-      isVerified: json['isVerified'] as bool? ?? false,
-      isFollowing: json['isFollowing'] as bool? ?? false,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      subscriptionTier: json['subscription_tier'] as String? ??
+          json['subscriptionTier'] as String? ??
+          'free',
+      coinBalance: json['coin_balance'] as int? ??
+          json['coinBalance'] as int? ??
+          0,
+      followerCount: json['follower_count'] as int? ??
+          json['followerCount'] as int? ??
+          0,
+      followingCount: json['following_count'] as int? ??
+          json['followingCount'] as int? ??
+          0,
+      submissionCount: json['submission_count'] as int? ??
+          json['submissionCount'] as int? ??
+          0,
+      totalVotesReceived: json['total_votes_received'] as int? ??
+          json['totalVotesReceived'] as int? ??
+          0,
+      isVerified: json['is_verified'] as bool? ??
+          json['isVerified'] as bool? ??
+          false,
+      isFollowing: json['is_following'] as bool? ??
+          json['isFollowing'] as bool? ??
+          false,
+      createdAt: DateTime.parse(
+          json['created_at'] as String? ?? json['createdAt'] as String),
     );
   }
 

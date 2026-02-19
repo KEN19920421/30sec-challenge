@@ -72,6 +72,13 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
 
   /// Loads the user profile and the first page of submissions.
   Future<void> loadProfile() async {
+    if (userId.isEmpty) {
+      state = state.copyWith(
+        status: ProfileStatus.error,
+        errorMessage: 'No user ID available',
+      );
+      return;
+    }
     state = state.copyWith(status: ProfileStatus.loading);
     try {
       final profile = await _profileRepo.getProfile(userId);

@@ -295,3 +295,52 @@ export async function getUserById(id: string): Promise<SanitizedUser> {
 
   return user as SanitizedUser;
 }
+
+/**
+ * DEV ONLY: Authenticate a user via email + password.
+ *
+ * Only available when NODE_ENV !== 'production'.
+ * Validates the password against the bcrypt hash stored in the `users` table.
+ */
+export async function devLogin(
+  email: string,
+  password: string,
+): Promise<AuthResult> {
+  if (process.env.NODE_ENV === 'production') {
+    throw new AuthenticationError('Dev login is not available in production');
+  }
+
+  const user = await db('users')
+    .select(USER_COLUMNS as unknown as string[])
+    .where('email', email.toLowerCase().trim())
+    .whereNull('deleted_at')
+    .first<UserRow | undefined>();
+
+  if (!user) {
+    throw new AuthenticationError('Invalid email or password');
+  }
+
+  if (!user.password_hash) {
+    throw new AuthenticationError('This account does not have a password set');
+  }
+
+  const { comparePassword } = await import('./password.service');
+  const isMatch = await comparePassword(password, user.password_hash);
+  if (!isMatch) {
+    throw new AuthenticationError('Invalid email or password');
+  }
+
+  const tokens = generateTokenPair({
+    id: user.id,
+    email: user.email,
+    role: user.role,
+    subscription_tier: user.subscription_tier,
+  });
+
+  logger.info('Dev login successful', { userId: user.id, email: user.email });
+
+  return {
+    user: sanitizeUser(user),
+    tokens,
+  };
+}

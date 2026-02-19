@@ -104,6 +104,46 @@ class MockAuthRepository extends _i1.Mock implements _i4.AuthRepository {
       ) as _i5.Future<(_i2.User, _i3.AuthTokens)>);
 
   @override
+  _i5.Future<(_i2.User, _i3.AuthTokens)> devLogin({
+    required String? email,
+    required String? password,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #devLogin,
+          [],
+          {
+            #email: email,
+            #password: password,
+          },
+        ),
+        returnValue: _i5.Future<(_i2.User, _i3.AuthTokens)>.value((
+          _FakeUser_0(
+            this,
+            Invocation.method(
+              #devLogin,
+              [],
+              {
+                #email: email,
+                #password: password,
+              },
+            ),
+          ),
+          _FakeAuthTokens_1(
+            this,
+            Invocation.method(
+              #devLogin,
+              [],
+              {
+                #email: email,
+                #password: password,
+              },
+            ),
+          )
+        )),
+      ) as _i5.Future<(_i2.User, _i3.AuthTokens)>);
+
+  @override
   _i5.Future<_i3.AuthTokens> refreshToken(String? refreshToken) =>
       (super.noSuchMethod(
         Invocation.method(

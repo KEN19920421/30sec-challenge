@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/social_repository.dart';
+// ignore: unnecessary_import
+import '../../domain/entities/social_user.dart';
 
 // =============================================================================
 // Social List State

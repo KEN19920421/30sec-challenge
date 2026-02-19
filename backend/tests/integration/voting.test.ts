@@ -163,7 +163,6 @@ describe('Voting Endpoints', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({ submission_id: submission.id, value: 1 })
         .expect(403);
-
       expect(res.body.success).toBe(false);
       expect(res.body.message).toMatch(/own submission/i);
     });
