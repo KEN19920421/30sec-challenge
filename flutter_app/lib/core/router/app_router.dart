@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
+import '../services/analytics_service.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/onboarding_screen.dart';
@@ -14,8 +16,10 @@ import '../../features/leaderboard/data/leaderboard_repository.dart';
 import '../../features/leaderboard/domain/leaderboard_entry.dart';
 import '../../features/leaderboard/presentation/providers/leaderboard_provider.dart';
 import '../../features/leaderboard/presentation/screens/leaderboard_screen.dart';
+import '../../features/leaderboard/presentation/screens/league_screen.dart';
 import '../../features/notifications/presentation/screens/notification_settings_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
+import '../../features/profile/presentation/screens/creator_analytics_screen.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/profile/presentation/screens/followers_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
@@ -24,8 +28,11 @@ import '../../features/recording/presentation/screens/camera_screen.dart';
 import '../../features/recording/presentation/screens/preview_screen.dart';
 import '../../features/recording/presentation/screens/upload_progress_screen.dart';
 import '../../features/recording/presentation/screens/video_editor_screen.dart';
+import '../../features/search/presentation/screens/search_screen.dart';
 import '../../features/shop/presentation/screens/coin_store_screen.dart';
 import '../../features/shop/presentation/screens/subscription_screen.dart';
+import '../../features/profile/presentation/screens/blocked_users_screen.dart';
+import '../../features/voting/presentation/screens/voting_history_screen.dart';
 import '../../features/voting/presentation/screens/voting_screen.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
@@ -98,6 +105,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: '/',
     debugLogDiagnostics: true,
     refreshListenable: authNotifier,
+    observers: [SentryNavigatorObserver(), AnalyticsService.observer],
 
     // -------------------------------------------------------------------------
     // Auth redirect -- TikTok style: only gate actions, not browsing
@@ -219,7 +227,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 builder: (context, state) {
                   final extra = state.extra as Map<String, dynamic>?;
                   final challengeId = extra?['challengeId'] as String? ?? '';
-                  return CameraScreen(challengeId: challengeId);
+                  final duetParentId =
+                      extra?['duetParentId'] as String?;
+                  final duetParentUsername =
+                      extra?['duetParentUsername'] as String?;
+                  return CameraScreen(
+                    challengeId: challengeId,
+                    duetParentId: duetParentId,
+                    duetParentUsername: duetParentUsername,
+                  );
                 },
                 routes: [
                   GoRoute(
@@ -287,6 +303,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       );
                     },
                   ),
+                  GoRoute(
+                    path: 'league',
+                    name: RouteNames.league,
+                    pageBuilder: (context, state) => const NoTransitionPage(
+                      child: LeagueScreen(),
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -304,6 +327,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     path: 'edit',
                     name: RouteNames.editProfile,
                     builder: (context, state) => const EditProfileScreen(),
+                  ),
+                  GoRoute(
+                    path: 'analytics',
+                    name: RouteNames.creatorAnalytics,
+                    builder: (context, state) =>
+                        const CreatorAnalyticsScreen(),
                   ),
                 ],
               ),
@@ -366,6 +395,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/settings',
         name: RouteNames.settings,
         builder: (context, state) => const SettingsScreen(),
+        routes: [
+          GoRoute(
+            path: 'blocked-users',
+            name: RouteNames.blockedUsers,
+            builder: (context, state) => const BlockedUsersScreen(),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/voting/history',
+        name: RouteNames.votingHistory,
+        builder: (context, state) => const VotingHistoryScreen(),
       ),
       GoRoute(
         path: '/shop',
@@ -384,33 +425,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
         ],
       ),
+      GoRoute(
+        path: '/search',
+        name: RouteNames.search,
+        builder: (context, state) => const SearchScreen(),
+      ),
+      GoRoute(
+        path: '/404',
+        name: RouteNames.notFound,
+        builder: (context, state) => const _NotFoundScreen(),
+      ),
     ],
 
     // -------------------------------------------------------------------------
     // Error page
     // -------------------------------------------------------------------------
-    errorBuilder: (context, state) => Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text(
-              'Page not found',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(state.error?.toString() ?? 'Unknown error'),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => context.go('/'),
-              child: const Text('Go Home'),
-            ),
-          ],
-        ),
-      ),
-    ),
+    errorBuilder: (context, state) => const _NotFoundScreen(),
   );
 });
 
@@ -483,7 +513,7 @@ class _LeaderboardOverviewScreen extends ConsumerWidget {
           children: [
             const Icon(Icons.error_outline, size: 48, color: AppColors.error),
             const SizedBox(height: 16),
-            Text('Failed to load rankings', style: AppTextStyles.heading4),
+            const Text('Failed to load rankings', style: AppTextStyles.heading4),
             const SizedBox(height: 8),
             Text(
               state.errorMessage ?? '',
@@ -516,7 +546,7 @@ class _LeaderboardOverviewScreen extends ConsumerWidget {
                   : AppColors.lightOnSurfaceVariant,
             ),
             const SizedBox(height: 16),
-            Text('No rankings yet', style: AppTextStyles.heading4),
+            const Text('No rankings yet', style: AppTextStyles.heading4),
             const SizedBox(height: 8),
             Text(
               'Submit to a challenge to appear here!',
@@ -656,5 +686,42 @@ class _TopCreatorTile extends StatelessWidget {
       default:
         return AppColors.primary;
     }
+  }
+}
+
+// =============================================================================
+// 404 / Not-found screen
+// =============================================================================
+
+/// Displayed when a deep link or navigation target cannot be resolved.
+class _NotFoundScreen extends StatelessWidget {
+  const _NotFoundScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Colors.grey,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Page not found',
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () => context.go('/'),
+              child: const Text('Go Home'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

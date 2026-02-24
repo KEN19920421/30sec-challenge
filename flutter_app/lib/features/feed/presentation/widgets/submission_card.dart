@@ -12,6 +12,7 @@ class SubmissionCard extends StatelessWidget {
   final VoidCallback? onUserTap;
   final VoidCallback? onGiftTap;
   final VoidCallback? onBoostTap;
+  final VoidCallback? onDuetTap;
 
   const SubmissionCard({
     super.key,
@@ -20,6 +21,7 @@ class SubmissionCard extends StatelessWidget {
     this.onUserTap,
     this.onGiftTap,
     this.onBoostTap,
+    this.onDuetTap,
   });
 
   @override
@@ -75,6 +77,34 @@ class SubmissionCard extends StatelessWidget {
                       size: 56,
                     ),
                   ),
+
+                  // Duet badge — shown when this submission is a duet response.
+                  if (submission.duetParentId != null)
+                    Positioned(
+                      top: 8,
+                      left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.reply,
+                                color: Colors.white, size: 14),
+                            const SizedBox(width: 4),
+                            Text(
+                              'duet with @${submission.duetParentUsername ?? ""}',
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 11),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
 
                   // Boost badge
                   if (submission.isBoosted)
@@ -233,6 +263,20 @@ class SubmissionCard extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
+                      // Duet button
+                      if (onDuetTap != null)
+                        TextButton.icon(
+                          onPressed: onDuetTap,
+                          icon: const Icon(Icons.reply, size: 16),
+                          label: const Text('Duet'),
+                          style: TextButton.styleFrom(
+                            foregroundColor: AppColors.primary,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        ),
                       Icon(
                         Icons.more_horiz,
                         size: 20,

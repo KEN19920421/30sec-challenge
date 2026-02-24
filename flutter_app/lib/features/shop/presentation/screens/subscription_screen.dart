@@ -128,19 +128,55 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
               ),
             ),
 
-          // Benefits list
+          // Benefits heading
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
               child: Text(context.l10n.proBenefits, style: AppTextStyles.heading3),
             ),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: _buildBenefits(context).map((b) => _BenefitRow(benefit: b)).toList(),
-              ),
+
+          // Benefits list — six concrete items
+          const SliverToBoxAdapter(
+            child: Column(
+              children: [
+                _BenefitRow(
+                  icon: Icons.workspace_premium,
+                  iconColor: Color(0xFF9C27B0),
+                  title: '月次プレミアムチャレンジ参加権',
+                  subtitle: 'Monthly Premium Challenge Access — exclusive competitions',
+                ),
+                _BenefitRow(
+                  icon: Icons.flash_on,
+                  iconColor: Color(0xFFFF9800),
+                  title: 'スーパー投票無制限',
+                  subtitle: 'Unlimited Super Votes — boost your favorite submissions',
+                ),
+                _BenefitRow(
+                  icon: Icons.block,
+                  iconColor: Color(0xFF4CAF50),
+                  title: '広告なし',
+                  subtitle: 'Ad-free experience — enjoy uninterrupted creativity',
+                ),
+                _BenefitRow(
+                  icon: Icons.card_giftcard,
+                  iconColor: Color(0xFFE91E63),
+                  title: 'ギフト収益率+10%',
+                  subtitle: 'Gift revenue share +10% — earn more from every gift',
+                ),
+                _BenefitRow(
+                  icon: Icons.access_time,
+                  iconColor: Color(0xFF2196F3),
+                  title: '24時間早期アクセス',
+                  subtitle: '24hr early access — be first to submit every challenge',
+                ),
+                _BenefitRow(
+                  icon: Icons.military_tech,
+                  iconColor: Color(0xFFFFD700),
+                  title: 'プレミアムバッジ',
+                  subtitle: 'Premium badge — stand out on your profile and feed',
+                ),
+              ],
             ),
           ),
 
@@ -156,6 +192,12 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
               child: _buildPlanCards(state),
             ),
           ],
+
+          // Premium Challenge Preview banner — shown before subscribe button
+          if (!state.isPro)
+            const SliverToBoxAdapter(
+              child: _PremiumChallengeBanner(),
+            ),
 
           // Subscribe button
           if (!state.isPro)
@@ -188,10 +230,16 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
             child: Center(
               child: TextButton(
                 onPressed: () async {
+                  final messenger = ScaffoldMessenger.of(context);
+                  final message = context.l10n.purchasesRestored;
                   await ref.read(subscriptionProvider.notifier).restore();
-                  if (mounted) {
-                    context.showSnackBar(context.l10n.purchasesRestored);
-                  }
+                  if (!mounted) return;
+                  messenger
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                      content: Text(message),
+                      duration: const Duration(seconds: 3),
+                    ));
                 },
                 child: Text(context.l10n.restorePurchases),
               ),
@@ -205,8 +253,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
               child: Column(
                 children: [
                   Text(
-                    'Subscription auto-renews unless cancelled 24 hours before the end of the current period. '
-                    'Payment will be charged to your Apple ID / Google Play account.',
+                    context.l10n.subscriptionAutoRenews,
                     style: AppTextStyles.caption.copyWith(
                       color: isDark
                           ? AppColors.darkOnSurfaceVariant
@@ -220,9 +267,9 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                     children: [
                       TextButton(
                         onPressed: () => _launchUrl(
-                            'https://30secchallenge.app/terms'),
+                            'https://30sec-challenge.com/terms'),
                         child: Text(
-                          'Terms',
+                          context.l10n.terms,
                           style: AppTextStyles.caption.copyWith(
                             color: AppColors.primary,
                           ),
@@ -236,9 +283,9 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                           )),
                       TextButton(
                         onPressed: () => _launchUrl(
-                            'https://30secchallenge.app/privacy'),
+                            'https://appdevelopsk.github.io/privacy/'),
                         child: Text(
-                          'Privacy',
+                          context.l10n.privacy,
                           style: AppTextStyles.caption.copyWith(
                             color: AppColors.primary,
                           ),
@@ -310,16 +357,25 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
   Future<void> _subscribe() async {
     final state = ref.read(subscriptionProvider);
     if (_selectedPlanIndex >= state.plans.length) {
-      context.showErrorSnackBar('Please select a plan.');
+      context.showErrorSnackBar(context.l10n.selectPlanFirst);
       return;
     }
 
+    final messenger = ScaffoldMessenger.of(context);
+    final errorColor = context.colorScheme.error;
     final plan = state.plans[_selectedPlanIndex];
     final success =
         await ref.read(subscriptionProvider.notifier).purchase(plan);
-    if (mounted && !success) {
+    if (!mounted) return;
+    if (!success) {
       final errorMsg = ref.read(subscriptionProvider).errorMessage;
-      context.showErrorSnackBar(errorMsg ?? 'Purchase failed.');
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(
+          content: Text(errorMsg ?? context.l10n.purchaseFailed),
+          backgroundColor: errorColor,
+          duration: const Duration(seconds: 4),
+        ));
     }
   }
 
@@ -336,98 +392,158 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
 }
 
 // =============================================================================
-// Benefits
+// Benefit row widget
 // =============================================================================
 
-class _Benefit {
-  final IconData icon;
-  final String title;
-  final String description;
-
-  const _Benefit({
-    required this.icon,
-    required this.title,
-    required this.description,
-  });
-}
-
-List<_Benefit> _buildBenefits(BuildContext context) => [
-  _Benefit(
-    icon: Icons.block,
-    title: context.l10n.noAds,
-    description: 'Enjoy an ad-free experience',
-  ),
-  _Benefit(
-    icon: Icons.auto_awesome,
-    title: context.l10n.premiumEffects,
-    description: 'Exclusive video filters and effects',
-  ),
-  _Benefit(
-    icon: Icons.workspace_premium,
-    title: context.l10n.proBadge,
-    description: 'Stand out with a Pro badge on your profile',
-  ),
-  _Benefit(
-    icon: Icons.favorite,
-    title: context.l10n.freeSuperVotes,
-    description: 'Boost your favorite submissions daily',
-  ),
-  _Benefit(
-    icon: Icons.monetization_on,
-    title: context.l10n.coinMultiplier,
-    description: 'Earn 50% more Sparks on purchases',
-  ),
-  _Benefit(
-    icon: Icons.analytics,
-    title: context.l10n.detailedAnalytics,
-    description: 'Insights on your submissions and audience',
-  ),
-  _Benefit(
-    icon: Icons.card_giftcard,
-    title: context.l10n.premiumGifts,
-    description: 'Access exclusive gift items',
-  ),
-];
-
 class _BenefitRow extends StatelessWidget {
-  final _Benefit benefit;
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String subtitle;
 
-  const _BenefitRow({required this.benefit});
+  const _BenefitRow({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.subtitle,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Row(
         children: [
           Container(
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
+              color: iconColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(benefit.icon, color: AppColors.primary, size: 20),
+            child: Icon(icon, color: iconColor, size: 20),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+          const Icon(Icons.check_circle, color: AppColors.success, size: 20),
+        ],
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// Premium challenge preview banner
+// =============================================================================
+
+class _PremiumChallengeBanner extends StatelessWidget {
+  const _PremiumChallengeBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF7B1FA2), Color(0xFF9C27B0)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF9C27B0).withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Center(
+              child: Text('🏆', style: TextStyle(fontSize: 24)),
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(benefit.title, style: AppTextStyles.bodyMediumBold),
-                Text(
-                  benefit.description,
-                  style: AppTextStyles.caption.copyWith(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? AppColors.darkOnSurfaceVariant
-                        : AppColors.lightOnSurfaceVariant,
+                const Text(
+                  'Monthly Grand Challenge',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
                   ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Text(
+                        'Prize: 1000 coins',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Text(
+                        'Premium only',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          const Icon(Icons.check_circle,
-              color: AppColors.success, size: 20),
+          const Icon(Icons.lock_outline, color: Colors.white70, size: 20),
         ],
       ),
     );

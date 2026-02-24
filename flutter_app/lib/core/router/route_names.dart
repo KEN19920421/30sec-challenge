@@ -52,6 +52,17 @@ class RouteNames {
   // Settings
   // ---------------------------------------------------------------------------
   static const String settings = 'settings';
+  static const String blockedUsers = 'blockedUsers';
+
+  // ---------------------------------------------------------------------------
+  // Voting History
+  // ---------------------------------------------------------------------------
+  static const String votingHistory = 'votingHistory';
+
+  // ---------------------------------------------------------------------------
+  // Creator Analytics
+  // ---------------------------------------------------------------------------
+  static const String creatorAnalytics = 'creatorAnalytics';
 
   // ---------------------------------------------------------------------------
   // Shop
@@ -59,4 +70,19 @@ class RouteNames {
   static const String shop = 'shop';
   static const String shopCoins = 'shopCoins';
   static const String shopSubscription = 'shopSubscription';
+
+  // ---------------------------------------------------------------------------
+  // Search
+  // ---------------------------------------------------------------------------
+  static const String search = 'search';
+
+  // ---------------------------------------------------------------------------
+  // League
+  // ---------------------------------------------------------------------------
+  static const String league = 'league';
+
+  // ---------------------------------------------------------------------------
+  // Error / Fallback
+  // ---------------------------------------------------------------------------
+  static const String notFound = 'notFound';
 }

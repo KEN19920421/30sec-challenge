@@ -1,38 +1,49 @@
 {
   "@@locale": "ja",
-
   "appTitle": "30秒チャレンジ",
-
   "login": "ログイン",
   "register": "新規登録",
   "username": "ユーザー名",
   "displayName": "表示名",
-
   "signInToContinue": "ログインして続ける",
   "continueWithGoogle": "Googleで続ける",
   "continueWithApple": "Appleで続ける",
-
   "displayNameRequired": "表示名を入力してください",
   "displayNameMaxLength": "最大{length}文字",
   "@displayNameMaxLength": {
-    "placeholders": { "length": { "type": "int" } }
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
   },
   "usernameRequired": "ユーザー名を入力してください",
   "usernameMinLength": "{length}文字以上",
   "@usernameMinLength": {
-    "placeholders": { "length": { "type": "int" } }
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
   },
   "usernameMaxLength": "最大{length}文字",
   "@usernameMaxLength": {
-    "placeholders": { "length": { "type": "int" } }
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
   },
   "usernameInvalidChars": "英数字とアンダースコアのみ使用可能",
   "minCharacters": "{count}文字以上必要です",
   "@minCharacters": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "usernameNotAvailable": "このユーザー名は使用できません",
-
   "onboardingTitle1": "毎日のチャレンジ",
   "onboardingDesc1": "毎日新しいクリエイティブなお題が登場。30秒であなただけの作品を世界に見せよう。",
   "onboardingTitle2": "30秒動画",
@@ -42,7 +53,6 @@
   "skip": "スキップ",
   "getStarted": "始める",
   "next": "次へ",
-
   "todaysChallenge": "今日のチャレンジ",
   "recordNow": "今すぐ撮影",
   "timeRemaining": "残り時間",
@@ -52,7 +62,11 @@
   "live": "LIVE",
   "entriesCount": "{count}件のエントリー",
   "@entriesCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "recordYourEntry": "エントリーを撮影",
   "viewResults": "結果を見る",
@@ -62,13 +76,14 @@
   "failedToLoadResults": "結果の読み込みに失敗しました",
   "noPastChallenges": "過去のチャレンジはありません",
   "somethingWentWrong": "エラーが発生しました",
-
   "submissions": "投稿",
   "votes": "投票",
   "voting": "投票",
   "leaderboard": "ランキング",
   "profile": "プロフィール",
-  "discover": "発見",
+  "discover": "さがす",
+  "navHome": "ホーム",
+  "navRecord": "撮影",
   "settings": "設定",
   "notifications": "通知",
   "followers": "フォロワー",
@@ -87,7 +102,6 @@
   "noFollowersYet": "まだフォロワーがいません",
   "notFollowingYet": "まだ誰もフォローしていません",
   "getMore": "もっと見る",
-
   "superVote": "スーパー投票",
   "watchAd": "広告を見る",
   "noThanks": "いいえ",
@@ -97,7 +111,6 @@
   "comeBackLaterForVotes": "後でまた来てください。新しい投稿が追加されます。",
   "goBack": "戻る",
   "continueVoting": "投票を続ける",
-
   "daily": "デイリー",
   "weekly": "ウィークリー",
   "allTime": "全期間",
@@ -108,11 +121,14 @@
   "failedToLoadLeaderboard": "ランキングの読み込みに失敗しました",
   "howScoringWorks": "スコアの仕組み",
   "gotIt": "了解",
-
   "recording": "録画中...",
   "minimumRecordingDuration": "{seconds}秒以上録画してください",
   "@minimumRecordingDuration": {
-    "placeholders": { "seconds": { "type": "int" } }
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
   },
   "close": "閉じる",
   "preview": "プレビュー",
@@ -126,13 +142,16 @@
   "captionHint": "キャプションを追加（任意）",
   "viewInFeed": "フィードで見る",
   "retryUpload": "再アップロード",
-
   "goPro": "Proにする",
   "unlockPotential": "あなたの可能性を最大限に",
   "proMember": "Proメンバーです！",
   "renewsOn": "{date}に更新",
   "@renewsOn": {
-    "placeholders": { "date": { "type": "String" } }
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
   },
   "proBenefits": "Proの特典",
   "choosePlan": "プランを選択",
@@ -154,7 +173,6 @@
   "perYear": "/年",
   "save33": "33%お得",
   "bestValue": "一番お得",
-
   "sparks": "スパーク",
   "sparksStore": "スパークストア",
   "getSparks": "スパークを入手",
@@ -167,12 +185,18 @@
   "giftMessageHint": "メッセージを追加（任意）",
   "sendGiftButton": "{name}を送る ({cost} スパーク)",
   "@sendGiftButton": {
-    "placeholders": { "name": { "type": "String" }, "cost": { "type": "int" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "cost": {
+        "type": "int"
+      }
+    }
   },
   "getMoreSparks": "スパークを追加購入",
   "gifts": "ギフト",
   "shop": "ショップ",
-
   "noNotifications": "通知はまだありません",
   "markAllRead": "すべて既読にする",
   "notificationSettings": "通知設定",
@@ -192,18 +216,15 @@
   "notifSubmissionStatusDesc": "動画処理の進捗について",
   "notifMarketing": "マーケティング",
   "notifMarketingDesc": "プロモーション、新機能、ヒント",
-
   "searchSubmissions": "投稿を検索...",
   "trendingNow": "トレンド",
   "failedToLoadFeed": "フィードの読み込みに失敗しました",
-
   "reportUser": "ユーザーを報告",
   "blockUser": "ユーザーをブロック",
   "reportUserConfirm": "このユーザーを不適切な行為として報告しますか？",
   "userReported": "ユーザーを報告しました。確認いたします。",
   "blockUserConfirm": "ブロックされたユーザーはあなたのプロフィールを閲覧したり、コンテンツにアクセスしたりできなくなります。",
   "userBlocked": "ユーザーをブロックしました。",
-
   "accountSection": "アカウント",
   "subscriptionSection": "サブスクリプション",
   "currentPlan": "現在のプラン",
@@ -223,16 +244,24 @@
   "privacyPolicy": "プライバシーポリシー",
   "appVersion": "バージョン {version}",
   "@appVersion": {
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "deleteAccountWarning": "この操作は元に戻せません。すべてのデータ、投稿、コイン残高が失われます。",
   "selectLanguage": "言語を選択",
   "selectTheme": "テーマを選択",
   "logoutConfirm": "ログアウトしますか？",
   "comingSoon": "近日公開",
-
   "logout": "ログアウト",
   "deleteAccount": "アカウント削除",
+  "deleteAccountTitle": "アカウントを削除する",
+  "deleteAccountConfirm": "はい、削除する",
+  "deleteSubmission": "投稿を削除",
+  "deleteSubmissionWarning": "この投稿を削除してもよろしいですか？この操作は取り消せません。",
+  "deleteSubmissionConfirm": "はい、削除",
   "language": "言語",
   "darkMode": "ダークモード",
   "about": "アプリについて",
@@ -245,44 +274,50 @@
   "success": "成功",
   "proFeature": "Pro機能",
   "upgradeToUnlock": "Proにアップグレードして解除",
-
   "challengeEndsIn": "チャレンジ終了まで {time}",
   "@challengeEndsIn": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
   "votesRemaining": "残り {count} 票",
   "@votesRemaining": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "noMoreEntries": "すべてのエントリーに投票しました！",
   "comeBackLater": "後でまた来てください。",
-
   "firstBoostFree": "初回ブースト無料！",
   "firstBoostFreeDesc": "初めてのSmallブーストを無料で体験 — スパーク不要！",
   "freeTrialLabel": "無料",
-
   "dailyRewardTitle": "デイリーログインボーナス",
   "dailyRewardDesc": "おかえりなさい！毎日のスパークをどうぞ。",
   "claimReward": "受け取る",
   "dailyBonusClaimed": "本日受取済み",
   "dailyBonusAvailable": "+3 スパークを受け取れます",
-
   "earnFreeSparks": "無料でスパークを獲得",
   "watchAdForSparks": "広告を見てスパークを獲得",
   "watchAdForSparksDesc": "短い動画を見て10スパークを無料で獲得！",
   "watchAdEarn10Sparks": "広告を見て10スパーク獲得",
   "adsRemaining": "本日残り{count}回",
   "@adsRemaining": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "dailyAdLimitReached": "本日の広告上限に達しました",
-
   "boostSubmission": "投稿をブースト",
   "boostDescription": "この投稿をブーストしてフィードでの表示を増やしましょう",
   "boost": "ブースト",
   "boostPurchased": "ブーストを購入しました！",
   "boosted": "ブースト中",
-
   "pickFromGallery": "ギャラリー",
   "cameraUnavailable": "カメラを利用できません",
   "cameraUnavailableDescription": "カメラを起動できませんでした。代わりにギャラリーから動画を選択できます。",
@@ -292,31 +327,293 @@
   "addText": "テキスト",
   "exporting": "エクスポート中...",
   "exportFailed": "エクスポートに失敗しました",
-
   "comments": "コメント",
   "addComment": "コメントを追加...",
   "noCommentsYet": "まだコメントがありません",
   "beFirstToComment": "最初のコメントを投稿しよう！",
   "replyingTo": "@{username}に返信中",
   "@replyingTo": {
-    "placeholders": { "username": { "type": "String" } }
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
   },
   "repliesCount": "{count}件の返信",
   "@repliesCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "reply": "返信",
   "deleteComment": "削除",
   "commentDeleted": "コメントを削除しました",
   "deletedComment": "[削除済み]",
-
   "replyTo": "@{username} に返信",
   "@replyTo": {
-    "placeholders": { "username": { "type": "String" } }
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
   },
   "deleteCommentConfirm": "このコメントを削除しますか？",
   "commentAdded": "コメントを追加しました",
   "viewReplies": "返信を表示",
   "mute": "ミュート",
-  "unmute": "ミュート解除"
+  "unmute": "ミュート解除",
+  "devLogin": "開発者ログイン",
+  "email": "メールアドレス",
+  "password": "パスワード",
+  "browseAsGuest": "ゲストで閲覧",
+  "tapToStop": "タップして停止",
+  "trimRange": "5〜30秒の範囲",
+  "dragTextToReposition": "テキストをドラッグして位置を変更",
+  "passwordWeak": "弱い",
+  "passwordMedium": "普通",
+  "passwordStrong": "強い",
+  "shareSubmission": "この投稿をシェア",
+  "shareSubmissionLink": "30秒チャレンジのエントリーをチェックしよう！",
+  "votesCastThisSession": "このセッションで{count}票投じました",
+  "@votesCastThisSession": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "remainingLeft": "残り{count}件",
+  "@remainingLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "submissionsCount": "{count}件の投稿",
+  "@submissionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rankings": "ランキング",
+  "noRankingsYet": "まだランキングがありません",
+  "submitToAppear": "チャレンジに投稿してランキングに表示されよう！",
+  "failedToLoadRankings": "ランキングの読み込みに失敗しました",
+  "uploadingEntry": "エントリーをアップロード中...",
+  "percentComplete": "{percent}%完了",
+  "@percentComplete": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "submissionComplete": "投稿完了！",
+  "videoBeingProcessed": "動画を処理中です",
+  "uploadFailed": "アップロード失敗",
+  "preparingUpload": "アップロードを準備中...",
+  "pleaseWait": "しばらくお待ちください",
+  "autoRedirectingSoon": "まもなく自動的に移動します...",
+  "goBackLabel": "戻る",
+  "cancelUpload": "キャンセル",
+  "pageNotFound": "ページが見つかりません",
+  "goHome": "ホームへ",
+  "filterNone": "なし",
+  "filterVivid": "ビビッド",
+  "filterMono": "モノクロ",
+  "filterSepia": "セピア",
+  "filterWarm": "ウォーム",
+  "filterCool": "クール",
+  "filterFade": "フェード",
+  "filterVintage": "ビンテージ",
+  "submissionNotFound": "投稿が見つかりません",
+  "submissionDetail": "投稿",
+  "exportFailedWithError": "エクスポートに失敗しました: {error}",
+  "@exportFailedWithError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noFriendsOnLeaderboard": "フレンドがいません",
+  "@noFriendsOnLeaderboard": {
+    "description": "Title when no friends are on the leaderboard"
+  },
+  "noLeaderboardEntries": "まだエントリーがありません",
+  "@noLeaderboardEntries": {
+    "description": "Title when no leaderboard entries exist"
+  },
+  "noFriendsOnLeaderboardSubtitle": "フレンドをフォローしてランキングで競いましょう",
+  "@noFriendsOnLeaderboardSubtitle": {
+    "description": "Subtitle when no friends are on the leaderboard"
+  },
+  "noLeaderboardEntriesSubtitle": "最初にランキングを駆け上がりましょう",
+  "@noLeaderboardEntriesSubtitle": {
+    "description": "Subtitle when no leaderboard entries exist"
+  },
+  "noNotificationsYet": "通知はまだありません",
+  "@noNotificationsYet": {
+    "description": "Title when there are no notifications"
+  },
+  "noNotificationsSubtitle": "すべて確認済みです！後でまた確認してください。",
+  "@noNotificationsSubtitle": {
+    "description": "Subtitle when there are no notifications"
+  },
+  "endsIn": "残り時間",
+  "noActiveChallenge": "アクティブなチャレンジなし",
+  "nextChallengeComingSoon": "次のチャレンジがもうすぐ始まります！",
+  "checkBackSoon": "次のチャレンジをお楽しみに。",
+  "topSubmissions": "トップ投稿",
+  "viewAll": "すべて見る",
+  "entries": "参加数",
+  "remaining": "残り",
+  "winner": "優勝",
+  "subscriptionAutoRenews": "現在の期間終了の24時間前までにキャンセルしない限り、サブスクリプションは自動更新されます。",
+  "paymentCharged": "購入確認時にアカウントに請求されます。",
+  "terms": "利用規約",
+  "privacy": "プライバシー",
+  "selectPlanFirst": "プランを選択してください。",
+  "purchaseFailed": "購入に失敗しました。もう一度お試しください。",
+  "yourSparks": "あなたのスパーク",
+  "failedToLoadProfile": "プロフィールの読み込みに失敗しました",
+  "scoringInfo": "スコアリング情報",
+  "notificationToday": "今日",
+  "notificationYesterday": "昨日",
+  "notificationThisWeek": "今週",
+  "notificationEarlier": "以前",
+  "failedToDeleteAccount": "アカウントの削除に失敗しました。もう一度お試しください。",
+  "failedToLoadChallenge": "チャレンジの読み込みに失敗しました",
+  "deleteNotification": "通知を削除",
+  "deleteNotificationConfirm": "この通知を削除してもよろしいですか？",
+  "unblock": "ブロック解除",
+  "noBlockedUsers": "ブロックしたユーザーはいません",
+  "unblockConfirm": "このユーザーのブロックを解除しますか？",
+  "votingHistory": "投票履歴",
+  "noVotingHistory": "投票履歴はまだありません",
+  "votedOn": "投票済み",
+  "editCaption": "キャプションを編集",
+  "captionUpdated": "キャプションを更新しました",
+  "editComment": "コメントを編集",
+  "saveComment": "保存",
+  "commentUpdated": "コメントを更新しました",
+  "creatorAnalytics": "分析",
+  "totalSubmissions": "総投稿数",
+  "totalVotes": "総投票数",
+  "avgVotes": "平均投票数",
+  "challengesWon": "チャレンジ優勝数",
+  "totalCoinsEarned": "獲得コイン",
+  "submissionAnalytics": "投稿分析",
+  "upvotes": "賛成票",
+  "downvotes": "反対票",
+  "superVotes": "スーパー投票",
+  "giftsReceived": "受け取ったギフト",
+  "coverPhoto": "カバー写真",
+  "changeCoverPhoto": "カバー写真を変更",
+  "coverPhotoUpdated": "カバー写真を更新しました！",
+  "failedToUpdateCoverPhoto": "カバー写真の更新に失敗しました。",
+  "search": "検索",
+  "searchUsers": "ユーザー",
+  "searchChallenges": "チャレンジ",
+  "searchSubmissions": "投稿",
+  "searchHint": "ユーザー、チャレンジ、投稿を検索...",
+  "noSearchResults": "結果が見つかりません",
+  "searchPlaceholder": "検索キーワードを入力してください",
+  "followerCount": "{count}人のフォロワー",
+  "@followerCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "validationEmailRequired": "メールアドレスを入力してください。",
+  "validationEmailInvalid": "有効なメールアドレスを入力してください。",
+  "validationPasswordRequired": "パスワードを入力してください。",
+  "validationPasswordTooShort": "パスワードは8文字以上にしてください。",
+  "validationUsernameTooShort": "ユーザー名は3文字以上にしてください。",
+  "validationUsernameInvalid": "ユーザー名は英数字とアンダースコアのみ使用できます。",
+  "weeklyLeague": "週次リーグ",
+  "leagueRankings": "ランキング",
+  "leaguePoints": "{points}pts",
+  "@leaguePoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "promoted": "昇格",
+  "relegated": "降格",
+  "weekOf": "{date}の週",
+  "@weekOf": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "promotionLine": "上位20%が来週昇格",
+  "watchMode": "視聴",
+  "exploreMode": "探索",
+  "sponsoredChallenge": "スポンサー",
+  "prizeCoins": "賞金: {coins}コイン",
+  "@prizeCoins": {
+    "placeholders": {
+      "coins": {
+        "type": "int"
+      }
+    }
+  },
+  "sponsoredBy": "{name}提供",
+  "@sponsoredBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "premiumChallenge": "プレミアムチャレンジ",
+  "premiumBenefitMonthly": "月次プレミアムチャレンジ参加権",
+  "premiumBenefitSuperVotes": "スーパー投票無制限",
+  "premiumBenefitNoAds": "広告なし",
+  "premiumBenefitGiftRevenue": "ギフト収益率+10%",
+  "premiumBenefitEarlyAccess": "24時間早期アクセス",
+  "premiumBenefitBadge": "プレミアムバッジ",
+  "creatorTier": "クリエイタートライアングル",
+  "tierRookie": "ルーキー",
+  "tierRising": "ライジング",
+  "tierPartner": "パートナー",
+  "tierFeatured": "フィーチャード",
+  "noCreatorTier": "投稿を続けてティアを獲得しよう！",
+  "giftRevenueShare": "ギフト収益シェア率: {percent}%",
+  "@giftRevenueShare": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "duetWith": "↩ @{username}とデュエット",
+  "@duetWith": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "recordDuet": "デュエット",
+  "duetChallenge": "@{username}とデュエット中",
+  "@duetChallenge": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  }
 }

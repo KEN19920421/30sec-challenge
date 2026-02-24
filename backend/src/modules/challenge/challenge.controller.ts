@@ -69,6 +69,25 @@ export async function getHistory(
 }
 
 // ---------------------------------------------------------------------------
+// GET /premium -- premium-only active challenges (requires subscription)
+// ---------------------------------------------------------------------------
+
+export async function getPremiumChallenges(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const userId = req.user!.id;
+    const pagination = parsePaginationParams(req.query as Record<string, unknown>);
+    const result = await challengeService.getPremiumChallenges(userId, pagination);
+    res.status(200).json(paginatedResponse(result, 'Premium challenges retrieved'));
+  } catch (err) {
+    next(err);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // GET /:id
 // ---------------------------------------------------------------------------
 

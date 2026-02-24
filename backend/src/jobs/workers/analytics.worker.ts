@@ -1,6 +1,7 @@
-import { Worker, Job } from 'bullmq';
+import { Queue, Worker, Job } from 'bullmq';
 import { db } from '../../config/database';
 import { logger } from '../../config/logger';
+import * as userService from '../../modules/user/user.service';
 
 // ---------------------------------------------------------------------------
 // Redis connection config
@@ -299,3 +300,48 @@ export async function stopAnalyticsWorker(): Promise<void> {
     logger.info('Analytics worker stopped');
   }
 }
+
+// ---------------------------------------------------------------------------
+// Creator Tier Queue & Worker
+// ---------------------------------------------------------------------------
+
+/**
+ * Queue for monthly creator-tier recalculation jobs.
+ * Enqueue a job from the scheduler with: `creatorTierQueue.add('update_tiers', {})`
+ */
+export const creatorTierQueue = new Queue('creator-tier', {
+  connection,
+  defaultJobOptions: {
+    removeOnComplete: 100,
+    removeOnFail: 200,
+  },
+});
+
+const creatorTierWorker = new Worker(
+  'creator-tier',
+  async (job: Job) => {
+    logger.info('Processing monthly creator tier update', { jobId: job.id });
+    try {
+      await userService.updateCreatorTiers();
+      logger.info('Creator tier update completed', { jobId: job.id });
+    } catch (error) {
+      logger.error('Creator tier update failed', {
+        error: (error as Error).message,
+        jobId: job.id,
+      });
+      throw error;
+    }
+  },
+  { connection, concurrency: 1 },
+);
+
+creatorTierWorker.on('completed', (job) => {
+  logger.info('Creator tier worker job completed', { jobId: job.id });
+});
+
+creatorTierWorker.on('failed', (job, err) => {
+  logger.error('Creator tier worker job failed', {
+    jobId: job?.id,
+    error: err.message,
+  });
+});

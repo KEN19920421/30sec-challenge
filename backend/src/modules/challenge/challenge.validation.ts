@@ -45,6 +45,14 @@ export const createChallengeSchema = z.object({
     .min(0)
     .max(72)
     .default(2),
+  // Sponsored challenge fields
+  is_sponsored: z.boolean().optional().default(false),
+  prize_amount: z.number().int().min(0).optional().default(0),
+  prize_description: z.string().max(500).optional().nullable(),
+  is_premium_only: z.boolean().optional().default(false),
+  sponsor_name: z.string().max(100).optional().nullable(),
+  logo_url: z.string().url().optional().nullable(),
+  sponsor_url: z.string().url().optional().nullable(),
 }).refine(
   (data) => new Date(data.ends_at) > new Date(data.starts_at),
   { message: 'ends_at must be after starts_at', path: ['ends_at'] },
@@ -108,7 +116,31 @@ export const updateChallengeSchema = z.object({
   status: z
     .enum(['draft', 'scheduled', 'active', 'voting', 'completed', 'cancelled'])
     .optional(),
-});
+  // Sponsored challenge fields
+  is_sponsored: z.boolean().optional(),
+  prize_amount: z.number().int().min(0).optional(),
+  prize_description: z.string().max(500).optional().nullable(),
+  is_premium_only: z.boolean().optional(),
+  sponsor_name: z.string().max(100).optional().nullable(),
+  logo_url: z.string().url().optional().nullable(),
+  sponsor_url: z.string().url().optional().nullable(),
+}).refine(
+  (data) => {
+    if (data.ends_at && data.starts_at) {
+      return new Date(data.ends_at) > new Date(data.starts_at);
+    }
+    return true;
+  },
+  { message: 'ends_at must be after starts_at', path: ['ends_at'] },
+).refine(
+  (data) => {
+    if (data.voting_ends_at && data.ends_at) {
+      return new Date(data.voting_ends_at) > new Date(data.ends_at);
+    }
+    return true;
+  },
+  { message: 'voting_ends_at must be after ends_at', path: ['voting_ends_at'] },
+);
 
 // ---------------------------------------------------------------------------
 // Query parameters

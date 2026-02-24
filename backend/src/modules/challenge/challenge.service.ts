@@ -1,7 +1,7 @@
 import { db } from '../../config/database';
 import { redis } from '../../config/redis';
 import { logger } from '../../config/logger';
-import { NotFoundError, ValidationError } from '../../shared/errors';
+import { NotFoundError, ValidationError, ForbiddenError } from '../../shared/errors';
 import {
   type PaginationParams,
   type PaginatedResult,
@@ -12,6 +12,7 @@ import type {
   CreateChallengeInput,
   UpdateChallengeInput,
 } from './challenge.validation';
+import { challengeCompletionQueue } from '../../jobs/workers/challenge-completion.worker';
 
 // ---------------------------------------------------------------------------
 // Cache keys & TTLs
@@ -56,6 +57,7 @@ export async function getCurrent(): Promise<Record<string, unknown> | null> {
 
   const challenge = await db('challenges')
     .where('status', 'active')
+    .whereNot('status', 'draft')
     .where('starts_at', '<=', now)
     .where('ends_at', '>=', now)
     .first();
@@ -119,8 +121,9 @@ export async function getUpcoming(
 ): Promise<Record<string, unknown>[]> {
   const now = new Date();
 
-  let query = db('challenges')
+  const query = db('challenges')
     .where('status', 'scheduled')
+    .whereNot('status', 'draft')
     .where('starts_at', '>', now.toISOString())
     .orderBy('starts_at', 'asc');
 
@@ -149,8 +152,13 @@ export async function getHistory(
   const [{ count }] = await query.clone().count('id as count');
   const total = Number(count);
 
+  const ALLOWED_CHALLENGE_SORT_FIELDS = ['created_at', 'updated_at', 'ends_at', 'starts_at', 'title'] as const;
+  const challengeSortBy = ALLOWED_CHALLENGE_SORT_FIELDS.includes(pagination.sort_by as typeof ALLOWED_CHALLENGE_SORT_FIELDS[number])
+    ? (pagination.sort_by as string)
+    : 'ends_at';
+
   const data = await query
-    .orderBy(pagination.sort_by || 'ends_at', pagination.sort_order || 'desc')
+    .orderBy(challengeSortBy, pagination.sort_order || 'desc')
     .limit(pagination.limit)
     .offset(offset);
 
@@ -196,6 +204,52 @@ export async function getResults(
     .whereNull('submissions.deleted_at')
     .orderBy('submissions.vote_count', 'desc')
     .orderBy('submissions.created_at', 'asc')
+    .limit(pagination.limit)
+    .offset(offset);
+
+  return buildPaginatedResult(data, total, pagination);
+}
+
+/**
+ * Returns active premium-only challenges.
+ * Verifies the requesting user has an active (non-free) subscription.
+ *
+ * @param userId      The authenticated user's ID.
+ * @param pagination  Pagination parameters.
+ * @throws ForbiddenError if the user does not have an active subscription.
+ */
+export async function getPremiumChallenges(
+  userId: string,
+  pagination: PaginationParams,
+): Promise<PaginatedResult<Record<string, unknown>>> {
+  // Verify the user exists and has a paid subscription tier
+  const user = await db('users')
+    .where({ id: userId })
+    .first('id', 'subscription_tier');
+
+  if (!user) {
+    throw new NotFoundError('User', userId);
+  }
+
+  if (!user.subscription_tier || user.subscription_tier === 'free') {
+    throw new ForbiddenError(
+      'An active subscription is required to access premium challenges',
+    );
+  }
+
+  const offset = paginationToOffset(pagination);
+
+  const baseQuery = db('challenges')
+    .where('is_premium_only', true)
+    .where('status', 'active');
+
+  const [{ count }] = await baseQuery.clone().count('id as count');
+  const total = Number(count);
+
+  const data = await db('challenges')
+    .where('is_premium_only', true)
+    .where('status', 'active')
+    .orderBy('starts_at', 'desc')
     .limit(pagination.limit)
     .offset(offset);
 
@@ -324,7 +378,31 @@ export async function deactivate(id: string): Promise<Record<string, unknown>> {
 
   await invalidateChallengeCache();
 
+  // Enqueue challenge completion rewards when status transitions to completed
+  if (newStatus === 'completed') {
+    await enqueueChallengeCompletion(id);
+  }
+
   logger.info('Challenge deactivated', { challengeId: id, newStatus });
 
   return updated;
+}
+
+/**
+ * Enqueues a challenge-completion job to award coins and send notifications.
+ */
+export async function enqueueChallengeCompletion(challengeId: string): Promise<void> {
+  try {
+    await challengeCompletionQueue.add(
+      'process-completion',
+      { challengeId },
+      { jobId: `challenge-completion:${challengeId}` },
+    );
+    logger.info('Challenge completion job enqueued', { challengeId });
+  } catch (err) {
+    logger.error('Failed to enqueue challenge completion job', {
+      challengeId,
+      err: (err as Error).message,
+    });
+  }
 }

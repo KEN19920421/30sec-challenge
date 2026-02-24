@@ -14,6 +14,8 @@ class Challenge {
   final String? thumbnailUrl;
   final String? sponsorName;
   final String? sponsorLogoUrl;
+  final int prizeAmount;
+  final String? prizeDescription;
 
   /// One of: draft, scheduled, active, voting, completed.
   final String status;
@@ -37,6 +39,8 @@ class Challenge {
     this.thumbnailUrl,
     this.sponsorName,
     this.sponsorLogoUrl,
+    this.prizeAmount = 0,
+    this.prizeDescription,
     required this.status,
     required this.startsAt,
     required this.endsAt,
@@ -65,6 +69,9 @@ class Challenge {
 
   /// Whether this challenge has a sponsor.
   bool get isSponsored => sponsorName != null && sponsorName!.isNotEmpty;
+
+  /// Whether this challenge has a prize pool.
+  bool get hasPrize => prizeAmount > 0;
 
   /// Time remaining until [endsAt]. Returns [Duration.zero] if already past.
   Duration get timeRemaining {
@@ -100,6 +107,8 @@ class Challenge {
       thumbnailUrl: (json['thumbnail_url'] ?? json['thumbnailUrl']) as String?,
       sponsorName: (json['sponsor_name'] ?? json['sponsorName']) as String?,
       sponsorLogoUrl: (json['sponsor_logo_url'] ?? json['sponsorLogoUrl']) as String?,
+      prizeAmount: ((json['prize_amount'] ?? json['prizeAmount']) as num?)?.toInt() ?? 0,
+      prizeDescription: (json['prize_description'] ?? json['prizeDescription']) as String?,
       status: json['status'] as String,
       startsAt: DateTime.parse((json['starts_at'] ?? json['startsAt']) as String),
       endsAt: DateTime.parse((json['ends_at'] ?? json['endsAt']) as String),
@@ -123,6 +132,8 @@ class Challenge {
       'thumbnailUrl': thumbnailUrl,
       'sponsorName': sponsorName,
       'sponsorLogoUrl': sponsorLogoUrl,
+      'prizeAmount': prizeAmount,
+      'prizeDescription': prizeDescription,
       'status': status,
       'startsAt': startsAt.toIso8601String(),
       'endsAt': endsAt.toIso8601String(),
@@ -145,6 +156,8 @@ class Challenge {
     String? thumbnailUrl,
     String? sponsorName,
     String? sponsorLogoUrl,
+    int? prizeAmount,
+    String? prizeDescription,
     String? status,
     DateTime? startsAt,
     DateTime? endsAt,
@@ -165,6 +178,8 @@ class Challenge {
       thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
       sponsorName: sponsorName ?? this.sponsorName,
       sponsorLogoUrl: sponsorLogoUrl ?? this.sponsorLogoUrl,
+      prizeAmount: prizeAmount ?? this.prizeAmount,
+      prizeDescription: prizeDescription ?? this.prizeDescription,
       status: status ?? this.status,
       startsAt: startsAt ?? this.startsAt,
       endsAt: endsAt ?? this.endsAt,

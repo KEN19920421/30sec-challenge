@@ -158,7 +158,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get profile => 'プロフィール';
 
   @override
-  String get discover => '発見';
+  String get discover => 'さがす';
+
+  @override
+  String get navHome => 'ホーム';
+
+  @override
+  String get navRecord => '撮影';
 
   @override
   String get settings => '設定';
@@ -197,7 +203,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get connections => 'つながり';
 
   @override
-  String get searchUsers => 'ユーザーを検索...';
+  String get searchUsers => 'ユーザー';
 
   @override
   String get followersTab => 'フォロワー';
@@ -491,7 +497,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get notifMarketingDesc => 'プロモーション、新機能、ヒント';
 
   @override
-  String get searchSubmissions => '投稿を検索...';
+  String get searchSubmissions => '投稿';
 
   @override
   String get trendingNow => 'トレンド';
@@ -594,6 +600,21 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get deleteAccount => 'アカウント削除';
+
+  @override
+  String get deleteAccountTitle => 'アカウントを削除する';
+
+  @override
+  String get deleteAccountConfirm => 'はい、削除する';
+
+  @override
+  String get deleteSubmission => '投稿を削除';
+
+  @override
+  String get deleteSubmissionWarning => 'この投稿を削除してもよろしいですか？この操作は取り消せません。';
+
+  @override
+  String get deleteSubmissionConfirm => 'はい、削除';
 
   @override
   String get language => '言語';
@@ -787,4 +808,454 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get unmute => 'ミュート解除';
+
+  @override
+  String get devLogin => '開発者ログイン';
+
+  @override
+  String get email => 'メールアドレス';
+
+  @override
+  String get password => 'パスワード';
+
+  @override
+  String get browseAsGuest => 'ゲストで閲覧';
+
+  @override
+  String get tapToStop => 'タップして停止';
+
+  @override
+  String get trimRange => '5〜30秒の範囲';
+
+  @override
+  String get dragTextToReposition => 'テキストをドラッグして位置を変更';
+
+  @override
+  String get passwordWeak => '弱い';
+
+  @override
+  String get passwordMedium => '普通';
+
+  @override
+  String get passwordStrong => '強い';
+
+  @override
+  String get shareSubmission => 'この投稿をシェア';
+
+  @override
+  String get shareSubmissionLink => '30秒チャレンジのエントリーをチェックしよう！';
+
+  @override
+  String votesCastThisSession(int count) {
+    return 'このセッションで$count票投じました';
+  }
+
+  @override
+  String remainingLeft(int count) {
+    return '残り$count件';
+  }
+
+  @override
+  String submissionsCount(int count) {
+    return '$count件の投稿';
+  }
+
+  @override
+  String get rankings => 'ランキング';
+
+  @override
+  String get noRankingsYet => 'まだランキングがありません';
+
+  @override
+  String get submitToAppear => 'チャレンジに投稿してランキングに表示されよう！';
+
+  @override
+  String get failedToLoadRankings => 'ランキングの読み込みに失敗しました';
+
+  @override
+  String get uploadingEntry => 'エントリーをアップロード中...';
+
+  @override
+  String percentComplete(int percent) {
+    return '$percent%完了';
+  }
+
+  @override
+  String get submissionComplete => '投稿完了！';
+
+  @override
+  String get videoBeingProcessed => '動画を処理中です';
+
+  @override
+  String get uploadFailed => 'アップロード失敗';
+
+  @override
+  String get preparingUpload => 'アップロードを準備中...';
+
+  @override
+  String get pleaseWait => 'しばらくお待ちください';
+
+  @override
+  String get autoRedirectingSoon => 'まもなく自動的に移動します...';
+
+  @override
+  String get goBackLabel => '戻る';
+
+  @override
+  String get cancelUpload => 'キャンセル';
+
+  @override
+  String get pageNotFound => 'ページが見つかりません';
+
+  @override
+  String get goHome => 'ホームへ';
+
+  @override
+  String get filterNone => 'なし';
+
+  @override
+  String get filterVivid => 'ビビッド';
+
+  @override
+  String get filterMono => 'モノクロ';
+
+  @override
+  String get filterSepia => 'セピア';
+
+  @override
+  String get filterWarm => 'ウォーム';
+
+  @override
+  String get filterCool => 'クール';
+
+  @override
+  String get filterFade => 'フェード';
+
+  @override
+  String get filterVintage => 'ビンテージ';
+
+  @override
+  String get submissionNotFound => '投稿が見つかりません';
+
+  @override
+  String get submissionDetail => '投稿';
+
+  @override
+  String exportFailedWithError(String error) {
+    return 'エクスポートに失敗しました: $error';
+  }
+
+  @override
+  String get noFriendsOnLeaderboard => 'フレンドがいません';
+
+  @override
+  String get noLeaderboardEntries => 'まだエントリーがありません';
+
+  @override
+  String get noFriendsOnLeaderboardSubtitle => 'フレンドをフォローしてランキングで競いましょう';
+
+  @override
+  String get noLeaderboardEntriesSubtitle => '最初にランキングを駆け上がりましょう';
+
+  @override
+  String get noNotificationsYet => '通知はまだありません';
+
+  @override
+  String get noNotificationsSubtitle => 'すべて確認済みです！後でまた確認してください。';
+
+  @override
+  String get endsIn => '残り時間';
+
+  @override
+  String get noActiveChallenge => 'アクティブなチャレンジなし';
+
+  @override
+  String get nextChallengeComingSoon => '次のチャレンジがもうすぐ始まります！';
+
+  @override
+  String get checkBackSoon => '次のチャレンジをお楽しみに。';
+
+  @override
+  String get topSubmissions => 'トップ投稿';
+
+  @override
+  String get viewAll => 'すべて見る';
+
+  @override
+  String get entries => '参加数';
+
+  @override
+  String get remaining => '残り';
+
+  @override
+  String get winner => '優勝';
+
+  @override
+  String get subscriptionAutoRenews =>
+      '現在の期間終了の24時間前までにキャンセルしない限り、サブスクリプションは自動更新されます。';
+
+  @override
+  String get paymentCharged => '購入確認時にアカウントに請求されます。';
+
+  @override
+  String get terms => '利用規約';
+
+  @override
+  String get privacy => 'プライバシー';
+
+  @override
+  String get selectPlanFirst => 'プランを選択してください。';
+
+  @override
+  String get purchaseFailed => '購入に失敗しました。もう一度お試しください。';
+
+  @override
+  String get yourSparks => 'あなたのスパーク';
+
+  @override
+  String get failedToLoadProfile => 'プロフィールの読み込みに失敗しました';
+
+  @override
+  String get scoringInfo => 'スコアリング情報';
+
+  @override
+  String get notificationToday => '今日';
+
+  @override
+  String get notificationYesterday => '昨日';
+
+  @override
+  String get notificationThisWeek => '今週';
+
+  @override
+  String get notificationEarlier => '以前';
+
+  @override
+  String get failedToDeleteAccount => 'アカウントの削除に失敗しました。もう一度お試しください。';
+
+  @override
+  String get failedToLoadChallenge => 'チャレンジの読み込みに失敗しました';
+
+  @override
+  String get deleteNotification => '通知を削除';
+
+  @override
+  String get deleteNotificationConfirm => 'この通知を削除してもよろしいですか？';
+
+  @override
+  String get unblock => 'ブロック解除';
+
+  @override
+  String get noBlockedUsers => 'ブロックしたユーザーはいません';
+
+  @override
+  String get unblockConfirm => 'このユーザーのブロックを解除しますか？';
+
+  @override
+  String get votingHistory => '投票履歴';
+
+  @override
+  String get noVotingHistory => '投票履歴はまだありません';
+
+  @override
+  String get votedOn => '投票済み';
+
+  @override
+  String get editCaption => 'キャプションを編集';
+
+  @override
+  String get captionUpdated => 'キャプションを更新しました';
+
+  @override
+  String get editComment => 'コメントを編集';
+
+  @override
+  String get saveComment => '保存';
+
+  @override
+  String get commentUpdated => 'コメントを更新しました';
+
+  @override
+  String get creatorAnalytics => '分析';
+
+  @override
+  String get totalSubmissions => '総投稿数';
+
+  @override
+  String get totalVotes => '総投票数';
+
+  @override
+  String get avgVotes => '平均投票数';
+
+  @override
+  String get challengesWon => 'チャレンジ優勝数';
+
+  @override
+  String get totalCoinsEarned => '獲得コイン';
+
+  @override
+  String get submissionAnalytics => '投稿分析';
+
+  @override
+  String get upvotes => '賛成票';
+
+  @override
+  String get downvotes => '反対票';
+
+  @override
+  String get superVotes => 'スーパー投票';
+
+  @override
+  String get giftsReceived => '受け取ったギフト';
+
+  @override
+  String get coverPhoto => 'カバー写真';
+
+  @override
+  String get changeCoverPhoto => 'カバー写真を変更';
+
+  @override
+  String get coverPhotoUpdated => 'カバー写真を更新しました！';
+
+  @override
+  String get failedToUpdateCoverPhoto => 'カバー写真の更新に失敗しました。';
+
+  @override
+  String get search => '検索';
+
+  @override
+  String get searchChallenges => 'チャレンジ';
+
+  @override
+  String get searchHint => 'ユーザー、チャレンジ、投稿を検索...';
+
+  @override
+  String get noSearchResults => '結果が見つかりません';
+
+  @override
+  String get searchPlaceholder => '検索キーワードを入力してください';
+
+  @override
+  String followerCount(int count) {
+    return '$count人のフォロワー';
+  }
+
+  @override
+  String get validationEmailRequired => 'メールアドレスを入力してください。';
+
+  @override
+  String get validationEmailInvalid => '有効なメールアドレスを入力してください。';
+
+  @override
+  String get validationPasswordRequired => 'パスワードを入力してください。';
+
+  @override
+  String get validationPasswordTooShort => 'パスワードは8文字以上にしてください。';
+
+  @override
+  String get validationUsernameTooShort => 'ユーザー名は3文字以上にしてください。';
+
+  @override
+  String get validationUsernameInvalid => 'ユーザー名は英数字とアンダースコアのみ使用できます。';
+
+  @override
+  String get weeklyLeague => '週次リーグ';
+
+  @override
+  String get leagueRankings => 'ランキング';
+
+  @override
+  String leaguePoints(int points) {
+    return '${points}pts';
+  }
+
+  @override
+  String get promoted => '昇格';
+
+  @override
+  String get relegated => '降格';
+
+  @override
+  String weekOf(String date) {
+    return '$dateの週';
+  }
+
+  @override
+  String get promotionLine => '上位20%が来週昇格';
+
+  @override
+  String get watchMode => '視聴';
+
+  @override
+  String get exploreMode => '探索';
+
+  @override
+  String get sponsoredChallenge => 'スポンサー';
+
+  @override
+  String prizeCoins(int coins) {
+    return '賞金: $coinsコイン';
+  }
+
+  @override
+  String sponsoredBy(String name) {
+    return '$name提供';
+  }
+
+  @override
+  String get premiumChallenge => 'プレミアムチャレンジ';
+
+  @override
+  String get premiumBenefitMonthly => '月次プレミアムチャレンジ参加権';
+
+  @override
+  String get premiumBenefitSuperVotes => 'スーパー投票無制限';
+
+  @override
+  String get premiumBenefitNoAds => '広告なし';
+
+  @override
+  String get premiumBenefitGiftRevenue => 'ギフト収益率+10%';
+
+  @override
+  String get premiumBenefitEarlyAccess => '24時間早期アクセス';
+
+  @override
+  String get premiumBenefitBadge => 'プレミアムバッジ';
+
+  @override
+  String get creatorTier => 'クリエイタートライアングル';
+
+  @override
+  String get tierRookie => 'ルーキー';
+
+  @override
+  String get tierRising => 'ライジング';
+
+  @override
+  String get tierPartner => 'パートナー';
+
+  @override
+  String get tierFeatured => 'フィーチャード';
+
+  @override
+  String get noCreatorTier => '投稿を続けてティアを獲得しよう！';
+
+  @override
+  String giftRevenueShare(int percent) {
+    return 'ギフト収益シェア率: $percent%';
+  }
+
+  @override
+  String duetWith(String username) {
+    return '↩ @$usernameとデュエット';
+  }
+
+  @override
+  String get recordDuet => 'デュエット';
+
+  @override
+  String duetChallenge(String username) {
+    return '@$usernameとデュエット中';
+  }
 }

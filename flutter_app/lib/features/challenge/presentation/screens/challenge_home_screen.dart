@@ -78,6 +78,13 @@ class _ChallengeHomeScreenState extends ConsumerState<ChallengeHomeScreen> {
               ),
               actions: [
                 IconButton(
+                  icon: const Icon(Icons.search_rounded),
+                  color: theme.colorScheme.onSurface,
+                  onPressed: () =>
+                      context.pushNamed(RouteNames.search),
+                  tooltip: context.l10n.search,
+                ),
+                IconButton(
                   icon: const Icon(Icons.history_rounded),
                   color: theme.colorScheme.onSurface,
                   onPressed: () => context.push('/challenges/history'),
@@ -296,7 +303,7 @@ class _ActiveChallengeHero extends StatelessWidget {
                   Center(
                     child: ChallengeCountdown(
                       targetTime: challenge.endsAt,
-                      label: 'Ends in',
+                      label: context.l10n.endsIn,
                       digitStyle: AppTextStyles.heading2,
                     ),
                   ),
@@ -356,7 +363,7 @@ class _ActiveChallengeHero extends StatelessWidget {
                   const Icon(Icons.fiber_manual_record, size: 20),
                   const SizedBox(width: 8),
                   Text(
-                    'Record Now',
+                    context.l10n.recordNow,
                     style: AppTextStyles.buttonLarge,
                   ),
                 ],
@@ -371,6 +378,65 @@ class _ActiveChallengeHero extends StatelessWidget {
               child: SponsorBadge(
                 sponsorName: challenge.sponsorName!,
                 sponsorLogoUrl: challenge.sponsorLogoUrl,
+              ),
+            ),
+          ],
+
+          // Prize banner (if prize is set).
+          _PrizeBanner(
+            prizeAmount: challenge.prizeAmount,
+            prizeDescription: challenge.prizeDescription,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// =============================================================================
+// Prize banner widget
+// =============================================================================
+
+class _PrizeBanner extends StatelessWidget {
+  final int prizeAmount;
+  final String? prizeDescription;
+
+  const _PrizeBanner({required this.prizeAmount, this.prizeDescription});
+
+  @override
+  Widget build(BuildContext context) {
+    if (prizeAmount <= 0) return const SizedBox.shrink();
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFFFD700), Color(0xFFFFA000)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('🏆', style: TextStyle(fontSize: 20)),
+          const SizedBox(width: 8),
+          Text(
+            '賞金: $prizeAmount コイン',
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+          if (prizeDescription != null) ...[
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                prizeDescription!,
+                style: const TextStyle(color: Colors.white70, fontSize: 13),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -417,7 +483,7 @@ class _NoChallengeView extends StatelessWidget {
           const SizedBox(height: 24),
 
           Text(
-            'No Active Challenge',
+            context.l10n.noActiveChallenge,
             style: AppTextStyles.heading2.copyWith(
               color: theme.colorScheme.onSurface,
             ),
@@ -427,8 +493,8 @@ class _NoChallengeView extends StatelessWidget {
 
           Text(
             nextChallenge != null
-                ? 'The next challenge is almost here!'
-                : 'Check back soon for the next challenge.',
+                ? context.l10n.nextChallengeComingSoon
+                : context.l10n.checkBackSoon,
             style: AppTextStyles.bodyMedium.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
@@ -519,7 +585,7 @@ class _ErrorView extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Something went wrong',
+              context.l10n.somethingWentWrong,
               style: AppTextStyles.heading3,
             ),
             const SizedBox(height: 8),
@@ -537,7 +603,7 @@ class _ErrorView extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+              label: Text(context.l10n.retry),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.white,

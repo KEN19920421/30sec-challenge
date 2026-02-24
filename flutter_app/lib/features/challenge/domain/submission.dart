@@ -50,6 +50,10 @@ class Submission {
   final String? displayName;
   final String? avatarUrl;
 
+  // Duet info — set when this submission is a duet response.
+  final String? duetParentId;
+  final String? duetParentUsername;
+
   const Submission({
     required this.id,
     required this.userId,
@@ -72,6 +76,8 @@ class Submission {
     this.username,
     this.displayName,
     this.avatarUrl,
+    this.duetParentId,
+    this.duetParentUsername,
   });
 
   // ---------------------------------------------------------------------------
@@ -89,6 +95,9 @@ class Submission {
 
   /// Whether this submission is currently boosted.
   bool get isBoosted => boostScore > 0;
+
+  /// Whether this submission is a duet response.
+  bool get isDuet => duetParentId != null;
 
   /// Total weighted votes including super votes (each super vote counts as 3).
   int get weightedVoteCount => voteCount + (superVoteCount * 3);
@@ -131,6 +140,8 @@ class Submission {
           user?['display_name'] as String? ?? user?['displayName'] as String? ?? json['display_name'] as String? ?? json['displayName'] as String?,
       avatarUrl:
           user?['avatar_url'] as String? ?? user?['avatarUrl'] as String? ?? json['avatar_url'] as String? ?? json['avatarUrl'] as String?,
+      duetParentId: json['duet_parent_id'] as String?,
+      duetParentUsername: json['duet_parent_username'] as String?,
     );
   }
 
@@ -157,6 +168,8 @@ class Submission {
       'username': username,
       'displayName': displayName,
       'avatarUrl': avatarUrl,
+      'duet_parent_id': duetParentId,
+      'duet_parent_username': duetParentUsername,
     };
   }
 
@@ -182,6 +195,8 @@ class Submission {
     String? username,
     String? displayName,
     String? avatarUrl,
+    String? duetParentId,
+    String? duetParentUsername,
   }) {
     return Submission(
       id: id ?? this.id,
@@ -205,6 +220,8 @@ class Submission {
       username: username ?? this.username,
       displayName: displayName ?? this.displayName,
       avatarUrl: avatarUrl ?? this.avatarUrl,
+      duetParentId: duetParentId ?? this.duetParentId,
+      duetParentUsername: duetParentUsername ?? this.duetParentUsername,
     );
   }
 

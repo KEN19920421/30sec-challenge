@@ -163,6 +163,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discover => 'Discover';
 
   @override
+  String get navHome => 'Home';
+
+  @override
+  String get navRecord => 'Record';
+
+  @override
   String get settings => 'Settings';
 
   @override
@@ -199,7 +205,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get connections => 'Connections';
 
   @override
-  String get searchUsers => 'Search users...';
+  String get searchUsers => 'Users';
 
   @override
   String get followersTab => 'Followers';
@@ -494,7 +500,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifMarketingDesc => 'Promotions, new features, and tips';
 
   @override
-  String get searchSubmissions => 'Search submissions...';
+  String get searchSubmissions => 'Submissions';
 
   @override
   String get trendingNow => 'Trending Now';
@@ -599,6 +605,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAccount => 'Delete Account';
+
+  @override
+  String get deleteAccountTitle => 'Delete Your Account';
+
+  @override
+  String get deleteAccountConfirm => 'Yes, Delete Account';
+
+  @override
+  String get deleteSubmission => 'Delete Submission';
+
+  @override
+  String get deleteSubmissionWarning =>
+      'Are you sure you want to delete this submission? This action cannot be undone.';
+
+  @override
+  String get deleteSubmissionConfirm => 'Yes, Delete';
 
   @override
   String get language => 'Language';
@@ -796,4 +818,463 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unmute => 'Unmute';
+
+  @override
+  String get devLogin => 'Dev Login';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get browseAsGuest => 'Browse as Guest';
+
+  @override
+  String get tapToStop => 'Tap to stop';
+
+  @override
+  String get trimRange => '5-30s range';
+
+  @override
+  String get dragTextToReposition => 'Drag text on preview to reposition';
+
+  @override
+  String get passwordWeak => 'Weak';
+
+  @override
+  String get passwordMedium => 'Medium';
+
+  @override
+  String get passwordStrong => 'Strong';
+
+  @override
+  String get shareSubmission => 'Share this submission';
+
+  @override
+  String get shareSubmissionLink => 'Check out this 30-second challenge entry!';
+
+  @override
+  String votesCastThisSession(int count) {
+    return '$count votes cast this session';
+  }
+
+  @override
+  String remainingLeft(int count) {
+    return '$count left';
+  }
+
+  @override
+  String submissionsCount(int count) {
+    return '$count submissions';
+  }
+
+  @override
+  String get rankings => 'Rankings';
+
+  @override
+  String get noRankingsYet => 'No rankings yet';
+
+  @override
+  String get submitToAppear => 'Submit to a challenge to appear here!';
+
+  @override
+  String get failedToLoadRankings => 'Failed to load rankings';
+
+  @override
+  String get uploadingEntry => 'Uploading your entry...';
+
+  @override
+  String percentComplete(int percent) {
+    return '$percent% complete';
+  }
+
+  @override
+  String get submissionComplete => 'Submission complete!';
+
+  @override
+  String get videoBeingProcessed => 'Your video is being processed';
+
+  @override
+  String get uploadFailed => 'Upload failed';
+
+  @override
+  String get preparingUpload => 'Preparing upload...';
+
+  @override
+  String get pleaseWait => 'Please wait';
+
+  @override
+  String get autoRedirectingSoon => 'Auto-redirecting in a moment...';
+
+  @override
+  String get goBackLabel => 'Go Back';
+
+  @override
+  String get cancelUpload => 'Cancel';
+
+  @override
+  String get pageNotFound => 'Page not found';
+
+  @override
+  String get goHome => 'Go Home';
+
+  @override
+  String get filterNone => 'None';
+
+  @override
+  String get filterVivid => 'Vivid';
+
+  @override
+  String get filterMono => 'Mono';
+
+  @override
+  String get filterSepia => 'Sepia';
+
+  @override
+  String get filterWarm => 'Warm';
+
+  @override
+  String get filterCool => 'Cool';
+
+  @override
+  String get filterFade => 'Fade';
+
+  @override
+  String get filterVintage => 'Vintage';
+
+  @override
+  String get submissionNotFound => 'Submission not found';
+
+  @override
+  String get submissionDetail => 'Submission';
+
+  @override
+  String exportFailedWithError(String error) {
+    return 'Export failed: $error';
+  }
+
+  @override
+  String get noFriendsOnLeaderboard => 'No Friends Yet';
+
+  @override
+  String get noLeaderboardEntries => 'No Entries Yet';
+
+  @override
+  String get noFriendsOnLeaderboardSubtitle =>
+      'Follow friends to see them on the leaderboard';
+
+  @override
+  String get noLeaderboardEntriesSubtitle =>
+      'Be the first to climb the rankings';
+
+  @override
+  String get noNotificationsYet => 'No Notifications Yet';
+
+  @override
+  String get noNotificationsSubtitle =>
+      'You\'re all caught up! Check back later.';
+
+  @override
+  String get endsIn => 'Ends in';
+
+  @override
+  String get noActiveChallenge => 'No Active Challenge';
+
+  @override
+  String get nextChallengeComingSoon => 'The next challenge is almost here!';
+
+  @override
+  String get checkBackSoon => 'Check back soon for the next challenge.';
+
+  @override
+  String get topSubmissions => 'Top Submissions';
+
+  @override
+  String get viewAll => 'View All';
+
+  @override
+  String get entries => 'Entries';
+
+  @override
+  String get remaining => 'Remaining';
+
+  @override
+  String get winner => 'WINNER';
+
+  @override
+  String get subscriptionAutoRenews =>
+      'Subscription auto-renews unless cancelled at least 24 hours before the end of the current period.';
+
+  @override
+  String get paymentCharged =>
+      'Payment will be charged to your account at confirmation of purchase.';
+
+  @override
+  String get terms => 'Terms';
+
+  @override
+  String get privacy => 'Privacy';
+
+  @override
+  String get selectPlanFirst => 'Please select a plan.';
+
+  @override
+  String get purchaseFailed => 'Purchase failed. Please try again.';
+
+  @override
+  String get yourSparks => 'Your Sparks';
+
+  @override
+  String get failedToLoadProfile => 'Failed to load profile';
+
+  @override
+  String get scoringInfo => 'Scoring Info';
+
+  @override
+  String get notificationToday => 'Today';
+
+  @override
+  String get notificationYesterday => 'Yesterday';
+
+  @override
+  String get notificationThisWeek => 'This Week';
+
+  @override
+  String get notificationEarlier => 'Earlier';
+
+  @override
+  String get failedToDeleteAccount =>
+      'Failed to delete account. Please try again.';
+
+  @override
+  String get failedToLoadChallenge => 'Failed to load challenge';
+
+  @override
+  String get deleteNotification => 'Delete notification';
+
+  @override
+  String get deleteNotificationConfirm =>
+      'Are you sure you want to delete this notification?';
+
+  @override
+  String get unblock => 'Unblock';
+
+  @override
+  String get noBlockedUsers => 'No blocked users';
+
+  @override
+  String get unblockConfirm => 'Unblock this user?';
+
+  @override
+  String get votingHistory => 'Voting History';
+
+  @override
+  String get noVotingHistory => 'No votes yet';
+
+  @override
+  String get votedOn => 'Voted';
+
+  @override
+  String get editCaption => 'Edit Caption';
+
+  @override
+  String get captionUpdated => 'Caption updated';
+
+  @override
+  String get editComment => 'Edit Comment';
+
+  @override
+  String get saveComment => 'Save';
+
+  @override
+  String get commentUpdated => 'Comment updated';
+
+  @override
+  String get creatorAnalytics => 'Analytics';
+
+  @override
+  String get totalSubmissions => 'Total Submissions';
+
+  @override
+  String get totalVotes => 'Total Votes';
+
+  @override
+  String get avgVotes => 'Avg Votes';
+
+  @override
+  String get challengesWon => 'Challenges Won';
+
+  @override
+  String get totalCoinsEarned => 'Coins Earned';
+
+  @override
+  String get submissionAnalytics => 'Submission Analytics';
+
+  @override
+  String get upvotes => 'Upvotes';
+
+  @override
+  String get downvotes => 'Downvotes';
+
+  @override
+  String get superVotes => 'Super Votes';
+
+  @override
+  String get giftsReceived => 'Gifts Received';
+
+  @override
+  String get coverPhoto => 'Cover Photo';
+
+  @override
+  String get changeCoverPhoto => 'Change Cover Photo';
+
+  @override
+  String get coverPhotoUpdated => 'Cover photo updated!';
+
+  @override
+  String get failedToUpdateCoverPhoto => 'Failed to update cover photo.';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get searchChallenges => 'Challenges';
+
+  @override
+  String get searchHint => 'Search users, challenges, submissions...';
+
+  @override
+  String get noSearchResults => 'No results found';
+
+  @override
+  String get searchPlaceholder => 'Start typing to search';
+
+  @override
+  String followerCount(int count) {
+    return '$count followers';
+  }
+
+  @override
+  String get validationEmailRequired => 'Email is required.';
+
+  @override
+  String get validationEmailInvalid => 'Enter a valid email address.';
+
+  @override
+  String get validationPasswordRequired => 'Password is required.';
+
+  @override
+  String get validationPasswordTooShort =>
+      'Password must be at least 8 characters.';
+
+  @override
+  String get validationUsernameTooShort =>
+      'Username must be at least 3 characters.';
+
+  @override
+  String get validationUsernameInvalid =>
+      'Username can only contain letters, numbers, and underscores.';
+
+  @override
+  String get weeklyLeague => 'Weekly League';
+
+  @override
+  String get leagueRankings => 'Rankings';
+
+  @override
+  String leaguePoints(int points) {
+    return '$points pts';
+  }
+
+  @override
+  String get promoted => 'PROMOTED';
+
+  @override
+  String get relegated => 'RELEGATED';
+
+  @override
+  String weekOf(String date) {
+    return 'Week of $date';
+  }
+
+  @override
+  String get promotionLine => 'Top 20% promote next week';
+
+  @override
+  String get watchMode => 'Watch';
+
+  @override
+  String get exploreMode => 'Explore';
+
+  @override
+  String get sponsoredChallenge => 'SPONSORED';
+
+  @override
+  String prizeCoins(int coins) {
+    return 'Prize: $coins coins';
+  }
+
+  @override
+  String sponsoredBy(String name) {
+    return 'Sponsored by $name';
+  }
+
+  @override
+  String get premiumChallenge => 'Premium Challenge';
+
+  @override
+  String get premiumBenefitMonthly => 'Monthly Premium Challenge Access';
+
+  @override
+  String get premiumBenefitSuperVotes => 'Unlimited Super Votes';
+
+  @override
+  String get premiumBenefitNoAds => 'Ad-free Experience';
+
+  @override
+  String get premiumBenefitGiftRevenue => 'Gift Revenue +10%';
+
+  @override
+  String get premiumBenefitEarlyAccess => '24hr Early Access';
+
+  @override
+  String get premiumBenefitBadge => 'Premium Badge';
+
+  @override
+  String get creatorTier => 'Creator Tier';
+
+  @override
+  String get tierRookie => 'Rookie';
+
+  @override
+  String get tierRising => 'Rising';
+
+  @override
+  String get tierPartner => 'Partner';
+
+  @override
+  String get tierFeatured => 'Featured';
+
+  @override
+  String get noCreatorTier => 'Keep creating to earn a tier!';
+
+  @override
+  String giftRevenueShare(int percent) {
+    return 'Gift revenue share: $percent%';
+  }
+
+  @override
+  String duetWith(String username) {
+    return '↩ duet with @$username';
+  }
+
+  @override
+  String get recordDuet => 'Duet';
+
+  @override
+  String duetChallenge(String username) {
+    return 'Dueting with @$username';
+  }
 }

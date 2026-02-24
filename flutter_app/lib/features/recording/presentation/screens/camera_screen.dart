@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -13,6 +16,8 @@ import '../../../challenge/presentation/providers/challenge_provider.dart';
 import '../providers/recording_provider.dart';
 import '../widgets/camera_controls.dart';
 import '../widgets/recording_timer_ring.dart';
+
+import '../../../../core/services/analytics_service.dart';
 
 /// Full-screen camera recording screen.
 ///
@@ -25,12 +30,17 @@ import '../widgets/recording_timer_ring.dart';
 /// - Auto-stops at 30 seconds.
 /// - Haptic feedback on start/stop.
 /// - Timer text showing elapsed time.
+/// - Optional duet banner when [duetParentId] is provided.
 class CameraScreen extends ConsumerStatefulWidget {
   final String challengeId;
+  final String? duetParentId;
+  final String? duetParentUsername;
 
   const CameraScreen({
     super.key,
     required this.challengeId,
+    this.duetParentId,
+    this.duetParentUsername,
   });
 
   @override
@@ -52,10 +62,60 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     // Hide system UI for immersive camera experience.
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-    // Initialize camera after first frame.
+    // Request permissions, then initialize camera after first frame.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(recordingProvider(widget.challengeId).notifier).initCamera();
+      _requestPermissions();
     });
+  }
+
+  Future<void> _requestPermissions() async {
+    final cameraStatus = await Permission.camera.request();
+    final micStatus = await Permission.microphone.request();
+
+    if (cameraStatus.isPermanentlyDenied || micStatus.isPermanentlyDenied) {
+      if (mounted) {
+        showDialog<void>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Permission Required'),
+            content: const Text(
+              'Please enable camera and microphone access in Settings to record videos.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  openAppSettings();
+                },
+                child: const Text('Open Settings'),
+              ),
+            ],
+          ),
+        );
+      }
+      return;
+    }
+
+    if (cameraStatus.isDenied || micStatus.isDenied) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Camera and microphone permissions are required to record videos.',
+            ),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+      return;
+    }
+
+    // All permissions granted — initialize camera.
+    ref.read(recordingProvider(widget.challengeId).notifier).initCamera();
   }
 
   @override
@@ -89,6 +149,37 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
   }
 
   Future<void> _onPickFromGallery() async {
+    // Request photos permission (iOS) / storage permission (Android <13).
+    final Permission galleryPermission =
+        Platform.isIOS ? Permission.photos : Permission.storage;
+    final status = await galleryPermission.request();
+
+    if (status.isPermanentlyDenied) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Gallery access is permanently denied. Enable it in Settings.',
+            ),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+      return;
+    }
+
+    if (status.isDenied) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Gallery permission is required to pick a video.'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+      return;
+    }
+
     final picker = ImagePicker();
     final video = await picker.pickVideo(
       source: ImageSource.gallery,
@@ -114,6 +205,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     if (state is RecordingReady) {
       HapticFeedback.mediumImpact();
       await notifier.startRecording();
+      AnalyticsService.logRecordingStarted(); // fire-and-forget
     } else if (state is RecordingInProgress) {
       // Only allow stopping if minimum duration met.
       if (state.elapsed.inSeconds >= AppConstants.minVideoDurationSeconds) {
@@ -166,6 +258,42 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
         children: [
           // Camera preview.
           _buildCameraPreview(state),
+
+          // Duet banner — shown above camera controls when in duet mode.
+          if (widget.duetParentId != null)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.reply,
+                            color: Colors.white, size: 16),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Duet with @${widget.duetParentUsername ?? ""}',
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
 
           // Top controls.
           Positioned(

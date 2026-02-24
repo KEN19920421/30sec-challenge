@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { authenticate, optionalAuth, validate } from '../../middleware';
 import { requireRole } from '../../middleware/require-role';
+import { defaultLimiter } from '../../middleware/rate-limiter';
 import * as controller from './challenge.controller';
 import {
   createChallengeSchema,
@@ -32,6 +33,22 @@ router.get(
   validate(challengeHistoryQuerySchema, 'query'),
   controller.getHistory,
 );
+
+// ---------------------------------------------------------------------------
+// Authenticated routes (must come before /:id to avoid param collision)
+// ---------------------------------------------------------------------------
+
+/** GET /premium -- active premium-only challenges (requires subscription) */
+router.get(
+  '/premium',
+  defaultLimiter,
+  authenticate,
+  controller.getPremiumChallenges,
+);
+
+// ---------------------------------------------------------------------------
+// Param routes
+// ---------------------------------------------------------------------------
 
 /** GET /:id -- single challenge by ID */
 router.get(

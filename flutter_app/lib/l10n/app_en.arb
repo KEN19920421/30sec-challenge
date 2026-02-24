@@ -1,38 +1,49 @@
 {
   "@@locale": "en",
-
   "appTitle": "30sec Challenge",
-
   "login": "Log In",
   "register": "Sign Up",
   "username": "Username",
   "displayName": "Display Name",
-
   "signInToContinue": "Sign in to continue",
   "continueWithGoogle": "Continue with Google",
   "continueWithApple": "Continue with Apple",
-
   "displayNameRequired": "Display name is required",
   "displayNameMaxLength": "Max {length} characters",
   "@displayNameMaxLength": {
-    "placeholders": { "length": { "type": "int" } }
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
   },
   "usernameRequired": "Username is required",
   "usernameMinLength": "At least {length} characters",
   "@usernameMinLength": {
-    "placeholders": { "length": { "type": "int" } }
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
   },
   "usernameMaxLength": "Max {length} characters",
   "@usernameMaxLength": {
-    "placeholders": { "length": { "type": "int" } }
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
   },
   "usernameInvalidChars": "Only letters, numbers, and underscores",
   "minCharacters": "Must be at least {count} characters",
   "@minCharacters": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "usernameNotAvailable": "Username is not available",
-
   "onboardingTitle1": "Daily Challenges",
   "onboardingDesc1": "Every day brings a new creative challenge. Show the world your unique take in just 30 seconds.",
   "onboardingTitle2": "30-Second Videos",
@@ -42,7 +53,6 @@
   "skip": "Skip",
   "getStarted": "Get Started",
   "next": "Next",
-
   "todaysChallenge": "Today's Challenge",
   "recordNow": "Record Now",
   "timeRemaining": "Time Remaining",
@@ -52,7 +62,11 @@
   "live": "LIVE",
   "entriesCount": "{count} entries",
   "@entriesCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "recordYourEntry": "Record Your Entry",
   "viewResults": "View Results",
@@ -62,13 +76,14 @@
   "failedToLoadResults": "Failed to load results",
   "noPastChallenges": "No past challenges",
   "somethingWentWrong": "Something went wrong",
-
   "submissions": "Submissions",
   "votes": "Votes",
   "voting": "Voting",
   "leaderboard": "Leaderboard",
   "profile": "Profile",
   "discover": "Discover",
+  "navHome": "Home",
+  "navRecord": "Record",
   "settings": "Settings",
   "notifications": "Notifications",
   "followers": "Followers",
@@ -87,7 +102,6 @@
   "noFollowersYet": "No followers yet",
   "notFollowingYet": "Not following anyone yet",
   "getMore": "Get More",
-
   "superVote": "Super Vote",
   "watchAd": "Watch Ad",
   "noThanks": "No Thanks",
@@ -97,7 +111,6 @@
   "comeBackLaterForVotes": "Come back later for more submissions to vote on.",
   "goBack": "Go Back",
   "continueVoting": "Continue Voting",
-
   "daily": "Daily",
   "weekly": "Weekly",
   "allTime": "All Time",
@@ -108,11 +121,14 @@
   "failedToLoadLeaderboard": "Failed to load leaderboard",
   "howScoringWorks": "How Scoring Works",
   "gotIt": "Got it",
-
   "recording": "Recording...",
   "minimumRecordingDuration": "Record at least {seconds} seconds",
   "@minimumRecordingDuration": {
-    "placeholders": { "seconds": { "type": "int" } }
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
   },
   "close": "Close",
   "preview": "Preview",
@@ -126,13 +142,16 @@
   "captionHint": "Add a caption (optional)",
   "viewInFeed": "View in Feed",
   "retryUpload": "Retry Upload",
-
   "goPro": "Go Pro",
   "unlockPotential": "Unlock your full potential",
   "proMember": "You are a Pro member!",
   "renewsOn": "Renews on {date}",
   "@renewsOn": {
-    "placeholders": { "date": { "type": "String" } }
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
   },
   "proBenefits": "Pro Benefits",
   "choosePlan": "Choose Your Plan",
@@ -154,7 +173,6 @@
   "perYear": "/year",
   "save33": "Save 33%",
   "bestValue": "Best Value",
-
   "sparks": "Sparks",
   "sparksStore": "Sparks Store",
   "getSparks": "Get Sparks",
@@ -167,12 +185,18 @@
   "giftMessageHint": "Add a message (optional)",
   "sendGiftButton": "Send {name} ({cost} Sparks)",
   "@sendGiftButton": {
-    "placeholders": { "name": { "type": "String" }, "cost": { "type": "int" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "cost": {
+        "type": "int"
+      }
+    }
   },
   "getMoreSparks": "Get More Sparks",
   "gifts": "Gifts",
   "shop": "Shop",
-
   "noNotifications": "No notifications yet",
   "markAllRead": "Mark All Read",
   "notificationSettings": "Notification Settings",
@@ -192,18 +216,15 @@
   "notifSubmissionStatusDesc": "Updates about your video processing",
   "notifMarketing": "Marketing",
   "notifMarketingDesc": "Promotions, new features, and tips",
-
   "searchSubmissions": "Search submissions...",
   "trendingNow": "Trending Now",
   "failedToLoadFeed": "Failed to load feed",
-
   "reportUser": "Report User",
   "blockUser": "Block User",
   "reportUserConfirm": "Are you sure you want to report this user for inappropriate behavior?",
   "userReported": "User reported. We will review this shortly.",
   "blockUserConfirm": "Blocked users cannot see your profile or interact with your content.",
   "userBlocked": "User blocked.",
-
   "accountSection": "Account",
   "subscriptionSection": "Subscription",
   "currentPlan": "Current Plan",
@@ -223,16 +244,24 @@
   "privacyPolicy": "Privacy Policy",
   "appVersion": "Version {version}",
   "@appVersion": {
-    "placeholders": { "version": { "type": "String" } }
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "deleteAccountWarning": "This action is permanent and cannot be undone. All your data, submissions, and coin balance will be lost.",
   "selectLanguage": "Select Language",
   "selectTheme": "Select Theme",
   "logoutConfirm": "Are you sure you want to log out?",
   "comingSoon": "Coming soon",
-
   "logout": "Log Out",
   "deleteAccount": "Delete Account",
+  "deleteAccountTitle": "Delete Your Account",
+  "deleteAccountConfirm": "Yes, Delete Account",
+  "deleteSubmission": "Delete Submission",
+  "deleteSubmissionWarning": "Are you sure you want to delete this submission? This action cannot be undone.",
+  "deleteSubmissionConfirm": "Yes, Delete",
   "language": "Language",
   "darkMode": "Dark Mode",
   "about": "About",
@@ -245,44 +274,50 @@
   "success": "Success",
   "proFeature": "Pro Feature",
   "upgradeToUnlock": "Upgrade to Pro to unlock this feature",
-
   "challengeEndsIn": "Challenge ends in {time}",
   "@challengeEndsIn": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
   "votesRemaining": "{count} votes remaining",
   "@votesRemaining": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "noMoreEntries": "You've voted on all entries!",
   "comeBackLater": "Come back later for more.",
-
   "firstBoostFree": "First Boost Free!",
   "firstBoostFreeDesc": "Try your first Small boost for free — no Sparks needed!",
   "freeTrialLabel": "FREE",
-
   "dailyRewardTitle": "Daily Login Bonus",
   "dailyRewardDesc": "Welcome back! Here are your daily Sparks.",
   "claimReward": "Claim Reward",
   "dailyBonusClaimed": "Claimed today!",
   "dailyBonusAvailable": "+3 Sparks available",
-
   "earnFreeSparks": "Earn Free Sparks",
   "watchAdForSparks": "Watch Ad for Sparks",
   "watchAdForSparksDesc": "Watch a short video to earn 10 free Sparks!",
   "watchAdEarn10Sparks": "Watch Ad & Earn 10 Sparks",
   "adsRemaining": "{count} ads remaining today",
   "@adsRemaining": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "dailyAdLimitReached": "Daily ad limit reached",
-
   "boostSubmission": "Boost Submission",
   "boostDescription": "Boost this submission to increase its visibility in the feed",
   "boost": "Boost",
   "boostPurchased": "Boost purchased!",
   "boosted": "Boosted",
-
   "pickFromGallery": "Gallery",
   "cameraUnavailable": "Camera Unavailable",
   "cameraUnavailableDescription": "Camera could not be started. You can choose a video from your gallery instead.",
@@ -292,31 +327,293 @@
   "addText": "Text",
   "exporting": "Exporting...",
   "exportFailed": "Export failed",
-
   "comments": "Comments",
   "addComment": "Add a comment...",
   "noCommentsYet": "No comments yet",
   "beFirstToComment": "Be the first to comment!",
   "replyingTo": "Replying to @{username}",
   "@replyingTo": {
-    "placeholders": { "username": { "type": "String" } }
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
   },
   "repliesCount": "{count} replies",
   "@repliesCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "reply": "Reply",
   "deleteComment": "Delete",
   "commentDeleted": "Comment deleted",
   "deletedComment": "[Deleted]",
-
   "replyTo": "Replying to @{username}",
   "@replyTo": {
-    "placeholders": { "username": { "type": "String" } }
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
   },
   "deleteCommentConfirm": "Are you sure you want to delete this comment?",
   "commentAdded": "Comment added",
   "viewReplies": "View replies",
   "mute": "Mute",
-  "unmute": "Unmute"
+  "unmute": "Unmute",
+  "devLogin": "Dev Login",
+  "email": "Email",
+  "password": "Password",
+  "browseAsGuest": "Browse as Guest",
+  "tapToStop": "Tap to stop",
+  "trimRange": "5-30s range",
+  "dragTextToReposition": "Drag text on preview to reposition",
+  "passwordWeak": "Weak",
+  "passwordMedium": "Medium",
+  "passwordStrong": "Strong",
+  "shareSubmission": "Share this submission",
+  "shareSubmissionLink": "Check out this 30-second challenge entry!",
+  "votesCastThisSession": "{count} votes cast this session",
+  "@votesCastThisSession": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "remainingLeft": "{count} left",
+  "@remainingLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "submissionsCount": "{count} submissions",
+  "@submissionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rankings": "Rankings",
+  "noRankingsYet": "No rankings yet",
+  "submitToAppear": "Submit to a challenge to appear here!",
+  "failedToLoadRankings": "Failed to load rankings",
+  "uploadingEntry": "Uploading your entry...",
+  "percentComplete": "{percent}% complete",
+  "@percentComplete": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "submissionComplete": "Submission complete!",
+  "videoBeingProcessed": "Your video is being processed",
+  "uploadFailed": "Upload failed",
+  "preparingUpload": "Preparing upload...",
+  "pleaseWait": "Please wait",
+  "autoRedirectingSoon": "Auto-redirecting in a moment...",
+  "goBackLabel": "Go Back",
+  "cancelUpload": "Cancel",
+  "pageNotFound": "Page not found",
+  "goHome": "Go Home",
+  "filterNone": "None",
+  "filterVivid": "Vivid",
+  "filterMono": "Mono",
+  "filterSepia": "Sepia",
+  "filterWarm": "Warm",
+  "filterCool": "Cool",
+  "filterFade": "Fade",
+  "filterVintage": "Vintage",
+  "submissionNotFound": "Submission not found",
+  "submissionDetail": "Submission",
+  "exportFailedWithError": "Export failed: {error}",
+  "@exportFailedWithError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noFriendsOnLeaderboard": "No Friends Yet",
+  "@noFriendsOnLeaderboard": {
+    "description": "Title when no friends are on the leaderboard"
+  },
+  "noLeaderboardEntries": "No Entries Yet",
+  "@noLeaderboardEntries": {
+    "description": "Title when no leaderboard entries exist"
+  },
+  "noFriendsOnLeaderboardSubtitle": "Follow friends to see them on the leaderboard",
+  "@noFriendsOnLeaderboardSubtitle": {
+    "description": "Subtitle when no friends are on the leaderboard"
+  },
+  "noLeaderboardEntriesSubtitle": "Be the first to climb the rankings",
+  "@noLeaderboardEntriesSubtitle": {
+    "description": "Subtitle when no leaderboard entries exist"
+  },
+  "noNotificationsYet": "No Notifications Yet",
+  "@noNotificationsYet": {
+    "description": "Title when there are no notifications"
+  },
+  "noNotificationsSubtitle": "You're all caught up! Check back later.",
+  "@noNotificationsSubtitle": {
+    "description": "Subtitle when there are no notifications"
+  },
+  "endsIn": "Ends in",
+  "noActiveChallenge": "No Active Challenge",
+  "nextChallengeComingSoon": "The next challenge is almost here!",
+  "checkBackSoon": "Check back soon for the next challenge.",
+  "topSubmissions": "Top Submissions",
+  "viewAll": "View All",
+  "entries": "Entries",
+  "remaining": "Remaining",
+  "winner": "WINNER",
+  "subscriptionAutoRenews": "Subscription auto-renews unless cancelled at least 24 hours before the end of the current period.",
+  "paymentCharged": "Payment will be charged to your account at confirmation of purchase.",
+  "terms": "Terms",
+  "privacy": "Privacy",
+  "selectPlanFirst": "Please select a plan.",
+  "purchaseFailed": "Purchase failed. Please try again.",
+  "yourSparks": "Your Sparks",
+  "failedToLoadProfile": "Failed to load profile",
+  "scoringInfo": "Scoring Info",
+  "notificationToday": "Today",
+  "notificationYesterday": "Yesterday",
+  "notificationThisWeek": "This Week",
+  "notificationEarlier": "Earlier",
+  "failedToDeleteAccount": "Failed to delete account. Please try again.",
+  "failedToLoadChallenge": "Failed to load challenge",
+  "deleteNotification": "Delete notification",
+  "deleteNotificationConfirm": "Are you sure you want to delete this notification?",
+  "unblock": "Unblock",
+  "noBlockedUsers": "No blocked users",
+  "unblockConfirm": "Unblock this user?",
+  "votingHistory": "Voting History",
+  "noVotingHistory": "No votes yet",
+  "votedOn": "Voted",
+  "editCaption": "Edit Caption",
+  "captionUpdated": "Caption updated",
+  "editComment": "Edit Comment",
+  "saveComment": "Save",
+  "commentUpdated": "Comment updated",
+  "creatorAnalytics": "Analytics",
+  "totalSubmissions": "Total Submissions",
+  "totalVotes": "Total Votes",
+  "avgVotes": "Avg Votes",
+  "challengesWon": "Challenges Won",
+  "totalCoinsEarned": "Coins Earned",
+  "submissionAnalytics": "Submission Analytics",
+  "upvotes": "Upvotes",
+  "downvotes": "Downvotes",
+  "superVotes": "Super Votes",
+  "giftsReceived": "Gifts Received",
+  "coverPhoto": "Cover Photo",
+  "changeCoverPhoto": "Change Cover Photo",
+  "coverPhotoUpdated": "Cover photo updated!",
+  "failedToUpdateCoverPhoto": "Failed to update cover photo.",
+  "search": "Search",
+  "searchUsers": "Users",
+  "searchChallenges": "Challenges",
+  "searchSubmissions": "Submissions",
+  "searchHint": "Search users, challenges, submissions...",
+  "noSearchResults": "No results found",
+  "searchPlaceholder": "Start typing to search",
+  "followerCount": "{count} followers",
+  "@followerCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "validationEmailRequired": "Email is required.",
+  "validationEmailInvalid": "Enter a valid email address.",
+  "validationPasswordRequired": "Password is required.",
+  "validationPasswordTooShort": "Password must be at least 8 characters.",
+  "validationUsernameTooShort": "Username must be at least 3 characters.",
+  "validationUsernameInvalid": "Username can only contain letters, numbers, and underscores.",
+  "weeklyLeague": "Weekly League",
+  "leagueRankings": "Rankings",
+  "leaguePoints": "{points} pts",
+  "@leaguePoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "promoted": "PROMOTED",
+  "relegated": "RELEGATED",
+  "weekOf": "Week of {date}",
+  "@weekOf": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "promotionLine": "Top 20% promote next week",
+  "watchMode": "Watch",
+  "exploreMode": "Explore",
+  "sponsoredChallenge": "SPONSORED",
+  "prizeCoins": "Prize: {coins} coins",
+  "@prizeCoins": {
+    "placeholders": {
+      "coins": {
+        "type": "int"
+      }
+    }
+  },
+  "sponsoredBy": "Sponsored by {name}",
+  "@sponsoredBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "premiumChallenge": "Premium Challenge",
+  "premiumBenefitMonthly": "Monthly Premium Challenge Access",
+  "premiumBenefitSuperVotes": "Unlimited Super Votes",
+  "premiumBenefitNoAds": "Ad-free Experience",
+  "premiumBenefitGiftRevenue": "Gift Revenue +10%",
+  "premiumBenefitEarlyAccess": "24hr Early Access",
+  "premiumBenefitBadge": "Premium Badge",
+  "creatorTier": "Creator Tier",
+  "tierRookie": "Rookie",
+  "tierRising": "Rising",
+  "tierPartner": "Partner",
+  "tierFeatured": "Featured",
+  "noCreatorTier": "Keep creating to earn a tier!",
+  "giftRevenueShare": "Gift revenue share: {percent}%",
+  "@giftRevenueShare": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "duetWith": "↩ duet with @{username}",
+  "@duetWith": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "recordDuet": "Duet",
+  "duetChallenge": "Dueting with @{username}",
+  "@duetChallenge": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  }
 }

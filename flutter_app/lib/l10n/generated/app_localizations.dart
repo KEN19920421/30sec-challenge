@@ -380,6 +380,18 @@ abstract class AppLocalizations {
   /// **'Discover'**
   String get discover;
 
+  /// No description provided for @navHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// No description provided for @navRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Record'**
+  String get navRecord;
+
   /// No description provided for @settings.
   ///
   /// In en, this message translates to:
@@ -455,7 +467,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchUsers.
   ///
   /// In en, this message translates to:
-  /// **'Search users...'**
+  /// **'Users'**
   String get searchUsers;
 
   /// No description provided for @followersTab.
@@ -1031,7 +1043,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchSubmissions.
   ///
   /// In en, this message translates to:
-  /// **'Search submissions...'**
+  /// **'Submissions'**
   String get searchSubmissions;
 
   /// No description provided for @trendingNow.
@@ -1231,6 +1243,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete Account'**
   String get deleteAccount;
+
+  /// No description provided for @deleteAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Your Account'**
+  String get deleteAccountTitle;
+
+  /// No description provided for @deleteAccountConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Delete Account'**
+  String get deleteAccountConfirm;
+
+  /// No description provided for @deleteSubmission.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Submission'**
+  String get deleteSubmission;
+
+  /// No description provided for @deleteSubmissionWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this submission? This action cannot be undone.'**
+  String get deleteSubmissionWarning;
+
+  /// No description provided for @deleteSubmissionConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Delete'**
+  String get deleteSubmissionConfirm;
 
   /// No description provided for @language.
   ///
@@ -1591,6 +1633,852 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unmute'**
   String get unmute;
+
+  /// No description provided for @devLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Dev Login'**
+  String get devLogin;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @browseAsGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse as Guest'**
+  String get browseAsGuest;
+
+  /// No description provided for @tapToStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to stop'**
+  String get tapToStop;
+
+  /// No description provided for @trimRange.
+  ///
+  /// In en, this message translates to:
+  /// **'5-30s range'**
+  String get trimRange;
+
+  /// No description provided for @dragTextToReposition.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag text on preview to reposition'**
+  String get dragTextToReposition;
+
+  /// No description provided for @passwordWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get passwordWeak;
+
+  /// No description provided for @passwordMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get passwordMedium;
+
+  /// No description provided for @passwordStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong'**
+  String get passwordStrong;
+
+  /// No description provided for @shareSubmission.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this submission'**
+  String get shareSubmission;
+
+  /// No description provided for @shareSubmissionLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Check out this 30-second challenge entry!'**
+  String get shareSubmissionLink;
+
+  /// No description provided for @votesCastThisSession.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} votes cast this session'**
+  String votesCastThisSession(int count);
+
+  /// No description provided for @remainingLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} left'**
+  String remainingLeft(int count);
+
+  /// No description provided for @submissionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} submissions'**
+  String submissionsCount(int count);
+
+  /// No description provided for @rankings.
+  ///
+  /// In en, this message translates to:
+  /// **'Rankings'**
+  String get rankings;
+
+  /// No description provided for @noRankingsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No rankings yet'**
+  String get noRankingsYet;
+
+  /// No description provided for @submitToAppear.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit to a challenge to appear here!'**
+  String get submitToAppear;
+
+  /// No description provided for @failedToLoadRankings.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load rankings'**
+  String get failedToLoadRankings;
+
+  /// No description provided for @uploadingEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading your entry...'**
+  String get uploadingEntry;
+
+  /// No description provided for @percentComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% complete'**
+  String percentComplete(int percent);
+
+  /// No description provided for @submissionComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Submission complete!'**
+  String get submissionComplete;
+
+  /// No description provided for @videoBeingProcessed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your video is being processed'**
+  String get videoBeingProcessed;
+
+  /// No description provided for @uploadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload failed'**
+  String get uploadFailed;
+
+  /// No description provided for @preparingUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing upload...'**
+  String get preparingUpload;
+
+  /// No description provided for @pleaseWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait'**
+  String get pleaseWait;
+
+  /// No description provided for @autoRedirectingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-redirecting in a moment...'**
+  String get autoRedirectingSoon;
+
+  /// No description provided for @goBackLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Back'**
+  String get goBackLabel;
+
+  /// No description provided for @cancelUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelUpload;
+
+  /// No description provided for @pageNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Page not found'**
+  String get pageNotFound;
+
+  /// No description provided for @goHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Home'**
+  String get goHome;
+
+  /// No description provided for @filterNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get filterNone;
+
+  /// No description provided for @filterVivid.
+  ///
+  /// In en, this message translates to:
+  /// **'Vivid'**
+  String get filterVivid;
+
+  /// No description provided for @filterMono.
+  ///
+  /// In en, this message translates to:
+  /// **'Mono'**
+  String get filterMono;
+
+  /// No description provided for @filterSepia.
+  ///
+  /// In en, this message translates to:
+  /// **'Sepia'**
+  String get filterSepia;
+
+  /// No description provided for @filterWarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm'**
+  String get filterWarm;
+
+  /// No description provided for @filterCool.
+  ///
+  /// In en, this message translates to:
+  /// **'Cool'**
+  String get filterCool;
+
+  /// No description provided for @filterFade.
+  ///
+  /// In en, this message translates to:
+  /// **'Fade'**
+  String get filterFade;
+
+  /// No description provided for @filterVintage.
+  ///
+  /// In en, this message translates to:
+  /// **'Vintage'**
+  String get filterVintage;
+
+  /// No description provided for @submissionNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Submission not found'**
+  String get submissionNotFound;
+
+  /// No description provided for @submissionDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Submission'**
+  String get submissionDetail;
+
+  /// No description provided for @exportFailedWithError.
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed: {error}'**
+  String exportFailedWithError(String error);
+
+  /// Title when no friends are on the leaderboard
+  ///
+  /// In en, this message translates to:
+  /// **'No Friends Yet'**
+  String get noFriendsOnLeaderboard;
+
+  /// Title when no leaderboard entries exist
+  ///
+  /// In en, this message translates to:
+  /// **'No Entries Yet'**
+  String get noLeaderboardEntries;
+
+  /// Subtitle when no friends are on the leaderboard
+  ///
+  /// In en, this message translates to:
+  /// **'Follow friends to see them on the leaderboard'**
+  String get noFriendsOnLeaderboardSubtitle;
+
+  /// Subtitle when no leaderboard entries exist
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first to climb the rankings'**
+  String get noLeaderboardEntriesSubtitle;
+
+  /// Title when there are no notifications
+  ///
+  /// In en, this message translates to:
+  /// **'No Notifications Yet'**
+  String get noNotificationsYet;
+
+  /// Subtitle when there are no notifications
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re all caught up! Check back later.'**
+  String get noNotificationsSubtitle;
+
+  /// No description provided for @endsIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends in'**
+  String get endsIn;
+
+  /// No description provided for @noActiveChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'No Active Challenge'**
+  String get noActiveChallenge;
+
+  /// No description provided for @nextChallengeComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'The next challenge is almost here!'**
+  String get nextChallengeComingSoon;
+
+  /// No description provided for @checkBackSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Check back soon for the next challenge.'**
+  String get checkBackSoon;
+
+  /// No description provided for @topSubmissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Submissions'**
+  String get topSubmissions;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get viewAll;
+
+  /// No description provided for @entries.
+  ///
+  /// In en, this message translates to:
+  /// **'Entries'**
+  String get entries;
+
+  /// No description provided for @remaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get remaining;
+
+  /// No description provided for @winner.
+  ///
+  /// In en, this message translates to:
+  /// **'WINNER'**
+  String get winner;
+
+  /// No description provided for @subscriptionAutoRenews.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription auto-renews unless cancelled at least 24 hours before the end of the current period.'**
+  String get subscriptionAutoRenews;
+
+  /// No description provided for @paymentCharged.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment will be charged to your account at confirmation of purchase.'**
+  String get paymentCharged;
+
+  /// No description provided for @terms.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms'**
+  String get terms;
+
+  /// No description provided for @privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get privacy;
+
+  /// No description provided for @selectPlanFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a plan.'**
+  String get selectPlanFirst;
+
+  /// No description provided for @purchaseFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase failed. Please try again.'**
+  String get purchaseFailed;
+
+  /// No description provided for @yourSparks.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Sparks'**
+  String get yourSparks;
+
+  /// No description provided for @failedToLoadProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load profile'**
+  String get failedToLoadProfile;
+
+  /// No description provided for @scoringInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Scoring Info'**
+  String get scoringInfo;
+
+  /// No description provided for @notificationToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get notificationToday;
+
+  /// No description provided for @notificationYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get notificationYesterday;
+
+  /// No description provided for @notificationThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get notificationThisWeek;
+
+  /// No description provided for @notificationEarlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier'**
+  String get notificationEarlier;
+
+  /// No description provided for @failedToDeleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete account. Please try again.'**
+  String get failedToDeleteAccount;
+
+  /// No description provided for @failedToLoadChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load challenge'**
+  String get failedToLoadChallenge;
+
+  /// No description provided for @deleteNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete notification'**
+  String get deleteNotification;
+
+  /// No description provided for @deleteNotificationConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this notification?'**
+  String get deleteNotificationConfirm;
+
+  /// No description provided for @unblock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unblock'**
+  String get unblock;
+
+  /// No description provided for @noBlockedUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'No blocked users'**
+  String get noBlockedUsers;
+
+  /// No description provided for @unblockConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Unblock this user?'**
+  String get unblockConfirm;
+
+  /// No description provided for @votingHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Voting History'**
+  String get votingHistory;
+
+  /// No description provided for @noVotingHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No votes yet'**
+  String get noVotingHistory;
+
+  /// No description provided for @votedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Voted'**
+  String get votedOn;
+
+  /// No description provided for @editCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Caption'**
+  String get editCaption;
+
+  /// No description provided for @captionUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Caption updated'**
+  String get captionUpdated;
+
+  /// No description provided for @editComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Comment'**
+  String get editComment;
+
+  /// No description provided for @saveComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveComment;
+
+  /// No description provided for @commentUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment updated'**
+  String get commentUpdated;
+
+  /// No description provided for @creatorAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics'**
+  String get creatorAnalytics;
+
+  /// No description provided for @totalSubmissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Submissions'**
+  String get totalSubmissions;
+
+  /// No description provided for @totalVotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Votes'**
+  String get totalVotes;
+
+  /// No description provided for @avgVotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Votes'**
+  String get avgVotes;
+
+  /// No description provided for @challengesWon.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenges Won'**
+  String get challengesWon;
+
+  /// No description provided for @totalCoinsEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Coins Earned'**
+  String get totalCoinsEarned;
+
+  /// No description provided for @submissionAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Submission Analytics'**
+  String get submissionAnalytics;
+
+  /// No description provided for @upvotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Upvotes'**
+  String get upvotes;
+
+  /// No description provided for @downvotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Downvotes'**
+  String get downvotes;
+
+  /// No description provided for @superVotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Super Votes'**
+  String get superVotes;
+
+  /// No description provided for @giftsReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Gifts Received'**
+  String get giftsReceived;
+
+  /// No description provided for @coverPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover Photo'**
+  String get coverPhoto;
+
+  /// No description provided for @changeCoverPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Cover Photo'**
+  String get changeCoverPhoto;
+
+  /// No description provided for @coverPhotoUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover photo updated!'**
+  String get coverPhotoUpdated;
+
+  /// No description provided for @failedToUpdateCoverPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update cover photo.'**
+  String get failedToUpdateCoverPhoto;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @searchChallenges.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenges'**
+  String get searchChallenges;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search users, challenges, submissions...'**
+  String get searchHint;
+
+  /// No description provided for @noSearchResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noSearchResults;
+
+  /// No description provided for @searchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Start typing to search'**
+  String get searchPlaceholder;
+
+  /// No description provided for @followerCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} followers'**
+  String followerCount(int count);
+
+  /// No description provided for @validationEmailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required.'**
+  String get validationEmailRequired;
+
+  /// No description provided for @validationEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address.'**
+  String get validationEmailInvalid;
+
+  /// No description provided for @validationPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required.'**
+  String get validationPasswordRequired;
+
+  /// No description provided for @validationPasswordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters.'**
+  String get validationPasswordTooShort;
+
+  /// No description provided for @validationUsernameTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Username must be at least 3 characters.'**
+  String get validationUsernameTooShort;
+
+  /// No description provided for @validationUsernameInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Username can only contain letters, numbers, and underscores.'**
+  String get validationUsernameInvalid;
+
+  /// No description provided for @weeklyLeague.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly League'**
+  String get weeklyLeague;
+
+  /// No description provided for @leagueRankings.
+  ///
+  /// In en, this message translates to:
+  /// **'Rankings'**
+  String get leagueRankings;
+
+  /// No description provided for @leaguePoints.
+  ///
+  /// In en, this message translates to:
+  /// **'{points} pts'**
+  String leaguePoints(int points);
+
+  /// No description provided for @promoted.
+  ///
+  /// In en, this message translates to:
+  /// **'PROMOTED'**
+  String get promoted;
+
+  /// No description provided for @relegated.
+  ///
+  /// In en, this message translates to:
+  /// **'RELEGATED'**
+  String get relegated;
+
+  /// No description provided for @weekOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Week of {date}'**
+  String weekOf(String date);
+
+  /// No description provided for @promotionLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Top 20% promote next week'**
+  String get promotionLine;
+
+  /// No description provided for @watchMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch'**
+  String get watchMode;
+
+  /// No description provided for @exploreMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get exploreMode;
+
+  /// No description provided for @sponsoredChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'SPONSORED'**
+  String get sponsoredChallenge;
+
+  /// No description provided for @prizeCoins.
+  ///
+  /// In en, this message translates to:
+  /// **'Prize: {coins} coins'**
+  String prizeCoins(int coins);
+
+  /// No description provided for @sponsoredBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsored by {name}'**
+  String sponsoredBy(String name);
+
+  /// No description provided for @premiumChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Challenge'**
+  String get premiumChallenge;
+
+  /// No description provided for @premiumBenefitMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Premium Challenge Access'**
+  String get premiumBenefitMonthly;
+
+  /// No description provided for @premiumBenefitSuperVotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited Super Votes'**
+  String get premiumBenefitSuperVotes;
+
+  /// No description provided for @premiumBenefitNoAds.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad-free Experience'**
+  String get premiumBenefitNoAds;
+
+  /// No description provided for @premiumBenefitGiftRevenue.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift Revenue +10%'**
+  String get premiumBenefitGiftRevenue;
+
+  /// No description provided for @premiumBenefitEarlyAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'24hr Early Access'**
+  String get premiumBenefitEarlyAccess;
+
+  /// No description provided for @premiumBenefitBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Badge'**
+  String get premiumBenefitBadge;
+
+  /// No description provided for @creatorTier.
+  ///
+  /// In en, this message translates to:
+  /// **'Creator Tier'**
+  String get creatorTier;
+
+  /// No description provided for @tierRookie.
+  ///
+  /// In en, this message translates to:
+  /// **'Rookie'**
+  String get tierRookie;
+
+  /// No description provided for @tierRising.
+  ///
+  /// In en, this message translates to:
+  /// **'Rising'**
+  String get tierRising;
+
+  /// No description provided for @tierPartner.
+  ///
+  /// In en, this message translates to:
+  /// **'Partner'**
+  String get tierPartner;
+
+  /// No description provided for @tierFeatured.
+  ///
+  /// In en, this message translates to:
+  /// **'Featured'**
+  String get tierFeatured;
+
+  /// No description provided for @noCreatorTier.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep creating to earn a tier!'**
+  String get noCreatorTier;
+
+  /// No description provided for @giftRevenueShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift revenue share: {percent}%'**
+  String giftRevenueShare(int percent);
+
+  /// No description provided for @duetWith.
+  ///
+  /// In en, this message translates to:
+  /// **'↩ duet with @{username}'**
+  String duetWith(String username);
+
+  /// No description provided for @recordDuet.
+  ///
+  /// In en, this message translates to:
+  /// **'Duet'**
+  String get recordDuet;
+
+  /// No description provided for @duetChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Dueting with @{username}'**
+  String duetChallenge(String username);
 }
 
 class _AppLocalizationsDelegate
